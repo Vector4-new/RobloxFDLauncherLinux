@@ -1,0 +1,3668 @@
+
+--This is a joinscript that works in 2013 and back, etc.
+
+-- functions --------------------------
+function onPlayerAdded(player)
+	-- override
+end
+
+pcall(function() game:SetPlaceID(-1, false) end)
+
+local startTime = tick()
+local connectResolved = false
+local loadResolved = false
+local joinResolved = false
+local playResolved = true
+local playStartTime = 0
+
+local cdnSuccess = 0
+local cdnFailure = 0
+
+settings()["Game Options"].CollisionSoundEnabled = true
+pcall(function() settings().Rendering.EnableFRM = true end)
+pcall(function() settings().Physics.Is30FpsThrottleEnabled = false end)
+pcall(function() settings()["Task Scheduler"].PriorityMethod = Enum.PriorityMethod.AccumulatedError end)
+pcall(function() settings().Physics.PhysicsEnvironmentalThrottle = Enum.EnviromentalPhysicsThrottle.DefaultAuto end)
+
+pcall(function() game:GetService("ScriptContext"):AddCoreScript(1,game:GetService("ScriptContext"),"StarterScript") end)
+
+local threadSleepTime = ...
+
+if threadSleepTime==nil then
+	threadSleepTime = 15
+end
+
+local test = true
+
+local closeConnection = game.Close:connect(function()
+	if 0 then
+		if not connectResolved then
+			local duration = tick() - startTime;
+		elseif (not loadResolved) or (not joinResolved) then
+			local duration = tick() - startTime;
+			if not loadResolved then
+				loadResolved = true
+			end
+			if not joinResolved then
+				joinResolved = true
+			end
+		elseif not playResolved then
+			playResolved = true
+		end
+	end
+end)
+
+game:GetService("ChangeHistoryService"):SetEnabled(false)
+game:GetService("ContentProvider"):SetThreadPool(16)
+game:GetService("InsertService"):SetBaseSetsUrl("http://www.roblox.com/Game/Tools/InsertAsset.ashx?nsets=10&type=base")
+game:GetService("InsertService"):SetUserSetsUrl("http://www.roblox.com/Game/Tools/InsertAsset.ashx?nsets=20&type=user&userid=%d")
+game:GetService("InsertService"):SetCollectionUrl("http://www.roblox.com/Game/Tools/InsertAsset.ashx?sid=%d")
+game:GetService("InsertService"):SetAssetUrl("http://localhost/asset/?id=%d")
+game:GetService("InsertService"):SetAssetVersionUrl("http://www.roblox.com/Asset/?assetversionid=%d")
+
+pcall(function() game:GetService("SocialService"):SetFriendUrl("http://www.roblox.com/Game/LuaWebService/HandleSocialRequest.ashx?method=IsFriendsWith&playerid=%d&userid=%d") end)
+pcall(function() game:GetService("SocialService"):SetBestFriendUrl("http://www.roblox.com/Game/LuaWebService/HandleSocialRequest.ashx?method=IsBestFriendsWith&playerid=%d&userid=%d") end)
+pcall(function() game:GetService("SocialService"):SetGroupUrl("http://www.roblox.com/Game/LuaWebService/HandleSocialRequest.ashx?method=IsInGroup&playerid=%d&groupid=%d") end)
+pcall(function() game:GetService("SocialService"):SetGroupRankUrl("http://www.roblox.com/Game/LuaWebService/HandleSocialRequest.ashx?method=GetGroupRank&playerid=%d&groupid=%d") end)
+pcall(function() game:GetService("SocialService"):SetGroupRoleUrl("http://www.roblox.com/Game/LuaWebService/HandleSocialRequest.ashx?method=GetGroupRole&playerid=%d&groupid=%d") end)
+pcall(function() game:GetService("GamePassService"):SetPlayerHasPassUrl("http://www.roblox.com/Game/GamePass/GamePassHandler.ashx?Action=HasPass&UserID=%d&PassID=%d") end)
+pcall(function() game:GetService("MarketplaceService"):SetProductInfoUrl("https://api.roblox.com/marketplace/productinfo?assetId=%d") end)
+pcall(function() game:GetService("MarketplaceService"):SetPlayerOwnsAssetUrl("https://api.roblox.com/ownership/hasasset?userId=%d&assetId=%d") end)
+pcall(function() game:SetCreatorID(0, Enum.CreatorType.User) end)
+
+pcall(function() game:GetService("Players"):SetChatStyle(Enum.ChatStyle.ClassicAndBubble) end)
+
+local waitingForCharacter = false
+
+pcall( function()
+	if settings().Network.MtuOverride == 0 then
+	  settings().Network.MtuOverride = 1400
+	end
+end)
+
+
+client = game:GetService("NetworkClient")
+visit = game:GetService("Visit")
+
+function setMessage(message)
+	-- todo: animated "..."
+	if not false then
+		game:SetMessage(message)
+	else
+		-- hack, good enought for now
+		game:SetMessage("Teleporting ...")
+	end
+end
+
+function showErrorWindow(message, errorType, errorCategory)
+	game:SetMessage(message)
+end
+
+-- called when the client connection closes
+function onDisconnection(peer, lostConnection)
+	if lostConnection then
+		showErrorWindow("You have lost connection", "LostConnection", "LostConnection")
+	else
+		showErrorWindow("This game has been shutdown", "Kick", "Kick")
+	end
+end
+
+function requestCharacter(replicator)
+
+	-- prepare code for when the Character appears
+	local connection
+	connection = player.Changed:connect(function (property)
+		if property=="Character" then
+			game:ClearMessage()
+			waitingForCharacter = false
+
+			connection:disconnect()
+
+			if 0 then
+				if not joinResolved then
+					local duration = tick() - startTime;
+					joinResolved = true
+
+					playStartTime = tick()
+					playResolved = false
+				end
+			end
+		end
+	end)
+
+	setMessage("Requesting character")
+   
+	local success, err = pcall(function()
+		replicator:RequestCharacter()
+		setMessage("Waiting for character")
+		waitingForCharacter = true
+	end)
+end
+
+function onConnectionAccepted(url, replicator)
+	connectResolved = true
+
+	local waitingForMarker = true
+
+	local success, err = pcall(function()
+		if not test then
+		    visit:SetPing("", 300)
+		end
+
+		if not false then
+			game:SetMessageBrickCount()
+		else
+			setMessage("Teleporting ...")
+		end
+
+		replicator.Disconnection:connect(onDisconnection)
+
+		local marker = replicator:SendMarker()
+
+		marker.Received:connect(function()
+			waitingForMarker = false
+			requestCharacter(replicator)
+		end)
+	end)
+
+	if not success then
+		return
+	end
+
+	while waitingForMarker do
+		workspace:ZoomToExtents()
+		wait(0.5)
+	end
+end
+
+-- called when the client connection fails
+function onConnectionFailed(_, error)
+	showErrorWindow("Failed to connect to the Game. (ID=" .. error .. ")", "ID" .. error, "Other")
+end
+
+-- called when the client connection is rejected
+function onConnectionRejected()
+	connectionFailed:disconnect()
+	showErrorWindow("This game is not available. Please try another", "WrongVersion", "WrongVersion")
+end
+
+pcall(function() settings().Diagnostics:LegacyScriptMode() end)
+local success, err = pcall(function()
+
+	game:SetRemoteBuildMode(true)
+
+	setMessage("Connecting to Server")
+	client.ConnectionAccepted:connect(onConnectionAccepted)
+	client.ConnectionRejected:connect(onConnectionRejected)
+	connectionFailed = client.ConnectionFailed:connect(onConnectionFailed)
+	client.Ticket = ""
+
+	playerConnectSucces, player = pcall(function() return client:PlayerConnect(%id%, "%ip%", %port%, 0, threadSleepTime) end)
+
+	player:SetSuperSafeChat(false)
+	pcall(function() player:SetUnder13(false) end)
+	pcall(function() player:SetMembershipType(Enum.MembershipType.None) end)
+	pcall(function() player:SetAccountAge(365) end)
+	player.Idled:connect(onPlayerIdled)
+
+	-- Overriden
+	onPlayerAdded(player)
+
+	if not test then visit:SetUploadUrl("")end
+        player.Name = "%user%"
+        player.CharacterAppearance = "%app%"
+
+end)
+function loadbackpack()
+-- Backpack Version 4.21
+-- OnlyTwentyCharacters
+
+-------------------
+--| Exposed API |--
+-------------------
+
+local BackpackScript = {}
+BackpackScript.OpenClose = nil -- Function to toggle open/close
+BackpackScript.StateChanged = Instance.new('BindableEvent') -- Fires after any open/close, passes IsNowOpen
+
+---------------------
+--| Configurables |--
+---------------------
+
+local UseExperimentalGamepadEquip = false -- hotbar equipping in a new way! (its better!)
+
+local ICON_SIZE = 60
+if UseExperimentalGamepadEquip then
+	ICON_SIZE = 100
+end
+local ICON_BUFFER = 5
+
+local BACKGROUND_FADE = 0.50
+local BACKGROUND_COLOR = Color3.new(31/255, 31/255, 31/255)
+
+local SLOT_DRAGGABLE_COLOR = Color3.new(49/255, 49/255, 49/255)
+local SLOT_EQUIP_COLOR = Color3.new(90/255, 142/255, 233/255)
+local SLOT_EQUIP_THICKNESS = 0.1 -- Relative
+local SLOT_FADE_LOCKED = 0.50 -- Locked means undraggable
+local SLOT_BORDER_COLOR = Color3.new(1, 1, 1) -- Appears when dragging
+
+local TOOLTIP_BUFFER = 6
+local TOOLTIP_HEIGHT = 16
+local TOOLTIP_OFFSET = -25 -- From top
+
+local ARROW_IMAGE_OPEN = 'rbxasset://textures/ui/Backpack_Open.png'
+local ARROW_IMAGE_CLOSE = 'rbxasset://textures/ui/Backpack_Close.png'
+local ARROW_SIZE = UDim2.new(0, 14, 0, 9)
+local ARROW_HOTKEY = Enum.KeyCode.Backquote.Value --TODO: Hookup '~' too?
+local ARROW_HOTKEY_STRING = '`'
+
+local HOTBAR_SLOTS_FULL = 10
+if UseExperimentalGamepadEquip then
+	HOTBAR_SLOTS_FULL = 8
+end
+local HOTBAR_SLOTS_MINI = 3
+local HOTBAR_SLOTS_WIDTH_CUTOFF = 1024 -- Anything smaller is MINI
+local HOTBAR_OFFSET_FROMBOTTOM = -30 -- Offset to make room for the Health GUI
+
+local INVENTORY_ROWS_FULL = 4
+local INVENTORY_ROWS_MINI = 2
+local INVENTORY_HEADER_SIZE = 40
+
+--local TITLE_OFFSET = 20 -- From left side
+--local TITLE_TEXT = "Backpack"
+
+local SEARCH_BUFFER = 5
+local SEARCH_WIDTH = 200
+local SEARCH_TEXT = "   Search"
+local SEARCH_TEXT_OFFSET_FROMLEFT = 0
+local SEARCH_BACKGROUND_COLOR = Color3.new(0.37, 0.37, 0.37)
+local SEARCH_BACKGROUND_FADE = 0.15
+
+local DOUBLE_CLICK_TIME = 0.5
+
+-----------------
+--| Variables |--
+-----------------
+
+local PlayersService = game:GetService('Players')
+local UserInputService = game:GetService('UserInputService')
+local StarterGui = game:GetService('StarterGui')
+local GuiService = game:GetService('GuiService')
+local CoreGui = game:GetService('CoreGui')
+local ContextActionService = game:GetService('ContextActionService')
+
+local gamepadSupportSuccess, gamepadSupportFlagValue = pcall(function() return settings():GetFFlag("TopbarGamepadSupport") end)
+local IsGamepadSupported = gamepadSupportSuccess and gamepadSupportFlagValue
+
+local IS_PHONE = UserInputService.TouchEnabled and GuiService:GetScreenResolution().X < HOTBAR_SLOTS_WIDTH_CUTOFF
+
+local HOTBAR_SLOTS = (IS_PHONE) and HOTBAR_SLOTS_MINI or HOTBAR_SLOTS_FULL
+local HOTBAR_SIZE = UDim2.new(0, ICON_BUFFER + (HOTBAR_SLOTS * (ICON_SIZE + ICON_BUFFER)), 0, ICON_BUFFER + ICON_SIZE + ICON_BUFFER)
+local ZERO_KEY_VALUE = Enum.KeyCode.Zero.Value
+local DROP_HOTKEY_VALUE = Enum.KeyCode.Backspace.Value
+local INVENTORY_ROWS = (IS_PHONE) and INVENTORY_ROWS_MINI or INVENTORY_ROWS_FULL
+
+local Player = PlayersService["%user%"]
+
+local MainFrame = nil
+local HotbarFrame = nil
+local InventoryFrame = nil
+local ScrollingFrame = nil
+
+local Character = nil
+local Humanoid = nil
+local Backpack = nil
+
+local Slots = {} -- List of all Slots by index
+local LowestEmptySlot = nil
+local SlotsByTool = {} -- Map of Tools to their assigned Slots
+local HotkeyFns = {} -- Map of KeyCode values to their assigned behaviors
+local Dragging = {} -- Only used to check if anything is being dragged, to disable other input
+local FullHotbarSlots = 0
+local UpdateArrowFrame = nil -- Function defined in arrow init logic at bottom
+local ActiveHopper = nil --NOTE: HopperBin
+local StarterToolFound = false -- Special handling is required for the gear currently equipped on the site
+local WholeThingEnabled = false
+local TextBoxFocused = false -- ANY TextBox, not just the search box
+local ResultsIndices = nil -- Results of a search, or nil
+local HotkeyStrings = {} -- Used for eating/releasing hotkeys
+local CharConns = {} -- Holds character connections to be cleared later
+local TopBarEnabled = false
+local GamepadEnabled = false -- determines if our gui needs to be gamepad friendly
+
+
+-----------------
+--| Functions |--
+-----------------
+
+local function NewGui(className, objectName)
+	local newGui = Instance.new(className)
+	newGui.Name = objectName
+	newGui.BackgroundColor3 = Color3.new(0, 0, 0)
+	newGui.BackgroundTransparency = 1
+	newGui.BorderColor3 = Color3.new(0, 0, 0)
+	newGui.BorderSizePixel = 0
+	newGui.Size = UDim2.new(1, 0, 1, 0)
+	if className:match('Text') then
+		newGui.TextColor3 = Color3.new(1, 1, 1)
+		newGui.Text = ''
+		newGui.Font = Enum.Font.SourceSans
+		newGui.FontSize = Enum.FontSize.Size14
+		newGui.TextWrapped = true
+		if className == 'TextButton' then
+			newGui.Font = Enum.Font.SourceSansBold
+			newGui.BorderSizePixel = 1
+		end
+	end
+	return newGui
+end
+
+local function FindLowestEmpty()
+	for i = 1, HOTBAR_SLOTS do
+		local slot = Slots[i]
+		if not slot.Tool then
+			return slot
+		end
+	end
+	return nil
+end
+
+local function AdjustHotbarFrames()
+	local inventoryOpen = InventoryFrame.Visible -- (Show all)
+	local visualTotal = (inventoryOpen) and HOTBAR_SLOTS or FullHotbarSlots
+	local visualIndex = 0
+	for i = 1, HOTBAR_SLOTS do
+		local slot = Slots[i]
+		if slot.Tool or inventoryOpen then
+			visualIndex = visualIndex + 1
+			slot:Readjust(visualIndex, visualTotal)
+
+			if not UseExperimentalGamepadEquip then
+				slot.Frame.Visible = true
+			end
+		else
+			slot.Frame.Visible = false
+		end
+	end
+end
+
+local function CheckBounds(guiObject, x, y)
+	local pos = guiObject.AbsolutePosition
+	local size = guiObject.AbsoluteSize
+	return (x > pos.X and x <= pos.X + size.X and y > pos.Y and y <= pos.Y + size.Y)
+end
+
+local function GetOffset(guiObject, point)
+	local centerPoint = guiObject.AbsolutePosition + (guiObject.AbsoluteSize / 2)
+	return (centerPoint - point).magnitude
+end
+
+local function DisableActiveHopper() --NOTE: HopperBin
+	ActiveHopper:ToggleSelect()
+	SlotsByTool[ActiveHopper]:UpdateEquipView()
+	ActiveHopper = nil
+end
+
+local function UnequipAllTools() --NOTE: HopperBin
+	Humanoid:UnequipTools()
+	if ActiveHopper then
+		DisableActiveHopper()
+	end
+end
+
+local function EquipNewTool(tool) --NOTE: HopperBin
+	UnequipAllTools()
+	if tool:IsA('HopperBin') then
+		tool:ToggleSelect()
+		SlotsByTool[tool]:UpdateEquipView()
+		ActiveHopper = tool
+	else
+		--Humanoid:EquipTool(tool) --NOTE: This would also unequip current Tool
+		tool.Parent = Character --TODO: Switch back to above line after EquipTool is fixed!
+	end
+end
+
+local function IsEquipped(tool)
+	return tool and ((tool:IsA('HopperBin') and tool.Active) or tool.Parent == Character) --NOTE: HopperBin
+end
+
+local function MakeSlot(parent, index)
+	index = index or (#Slots + 1)
+
+	-- Slot Definition --
+
+	local slot = {}
+	slot.Tool = nil
+	slot.Index = index
+	slot.Frame = nil
+
+	local SlotFrame = nil
+	local ToolIcon = nil
+	local ToolName = nil
+	local ToolChangeConn = nil
+	local HighlightFrame = nil
+
+	--NOTE: The following are only defined for Hotbar Slots
+	local ToolTip = nil
+	local SlotNumber = nil
+
+	-- Slot Functions --
+
+	local function UpdateSlotFading()
+		SlotFrame.BackgroundTransparency = (SlotFrame.Draggable) and 0 or SLOT_FADE_LOCKED
+		SlotFrame.BackgroundColor3 = (SlotFrame.Draggable) and SLOT_DRAGGABLE_COLOR or BACKGROUND_COLOR
+	end
+
+	function slot:Reposition()
+		-- Slots are positioned into rows
+		local index = (ResultsIndices and ResultsIndices[self]) or self.Index
+		local sizePlus = ICON_BUFFER + ICON_SIZE
+
+		local modSlots = 0
+		if UseExperimentalGamepadEquip then
+			modSlots = ((index - HOTBAR_SLOTS) % 5)
+			if modSlots == 0 then
+				modSlots = 5
+			end
+		else
+			modSlots = ((index - 1) % HOTBAR_SLOTS) + 1
+		end
+
+		local row = 0 
+		if UseExperimentalGamepadEquip then
+			row = math.floor( (index - HOTBAR_SLOTS - 1) / 5 )
+		else
+			row = (index > HOTBAR_SLOTS) and (math.floor((index - 1) / HOTBAR_SLOTS)) - 1 or 0
+		end
+
+		SlotFrame.Position = UDim2.new(0, ICON_BUFFER + ((modSlots - 1) * sizePlus), 0, ICON_BUFFER + (sizePlus * row))
+	end
+
+	function slot:Readjust(visualIndex, visualTotal) --NOTE: Only used for Hotbar slots
+		if UseExperimentalGamepadEquip then return end
+
+		local centered = HOTBAR_SIZE.X.Offset / 2
+		local sizePlus = ICON_BUFFER + ICON_SIZE
+		local midpointish = (visualTotal / 2) + 0.5
+		local factor = visualIndex - midpointish
+		SlotFrame.Position = UDim2.new(0, centered - (ICON_SIZE / 2) + (sizePlus * factor), 0, ICON_BUFFER)
+	end
+
+	function slot:Fill(tool)
+		if not tool then
+			return self:Clear()
+		end
+
+		self.Tool = tool
+
+		local function assignToolData()
+			local icon = tool.TextureId
+			ToolIcon.Image = icon
+			ToolName.Text = (icon == '') and tool.Name or '' -- (Only show name if no icon)
+			if ToolTip and tool:IsA('Tool') then --NOTE: HopperBin
+				ToolTip.Text = tool.ToolTip
+				local width = ToolTip.TextBounds.X + TOOLTIP_BUFFER
+				ToolTip.Size = UDim2.new(0, width, 0, TOOLTIP_HEIGHT)
+				ToolTip.Position = UDim2.new(0.5, -width / 2, 0, TOOLTIP_OFFSET)
+			end
+		end
+		assignToolData()
+
+		if ToolChangeConn then 
+			ToolChangeConn:disconnect()
+			ToolChangeConn = nil
+		end
+
+		ToolChangeConn = tool.Changed:connect(function(property)
+			if property == 'TextureId' or property == 'Name' or property == 'ToolTip' then
+				assignToolData()
+			end
+		end)
+
+		local hotbarSlot = (self.Index <= HOTBAR_SLOTS)
+		local inventoryOpen = InventoryFrame.Visible
+
+		if not hotbarSlot or inventoryOpen then
+			SlotFrame.Draggable = true
+		end
+
+		self:UpdateEquipView()
+
+		if hotbarSlot then
+			FullHotbarSlots = FullHotbarSlots + 1
+		end
+
+		SlotsByTool[tool] = self
+		LowestEmptySlot = FindLowestEmpty()
+		UpdateArrowFrame()
+	end
+
+	function slot:Clear()
+		if not self.Tool then return end
+
+		if ToolChangeConn then 
+			ToolChangeConn:disconnect()
+			ToolChangeConn = nil
+		end
+
+		ToolIcon.Image = ''
+		ToolName.Text = ''
+		if ToolTip then
+			ToolTip.Text = ''
+			ToolTip.Visible = false
+		end
+		SlotFrame.Draggable = false
+
+		self:UpdateEquipView(true) -- Show as unequipped
+
+		if self.Index <= HOTBAR_SLOTS then
+			FullHotbarSlots = FullHotbarSlots - 1
+		end
+
+		SlotsByTool[self.Tool] = nil
+		self.Tool = nil
+		LowestEmptySlot = FindLowestEmpty()
+		UpdateArrowFrame()
+	end
+
+	function slot:UpdateEquipView(unequippedOverride)
+		if not unequippedOverride and IsEquipped(self.Tool) then -- Equipped
+			if not HighlightFrame then
+				HighlightFrame = NewGui('Frame', 'Equipped')
+				HighlightFrame.ZIndex = SlotFrame.ZIndex
+				local t = SLOT_EQUIP_THICKNESS
+				local dataTable = { -- Relative sizes and positions
+					{t, 1, 0, 0},
+					{1, t, 0, 0},
+					{t, 1, 1 - t, 0},
+					{1, t, 0, 1 - t},
+				}
+				for _, data in pairs(dataTable) do
+					local edgeFrame = NewGui('Frame', 'Edge')
+					edgeFrame.BackgroundTransparency = 0
+					edgeFrame.BackgroundColor3 = SLOT_EQUIP_COLOR
+					edgeFrame.Size = UDim2.new(data[1], 0, data[2], 0)
+					edgeFrame.Position = UDim2.new(data[3], 0, data[4], 0)
+					edgeFrame.ZIndex = HighlightFrame.ZIndex
+					edgeFrame.Parent = HighlightFrame
+				end
+			end
+			HighlightFrame.Parent = SlotFrame
+		else -- In the Backpack
+			if HighlightFrame then
+				HighlightFrame.Parent = nil
+			end
+		end
+		UpdateSlotFading()
+	end
+
+	function slot:IsEquipped()
+		return IsEquipped(self.Tool)
+	end
+
+	function slot:Delete()
+		SlotFrame:Destroy() --NOTE: Also clears connections
+		table.remove(Slots, self.Index)
+		local newSize = #Slots
+
+		-- Now adjust the rest (both visually and representationally)
+		for i = self.Index, newSize do
+			Slots[i]:SlideBack()
+		end
+
+		if newSize % HOTBAR_SLOTS == 0 then -- We lost a row at the bottom! Adjust the CanvasSize
+			local lastSlot = Slots[newSize]
+			local lowestPoint = lastSlot.Frame.Position.Y.Offset + lastSlot.Frame.Size.Y.Offset
+			ScrollingFrame.CanvasSize = UDim2.new(0, 0, 0, lowestPoint + ICON_BUFFER)
+		end
+	end
+
+	function slot:Swap(targetSlot) --NOTE: This slot (self) must not be empty!
+		local myTool, otherTool = self.Tool, targetSlot.Tool
+		self:Clear()
+		if otherTool then -- (Target slot might be empty)
+			targetSlot:Clear()
+			self:Fill(otherTool)
+		end
+		if myTool then
+			targetSlot:Fill(myTool)
+		else
+			targetSlot:Clear()
+		end
+	end
+
+	function slot:SlideBack() -- For inventory slot shifting
+		self.Index = self.Index - 1
+		SlotFrame.Name = self.Index
+		self:Reposition()
+	end
+
+	function slot:TurnNumber(on)
+		if SlotNumber then
+			SlotNumber.Visible = on
+		end
+	end
+
+	function slot:SetClickability(on) -- (Happens on open/close arrow)
+		if self.Tool then
+			SlotFrame.Draggable = not on
+			UpdateSlotFading()
+		end
+	end
+
+	function slot:CheckTerms(terms)
+		local hits = 0
+		local function checkEm(str, term)
+			local _, n = str:lower():gsub(term, '')
+			hits = hits + n
+		end
+		local tool = self.Tool
+		for term in pairs(terms) do
+			checkEm(tool.Name, term)
+			if tool:IsA('Tool') then --NOTE: HopperBin
+				checkEm(tool.ToolTip, term)
+			end
+		end
+		return hits
+	end
+
+	-- Slot Init Logic --
+
+	SlotFrame = NewGui('TextButton', index)
+	SlotFrame.BackgroundColor3 = BACKGROUND_COLOR
+	SlotFrame.BorderColor3 = SLOT_BORDER_COLOR
+	SlotFrame.Text = ""
+	SlotFrame.AutoButtonColor = false
+	SlotFrame.BorderSizePixel = 0
+	SlotFrame.Size = UDim2.new(0, ICON_SIZE, 0, ICON_SIZE)
+	SlotFrame.Active = true
+	SlotFrame.Draggable = false
+	SlotFrame.BackgroundTransparency = SLOT_FADE_LOCKED
+	SlotFrame.MouseButton1Click:connect(function() changeSlot(slot) end)
+	slot.Frame = SlotFrame
+
+	ToolIcon = NewGui('ImageLabel', 'Icon')
+	ToolIcon.Size = UDim2.new(0.8, 0, 0.8, 0)
+	ToolIcon.Position = UDim2.new(0.1, 0, 0.1, 0)
+	ToolIcon.Parent = SlotFrame
+
+	ToolName = NewGui('TextLabel', 'ToolName')
+	ToolName.Size = UDim2.new(1, -2, 1, -2)
+	ToolName.Position = UDim2.new(0, 1, 0, 1)
+	ToolName.Parent = SlotFrame
+
+	slot:Reposition()
+
+	if index <= HOTBAR_SLOTS then -- Hotbar-Specific Slot Stuff
+		-- ToolTip stuff
+		ToolTip = NewGui('TextLabel', 'ToolTip')
+		ToolTip.TextWrapped = false
+		ToolTip.TextYAlignment = Enum.TextYAlignment.Top
+		ToolTip.BackgroundColor3 = Color3.new(0.4, 0.4, 0.4)
+		ToolTip.BackgroundTransparency = 0
+		ToolTip.Visible = false
+		ToolTip.Parent = SlotFrame
+		SlotFrame.MouseEnter:connect(function()
+			if ToolTip.Text ~= '' then
+				ToolTip.Visible = true
+			end
+		end)
+		SlotFrame.MouseLeave:connect(function() ToolTip.Visible = false end)
+
+		-- Slot select logic, activated by clicking or pressing hotkey
+		function slot:Select()
+			local tool = slot.Tool
+			if tool then
+				if IsEquipped(tool) then --NOTE: HopperBin
+					UnequipAllTools()
+				elseif tool.Parent == Backpack then
+					EquipNewTool(tool)
+				end
+			end
+		end
+
+		function slot:MoveToInventory()
+			if slot.Index <= HOTBAR_SLOTS then -- From a Hotbar slot
+				local tool = slot.Tool
+				self:Clear() --NOTE: Order matters here
+				local newSlot = MakeSlot(ScrollingFrame)
+				newSlot:Fill(tool)
+				if IsEquipped(tool) then -- Also unequip it --NOTE: HopperBin
+					UnequipAllTools()
+				end
+				-- Also hide the inventory slot if we're showing results right now
+				if ResultsIndices then
+					newSlot.Frame.Visible = false
+				end
+			end
+		end
+
+		-- Show label and assign hotkeys for 1-9 and 0 (zero is always last slot when > 10 total)
+		if index < 10 or index == HOTBAR_SLOTS then -- NOTE: Hardcoded on purpose!
+			local slotNum = (index < 10) and index or 0
+			SlotNumber = NewGui('TextLabel', 'Number')
+			SlotNumber.Text = slotNum
+			SlotNumber.Size = UDim2.new(0.15, 0, 0.15, 0)
+			SlotNumber.Visible = false
+			SlotNumber.Parent = SlotFrame
+			HotkeyFns[ZERO_KEY_VALUE + slotNum] = slot.Select
+		end
+
+		if UseExperimentalGamepadEquip then
+			local radius = 200
+			local angle = (index + 5) * (math.pi/4)
+			SlotFrame.Position = UDim2.new(0.5,-50 + math.cos(angle) * radius,0.5,-50 + math.sin(angle) * radius)
+			SlotFrame.Visible = false
+		end
+
+	else -- Inventory-Specific Slot Stuff
+
+		local newRow = false
+		if UseExperimentalGamepadEquip then
+			newRow = (index % 5 == 1)
+		else
+			newRow = (index % HOTBAR_SLOTS == 1)
+		end
+
+		if newRow then -- We are the first slot of a new row! Adjust the CanvasSize
+			local lowestPoint = SlotFrame.Position.Y.Offset + SlotFrame.Size.Y.Offset
+			ScrollingFrame.CanvasSize = UDim2.new(0, 0, 0, lowestPoint + ICON_BUFFER)
+		end
+
+		-- Scroll to new inventory slot, if we're open and not viewing search results
+		if InventoryFrame.Visible and not ResultsIndices then
+			local offset = ScrollingFrame.CanvasSize.Y.Offset - ScrollingFrame.AbsoluteSize.Y
+			ScrollingFrame.CanvasPosition = Vector2.new(0, math.max(0, offset))
+		end
+	end
+
+	do -- Dragging Logic
+		local startPoint = SlotFrame.Position
+		local lastUpTime = 0
+		local startParent = nil
+
+		SlotFrame.DragBegin:connect(function(dragPoint)
+			Dragging[SlotFrame] = true
+			startPoint = dragPoint
+
+			SlotFrame.BorderSizePixel = 2
+
+			-- Raise above other slots
+			SlotFrame.ZIndex = 2
+			ToolIcon.ZIndex = 2
+			ToolName.ZIndex = 2
+			if SlotNumber then
+				SlotNumber.ZIndex = 2
+			end
+			if HighlightFrame then
+				HighlightFrame.ZIndex = 2
+				for _, child in pairs(HighlightFrame:GetChildren()) do
+					child.ZIndex = 2
+				end
+			end
+
+			-- Circumvent the ScrollingFrame's ClipsDescendants property
+			startParent = SlotFrame.Parent
+			if startParent == ScrollingFrame then
+				SlotFrame.Parent = InventoryFrame
+				local pos = ScrollingFrame.Position
+				local offset = ScrollingFrame.CanvasPosition - Vector2.new(pos.X.Offset, pos.Y.Offset)
+				SlotFrame.Position = SlotFrame.Position - UDim2.new(0, offset.X, 0, offset.Y)
+			end
+		end)
+
+		SlotFrame.DragStopped:connect(function(x, y)
+			local now = tick()
+			SlotFrame.Position = startPoint
+			SlotFrame.Parent = startParent
+
+			SlotFrame.BorderSizePixel = 0
+
+			-- Restore height
+			SlotFrame.ZIndex = 1
+			ToolIcon.ZIndex = 1
+			ToolName.ZIndex = 1
+			if SlotNumber then
+				SlotNumber.ZIndex = 1
+			end
+			if HighlightFrame then
+				HighlightFrame.ZIndex = 1
+				for _, child in pairs(HighlightFrame:GetChildren()) do
+					child.ZIndex = 1
+				end
+			end
+
+			Dragging[SlotFrame] = nil
+
+			-- Make sure the tool wasn't dropped
+			if not slot.Tool then
+				return
+			end
+
+			-- Check where we were dropped
+			if CheckBounds(InventoryFrame, x, y) then
+				if slot.Index <= HOTBAR_SLOTS then
+					slot:MoveToInventory()
+				end
+				-- Check for double clicking on an inventory slot, to move into empty hotbar slot
+				if slot.Index > HOTBAR_SLOTS and now - lastUpTime < DOUBLE_CLICK_TIME then
+					if LowestEmptySlot then
+						local myTool = slot.Tool
+						slot:Clear()
+						LowestEmptySlot:Fill(myTool)
+						slot:Delete()
+					end
+					now = 0 -- Resets the timer
+				end
+			elseif CheckBounds(HotbarFrame, x, y) then
+				local closest = {math.huge, nil}
+				for i = 1, HOTBAR_SLOTS do
+					local otherSlot = Slots[i]
+					local offset = GetOffset(otherSlot.Frame, Vector2.new(x, y))
+					if offset < closest[1] then
+						closest = {offset, otherSlot}
+					end
+				end
+				local closestSlot = closest[2]
+				if closestSlot ~= slot then
+					slot:Swap(closestSlot)
+					if slot.Index > HOTBAR_SLOTS then
+						local tool = slot.Tool
+						if not tool then -- Clean up after ourselves if we're an inventory slot that's now empty
+							slot:Delete()
+						else -- Moved inventory slot to hotbar slot, and gained a tool that needs to be unequipped
+							if IsEquipped(tool) then --NOTE: HopperBin
+								UnequipAllTools()
+							end
+							-- Also hide the inventory slot if we're showing results right now
+							if ResultsIndices then
+								slot.Frame.Visible = false
+							end
+						end
+					end
+				end
+			else
+				-- local tool = slot.Tool
+				-- if tool.CanBeDropped then --TODO: HopperBins
+				-- tool.Parent = workspace
+				-- --TODO: Move away from character
+				-- end
+				if slot.Index <= HOTBAR_SLOTS then
+					slot:MoveToInventory() --NOTE: Temporary
+				end
+			end
+
+			lastUpTime = now
+		end)
+	end
+
+	-- All ready!
+	SlotFrame.Parent = parent
+	Slots[index] = slot
+	return slot
+end
+
+local function OnChildAdded(child) -- To Character or Backpack
+	if not child:IsA('Tool') and not child:IsA('HopperBin') then --NOTE: HopperBin
+		if child:IsA('Humanoid') and child.Parent == Character then
+			Humanoid = child
+		end
+		return
+	end
+	local tool = child
+
+	if ActiveHopper and tool.Parent == Character then --NOTE: HopperBin
+		DisableActiveHopper()
+	end
+
+	--TODO: Optimize / refactor / do something else
+	if not StarterToolFound and tool.Parent == Character and not SlotsByTool[tool] then
+		local starterGear = Player:FindFirstChild('StarterGear')
+		if starterGear then
+			if starterGear:FindFirstChild(tool.Name) then
+				StarterToolFound = true
+				local slot = LowestEmptySlot or MakeSlot(ScrollingFrame)
+				for i = slot.Index, 1, -1 do
+					local curr = Slots[i] -- An empty slot, because above
+					local pIndex = i - 1
+					if pIndex > 0 then
+						local prev = Slots[pIndex] -- Guaranteed to be full, because above
+						prev:Swap(curr)
+					else
+						curr:Fill(tool)
+					end
+				end
+				-- Have to manually unequip a possibly equipped tool
+				for _, child in pairs(Character:GetChildren()) do
+					if child:IsA('Tool') and child ~= tool then
+						child.Parent = Backpack
+					end
+				end
+				AdjustHotbarFrames()
+				return -- We're done here
+			end
+		end
+	end
+
+	-- The tool is either moving or new
+	local slot = SlotsByTool[tool]
+	if slot then
+		slot:UpdateEquipView()
+	else -- New! Put into lowest hotbar slot or new inventory slot
+		slot = LowestEmptySlot or MakeSlot(ScrollingFrame)
+		slot:Fill(tool)
+		if slot.Index <= HOTBAR_SLOTS and not InventoryFrame.Visible then
+			AdjustHotbarFrames()
+		end
+		if tool:IsA('HopperBin') then --NOTE: HopperBin
+			if tool.Active then
+				UnequipAllTools()
+				ActiveHopper = tool
+			end
+		end
+	end
+end
+
+local function OnChildRemoved(child) -- From Character or Backpack
+	if not child:IsA('Tool') and not child:IsA('HopperBin') then --NOTE: HopperBin
+		return
+	end
+	local tool = child
+
+	-- Ignore this event if we're just moving between the two
+	local newParent = tool.Parent
+	if newParent == Character or newParent == Backpack then
+		return
+	end
+
+	local slot = SlotsByTool[tool]
+	if slot then
+		slot:Clear()
+		if slot.Index > HOTBAR_SLOTS then -- Inventory slot
+			slot:Delete()
+		elseif not InventoryFrame.Visible then
+			AdjustHotbarFrames()
+		end
+	end
+
+	if tool == ActiveHopper then --NOTE: HopperBin
+		ActiveHopper = nil
+	end
+end
+
+local function OnCharacterAdded(character)
+	-- First, clean up any old slots
+	for i = #Slots, 1, -1 do
+		local slot = Slots[i]
+		if slot.Tool then
+			slot:Clear()
+		end
+		if i > HOTBAR_SLOTS then
+			slot:Delete()
+		end
+	end
+	ActiveHopper = nil --NOTE: HopperBin
+
+	-- And any old connections
+	for _, conn in pairs(CharConns) do
+		conn:disconnect()
+	end
+	CharConns = {}
+
+	-- Hook up the new character
+	Character = character
+	table.insert(CharConns, character.ChildRemoved:connect(OnChildRemoved))
+	table.insert(CharConns, character.ChildAdded:connect(OnChildAdded))
+	for _, child in pairs(character:GetChildren()) do
+		OnChildAdded(child)
+	end
+	--NOTE: Humanoid is set inside OnChildAdded
+
+	-- And the new backpack, when it gets here
+	Backpack = Player:WaitForChild('Backpack')
+	table.insert(CharConns, Backpack.ChildRemoved:connect(OnChildRemoved))
+	table.insert(CharConns, Backpack.ChildAdded:connect(OnChildAdded))
+	for _, child in pairs(Backpack:GetChildren()) do
+		OnChildAdded(child)
+	end
+
+	AdjustHotbarFrames()
+end
+
+function GetDescendants(o)
+    local allObjects = {}
+    function FindChildren(Object)
+       for i,v in pairs(Object:GetChildren()) do
+            table.insert(allObjects,v)
+            FindChildren(v)
+        end
+    end
+    FindChildren(o)
+    return allObjects
+end
+
+local function checkfocused()
+for i,v in pairs(GetDescendants(game)) do
+pcall(function()
+if v:IsA("TextBox") then
+local textlol=v.Text
+pcall(function()
+v.Changed:connect(function() if v.Text~=textlol then textlol=v.Text TextBoxFocused = true end end)
+v.FocusLost:connect(function() wait(0.2) TextBoxFocused = false end)
+end)
+end
+end)
+end
+game.DescendantAdded:connect(function(v)
+pcall(function()
+if v:IsA("TextBox") then
+local textlol=v.Text
+v.Changed:connect(function() if v.Text~=textlol then textlol=v.Text TextBoxFocused = true end end)
+v.FocusLost:connect(function() wait(0.2) TextBoxFocused = false end)
+end
+end)
+end)
+end
+
+local function OnInputBegan(input, isProcessed)
+	-- Pass through keyboard hotkeys when not typing into a TextBox and not disabled (except for the Drop key)
+if checkfocused() then return end
+	if input.UserInputType == Enum.UserInputType.Keyboard and not TextBoxFocused and (WholeThingEnabled or input.KeyCode.Value == DROP_HOTKEY_VALUE) then
+		local hotkeyBehavior = HotkeyFns[input.KeyCode.Value]
+		if hotkeyBehavior then
+			hotkeyBehavior(isProcessed)
+		end
+	end
+end
+
+local function OnUISChanged(property)
+	if property == 'KeyboardEnabled' then
+		local on = UserInputService.KeyboardEnabled
+		for i = 1, HOTBAR_SLOTS do
+			Slots[i]:TurnNumber(on)
+		end
+	end
+end
+
+
+
+-------------------------
+--| Gamepad Functions |--
+-------------------------
+local lastChangeToolInputObject = nil
+local lastChangeToolInputTime = nil
+local maxEquipDeltaTime = 0.06
+local noOpFunc = function() end
+local selectDirection = Vector2.new(0,0)
+local hotbarVisible = false
+
+function unbindAllGamepadEquipActions()
+	ContextActionService:UnbindCoreAction("RBXBackpackHasGamepadFocus")
+	ContextActionService:UnbindCoreAction("RBXCloseInventory")
+end
+
+local function setHotbarVisibility(visible, isInventoryScreen)
+	for i = 1, HOTBAR_SLOTS do
+		local hotbarSlot = Slots[i]
+		if hotbarSlot and hotbarSlot.Frame and (isInventoryScreen or hotbarSlot.Tool) then
+			hotbarSlot.Frame.Visible = visible
+		end
+	end
+end
+
+local function getInputDirection(inputObject)
+	local buttonModifier = 1
+	if inputObject.UserInputState == Enum.UserInputState.End then
+		buttonModifier = -1
+	end
+
+	if inputObject.KeyCode == Enum.KeyCode.Thumbstick1 then
+
+		local magnitude = inputObject.Position.magnitude
+
+		if magnitude > 0.98 then
+			local normalizedVector = Vector2.new(inputObject.Position.x / magnitude, -inputObject.Position.y / magnitude)
+			selectDirection =  normalizedVector
+		else
+			selectDirection = Vector2.new(0,0)
+		end
+	elseif inputObject.KeyCode == Enum.KeyCode.DPadLeft then
+		selectDirection = Vector2.new(selectDirection.x - 1 * buttonModifier, selectDirection.y)
+	elseif inputObject.KeyCode == Enum.KeyCode.DPadRight then
+		selectDirection = Vector2.new(selectDirection.x + 1 * buttonModifier, selectDirection.y)
+	elseif inputObject.KeyCode == Enum.KeyCode.DPadUp then
+		selectDirection = Vector2.new(selectDirection.x, selectDirection.y - 1 * buttonModifier)
+	elseif inputObject.KeyCode == Enum.KeyCode.DPadDown then
+		selectDirection = Vector2.new(selectDirection.x, selectDirection.y + 1 * buttonModifier)
+	else
+		selectDirection = Vector2.new(0,0)
+	end
+
+	return selectDirection
+end
+
+local selectToolExperiment = function(actionName, inputState, inputObject)
+
+	local inputDirection = getInputDirection(inputObject)
+
+	if inputDirection == Vector2.new(0,0) then
+		return
+	end
+
+	local angle = math.atan2(inputDirection.y, inputDirection.x) - math.atan2(-1, 0)
+	if angle < 0 then
+		angle = angle + (math.pi * 2)
+	end
+
+	local quarterPi = (math.pi * 0.25)
+
+	local index = (angle/quarterPi) + 1
+	index = math.floor(index + 0.5) -- round index to whole number
+	if index > HOTBAR_SLOTS then
+		index = 1
+	end
+
+	if index > 0 then
+		local selectedSlot = Slots[index]
+		if selectedSlot and selectedSlot.Tool and not selectedSlot:IsEquipped() then
+			selectedSlot:Select()
+		end
+	else
+		UnequipAllTools()
+	end
+end
+
+local changeToolFuncExperiment = nil
+changeToolFuncExperiment = function(actionName, inputState, inputObject)
+	local hasHotBar = false
+	for i = 1, HOTBAR_SLOTS do
+		if Slots[i].Tool then
+			hasHotBar = true
+			break
+		end
+	end
+
+	if not hasHotBar then return end
+
+	if inputState == Enum.UserInputState.Begin then
+		hotbarVisible = not hotbarVisible
+		if hotbarVisible then
+			HotbarFrame.Position = UDim2.new(0.5, -HotbarFrame.AbsoluteSize.x/2, 0.5, -HotbarFrame.AbsoluteSize.y/2)
+		end
+		setHotbarVisibility(hotbarVisible)
+	else
+		return
+	end
+
+	if not hotbarVisible then
+		selectDirection = Vector2.new(0,0)
+		ContextActionService:UnbindCoreAction("RBXRadialSelectTool")
+		ContextActionService:UnbindCoreAction("RBXRadialSelectToolKillInput")
+		ContextActionService:UnbindCoreAction("RBXHotbarEquip")
+		ContextActionService:BindCoreAction("RBXHotbarEquip", changeToolFuncExperiment, false, Enum.KeyCode.ButtonR1)
+	else
+		UnequipAllTools()
+
+		ContextActionService:BindCoreAction("RBXRadialSelectToolKillInput", noOpFunc, false, Enum.UserInputType.Gamepad1)
+		ContextActionService:UnbindCoreAction("RBXHotbarEquip")
+		ContextActionService:BindCoreAction("RBXHotbarEquip", changeToolFuncExperiment, false, Enum.KeyCode.ButtonR1, Enum.KeyCode.ButtonB)
+		ContextActionService:BindCoreAction("RBXRadialSelectTool", selectToolExperiment, false, Enum.KeyCode.Thumbstick1, 
+			Enum.KeyCode.DPadLeft, Enum.KeyCode.DPadRight, Enum.KeyCode.DPadUp, Enum.KeyCode.DPadDown)
+	end
+end
+
+local changeToolFunc = function(actionName, inputState, inputObject)
+	if inputState ~= Enum.UserInputState.Begin then return end
+
+	if lastChangeToolInputObject then
+		if (lastChangeToolInputObject.KeyCode == Enum.KeyCode.ButtonR1 and 
+			inputObject.KeyCode == Enum.KeyCode.ButtonL1) or
+			(lastChangeToolInputObject.KeyCode == Enum.KeyCode.ButtonL1 and 
+				inputObject.KeyCode == Enum.KeyCode.ButtonR1) then
+			if (tick() - lastChangeToolInputTime) <= maxEquipDeltaTime then
+				UnequipAllTools()
+				lastChangeToolInputObject = inputObject
+				lastChangeToolInputTime = tick()
+				return
+			end
+		end
+	end
+
+	lastChangeToolInputObject = inputObject
+	lastChangeToolInputTime = tick()
+
+	delay(maxEquipDeltaTime, function()
+		if lastChangeToolInputObject ~= inputObject then return end
+
+		local moveDirection = 0
+		if (inputObject.KeyCode == Enum.KeyCode.ButtonL1) then
+			moveDirection = -1
+		else
+			moveDirection = 1
+		end
+
+		for i = 1, HOTBAR_SLOTS do
+			local hotbarSlot = Slots[i]
+			if hotbarSlot:IsEquipped() then
+
+				local newSlotPosition = moveDirection + i
+				if newSlotPosition > HOTBAR_SLOTS then
+					newSlotPosition = 1
+				elseif newSlotPosition < 1 then
+					newSlotPosition = HOTBAR_SLOTS
+				end
+
+				local origNewSlotPos = newSlotPosition
+				while not Slots[newSlotPosition].Tool do
+					newSlotPosition = newSlotPosition + moveDirection
+					if newSlotPosition == origNewSlotPos then return end
+
+					if newSlotPosition > HOTBAR_SLOTS then
+						newSlotPosition = 1
+					elseif newSlotPosition < 1 then
+						newSlotPosition = HOTBAR_SLOTS
+					end
+				end
+
+				Slots[newSlotPosition]:Select()
+				return
+			end
+		end
+
+		for i = 1, HOTBAR_SLOTS do
+			if Slots[i].Tool then
+				Slots[i]:Select()
+				return
+			end
+		end
+	end)
+end
+
+function getGamepadSwapSlot()
+	for i = 1, #Slots do
+		if Slots[i].Frame.BorderSizePixel > 0 then
+			return Slots[i]
+		end
+	end
+end
+
+
+function changeSlot(slot)
+	if slot.Frame == GuiService.SelectedCoreObject then
+		local currentlySelectedSlot = getGamepadSwapSlot()
+
+		if currentlySelectedSlot then
+			currentlySelectedSlot.Frame.BorderSizePixel = 0
+			if currentlySelectedSlot ~= slot then
+				slot:Swap(currentlySelectedSlot)
+
+				if slot.Index > HOTBAR_SLOTS and not slot.Tool then
+					if GuiService.SelectedCoreObject == slot.Frame then
+						GuiService.SelectedCoreObject = currentlySelectedSlot.Frame
+					end
+					slot:Delete()
+				end
+
+				if currentlySelectedSlot.Index > HOTBAR_SLOTS and not currentlySelectedSlot.Tool then
+					if GuiService.SelectedCoreObject == currentlySelectedSlot.Frame then
+						GuiService.SelectedCoreObject = slot.Frame
+					end
+					currentlySelectedSlot:Delete()
+				end
+			end
+		else
+			slot.Frame.BorderSizePixel = 1
+		end
+	else
+		slot:Select()
+	end
+end
+
+
+function enableGamepadInventoryControl()
+	local goBackOneLevel = function(actionName, inputState, inputObject)
+		if inputState ~= Enum.UserInputState.Begin then return end
+
+		local selectedSlot = getGamepadSwapSlot()
+		if selectedSlot then
+			local selectedSlot = getGamepadSwapSlot()
+			if selectedSlot then
+				selectedSlot.Frame.BorderSizePixel = 0
+				return
+			end
+		elseif InventoryFrame.Visible then
+			BackpackScript.OpenClose()
+		end
+	end
+
+	ContextActionService:BindCoreAction("RBXBackpackHasGamepadFocus",noOpFunc, false, Enum.UserInputType.Gamepad1)
+	ContextActionService:BindCoreAction("RBXCloseInventory", goBackOneLevel, false, Enum.KeyCode.ButtonB, Enum.KeyCode.ButtonStart)
+
+	GuiService.SelectedCoreObject = HotbarFrame:FindFirstChild("1")
+end
+
+function disableGamepadInventoryControl()
+	unbindAllGamepadEquipActions()
+
+	for i = 1, HOTBAR_SLOTS do
+		local hotbarSlot = Slots[i]
+		if hotbarSlot and hotbarSlot.Frame then
+			hotbarSlot.Frame.BorderSizePixel = 0
+		end
+	end
+
+	GuiService.SelectedCoreObject = nil
+end
+
+function gamepadDisconnected()
+	GamepadEnabled = false
+	disableGamepadInventoryControl()
+	ContextActionService:UnbindCoreAction("RBXHotbarEquip")
+end
+
+function gamepadConnected()
+	GamepadEnabled = true
+	GuiService:AddSelectionParent("RBXBackpackSelection", MainFrame)
+
+	if UseExperimentalGamepadEquip then
+		ContextActionService:BindCoreAction("RBXHotbarEquip", changeToolFuncExperiment, false, Enum.KeyCode.ButtonR1)
+		HotbarFrame.Position = UDim2.new(HotbarFrame.Position.X.Scale, HotbarFrame.Position.X.Offset, 0.5, -35)
+	else
+		ContextActionService:BindCoreAction("RBXHotbarEquip", changeToolFunc, false, Enum.KeyCode.ButtonL1, Enum.KeyCode.ButtonR1)
+	end
+
+	if InventoryFrame.Visible then
+		enableGamepadInventoryControl()
+	end
+end
+-----------------------------
+--| End Gamepad Functions |--
+-----------------------------
+
+
+
+local function OnCoreGuiChanged(coreGuiType, enabled)
+	-- Check for enabling/disabling the whole thing
+	if coreGuiType == Enum.CoreGuiType.Backpack or coreGuiType == Enum.CoreGuiType.All then
+		WholeThingEnabled = enabled
+		MainFrame.Visible = enabled
+
+		-- Eat/Release hotkeys (Doesn't affect UserInputService)
+		for _, keyString in pairs(HotkeyStrings) do
+			if enabled then
+				--GuiService:AddKey(keyString)
+			else
+				GuiService:RemoveKey(keyString)
+			end
+		end
+
+		if IsGamepadSupported and GamepadEnabled then
+			if enabled then
+				if UseExperimentalGamepadEquip then
+					ContextActionService:BindCoreAction("RBXHotbarEquip", changeToolFuncExperiment, false, Enum.KeyCode.ButtonR1)
+				else
+					ContextActionService:BindCoreAction("RBXHotbarEquip", changeToolFunc, false, Enum.KeyCode.ButtonL1, Enum.KeyCode.ButtonR1)
+				end
+			else
+				disableGamepadInventoryControl()
+				ContextActionService:UnbindCoreAction("RBXHotbarEquip")
+			end
+		end
+	end
+
+	-- Also check if the Health GUI is showing, and shift everything down (or back up) accordingly
+	if not TopBarEnabled and (coreGuiType == Enum.CoreGuiType.Health or coreGuiType == Enum.CoreGuiType.All) then
+		MainFrame.Position = UDim2.new(0, 0, 0, enabled and HOTBAR_OFFSET_FROMBOTTOM or 0)
+	end
+end
+
+
+
+--------------------
+--| Script Logic |--
+--------------------
+
+-- First check if the TopBar is enabled. This affects the ArrowFrame existence and MainFrame position
+pcall(function() TopBarEnabled = settings():GetFFlag('UseInGameTopBar') end)
+
+-- Make the main frame, which (mostly) covers the screen
+MainFrame = NewGui('Frame', 'Backpack')
+MainFrame.Visible = false
+local RobloxGui = CoreGui:WaitForChild('RobloxGui')
+MainFrame.Parent = RobloxGui
+
+-- Make the HotbarFrame, which holds only the Hotbar Slots
+HotbarFrame = NewGui('Frame', 'Hotbar')
+HotbarFrame.Size = HOTBAR_SIZE
+HotbarFrame.Position = UDim2.new(0.5, -HotbarFrame.Size.X.Offset / 2, 1, -HotbarFrame.Size.Y.Offset)
+HotbarFrame.Parent = MainFrame
+
+-- Make all the Hotbar Slots
+for i = 1, HOTBAR_SLOTS do
+	local slot = MakeSlot(HotbarFrame, i)
+	slot.Frame.Visible = false
+
+	if not LowestEmptySlot then
+		LowestEmptySlot = slot
+	end
+end
+
+-- Make the Inventory, which holds the ScrollingFrame, the header, and the search box
+InventoryFrame = NewGui('Frame', 'Inventory')
+InventoryFrame.BackgroundTransparency = BACKGROUND_FADE
+InventoryFrame.BackgroundColor3 = BACKGROUND_COLOR
+InventoryFrame.Active = true
+if UseExperimentalGamepadEquip then
+	InventoryFrame.Size = UDim2.new(0, 530, 0, 480)
+	InventoryFrame.Position = UDim2.new(0.5, -530, 0.5, -240)
+else
+	InventoryFrame.Size = UDim2.new(0, HotbarFrame.Size.X.Offset, 0, (HotbarFrame.Size.Y.Offset * INVENTORY_ROWS) + INVENTORY_HEADER_SIZE)
+	InventoryFrame.Position = UDim2.new(0.5, -InventoryFrame.Size.X.Offset / 2, 1, HotbarFrame.Position.Y.Offset - InventoryFrame.Size.Y.Offset)
+end
+InventoryFrame.Visible = false
+InventoryFrame.Parent = MainFrame
+
+-- Make the ScrollingFrame, which holds the rest of the Slots (however many)
+ScrollingFrame = NewGui('ScrollingFrame', 'ScrollingFrame')
+if UseExperimentalGamepadEquip then
+	ScrollingFrame.Size = UDim2.new(1, 0, 1, -INVENTORY_HEADER_SIZE)
+else
+	ScrollingFrame.Size = UDim2.new(1, ScrollingFrame.ScrollBarThickness + 1, 1, -INVENTORY_HEADER_SIZE)
+end
+
+ScrollingFrame.Position = UDim2.new(0, 0, 0, INVENTORY_HEADER_SIZE)
+ScrollingFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
+ScrollingFrame.Parent = InventoryFrame
+
+-- Make the header title, in the Inventory
+--local headerText = NewGui('TextLabel', 'Header')
+--headerText.Text = TITLE_TEXT
+--headerText.TextXAlignment = Enum.TextXAlignment.Left
+--headerText.Font = Enum.Font.SourceSansBold
+--headerText.FontSize = Enum.FontSize.Size48
+--headerText.TextStrokeColor3 = SLOT_EQUIP_COLOR
+--headerText.TextStrokeTransparency = BACKGROUND_FADE
+--headerText.Size = UDim2.new(0, (InventoryFrame.Size.X.Offset / 2) - TITLE_OFFSET, 0, INVENTORY_HEADER_SIZE)
+--headerText.Position = UDim2.new(0, TITLE_OFFSET, 0, 0)
+--headerText.Parent = InventoryFrame
+
+do -- Search stuff
+	local searchFrame = NewGui('Frame', 'Search')
+	searchFrame.BackgroundColor3 = SEARCH_BACKGROUND_COLOR
+	searchFrame.BackgroundTransparency = SEARCH_BACKGROUND_FADE
+	searchFrame.Size = UDim2.new(0, SEARCH_WIDTH - (SEARCH_BUFFER * 2), 0, INVENTORY_HEADER_SIZE - (SEARCH_BUFFER * 2))
+	searchFrame.Position = UDim2.new(1, -searchFrame.Size.X.Offset - SEARCH_BUFFER, 0, SEARCH_BUFFER)
+	searchFrame.Parent = InventoryFrame
+
+	local searchBox = NewGui('TextBox', 'TextBox')
+	searchBox.Text = SEARCH_TEXT
+	searchBox.ClearTextOnFocus = false
+	searchBox.FontSize = Enum.FontSize.Size24
+	searchBox.TextXAlignment = Enum.TextXAlignment.Left
+	searchBox.Size = searchFrame.Size - UDim2.new(0, SEARCH_TEXT_OFFSET_FROMLEFT, 0, 0)
+	searchBox.Position = UDim2.new(0, SEARCH_TEXT_OFFSET_FROMLEFT, 0, 0)
+	searchBox.Parent = searchFrame
+
+	local xButton = NewGui('TextButton', 'X')
+	xButton.Text = 'x'
+	xButton.TextColor3 = SLOT_EQUIP_COLOR
+	xButton.FontSize = Enum.FontSize.Size24
+	xButton.TextYAlignment = Enum.TextYAlignment.Bottom
+	xButton.BackgroundColor3 = SEARCH_BACKGROUND_COLOR
+	xButton.BackgroundTransparency = 0
+	xButton.Size = UDim2.new(0, searchFrame.Size.Y.Offset - (SEARCH_BUFFER * 2), 0, searchFrame.Size.Y.Offset - (SEARCH_BUFFER * 2))
+	xButton.Position = UDim2.new(1, -xButton.Size.X.Offset - (SEARCH_BUFFER * 2), 0.5, -xButton.Size.Y.Offset / 2)
+	xButton.ZIndex = 0
+	xButton.Visible = true
+	xButton.BorderSizePixel = 0
+	xButton.Parent = searchFrame
+
+	local function search()
+		local terms = {}
+		for word in searchBox.Text:gmatch('%S+') do
+			terms[word:lower()] = true
+		end
+
+		local hitTable = {}
+		for i = HOTBAR_SLOTS + 1, #Slots do -- Only search inventory slots
+			local slot = Slots[i]
+			local hits = slot:CheckTerms(terms)
+			table.insert(hitTable, {slot, hits})
+			slot.Frame.Visible = false
+		end
+
+		table.sort(hitTable, function(left, right)
+			return left[2] > right[2]
+		end)
+		ResultsIndices = {}
+
+		for i, data in ipairs(hitTable) do
+			local slot, hits = data[1], data[2]
+			if hits > 0 then
+				ResultsIndices[slot] = HOTBAR_SLOTS + i
+				slot:Reposition()
+				slot.Frame.Visible = true
+			end
+		end
+
+		ScrollingFrame.CanvasPosition = Vector2.new(0, 0)
+
+		xButton.ZIndex = 3
+	end
+
+	local function clearResults()
+		if xButton.ZIndex > 0 then
+			ResultsIndices = nil
+			for i = HOTBAR_SLOTS + 1, #Slots do
+				local slot = Slots[i]
+				slot:Reposition()
+				slot.Frame.Visible = true
+			end
+			xButton.ZIndex = 0
+		end
+	end
+
+	local function reset()
+		clearResults()
+		searchBox.Text = SEARCH_TEXT
+	end
+
+	local function onChanged(property)
+		if property == 'Text' then
+			local text = searchBox.Text
+			if text == '' then
+				clearResults()
+			elseif text ~= SEARCH_TEXT then
+				search()
+			end
+		end
+	end
+
+	local function onFocused()
+		if searchBox.Text == SEARCH_TEXT then
+			searchBox.Text = ''
+		end
+	end
+
+	local function focusLost(enterPressed)
+		if enterPressed then
+			--TODO: Could optimize
+			search()
+		elseif searchBox.Text == '' then
+			searchBox.Text = SEARCH_TEXT
+		end
+	end
+
+	--searchBox.Focused:connect(onFocused)
+	xButton.MouseButton1Click:connect(reset)
+	searchBox.Changed:connect(onChanged)
+	searchBox.FocusLost:connect(focusLost)
+
+	BackpackScript.StateChanged.Event:connect(function(isNowOpen)
+		xButton.Modal = isNowOpen -- Allows free mouse movement even in first person
+		if not isNowOpen then
+			reset()
+		end
+	end)
+
+	HotkeyFns[Enum.KeyCode.Escape.Value] = function(isProcessed)
+		if isProcessed then -- Pressed from within a TextBox
+			reset()
+		elseif InventoryFrame.Visible then
+			BackpackScript.OpenClose()
+		end
+	end
+end
+
+do -- Make the Inventory expand/collapse arrow (unless TopBar)
+	local arrowFrame, arrowIcon = nil, nil, nil
+	local collapsed, closed, opened = nil, nil, nil
+
+	local removeHotBarSlot = function(name, state, input)
+		if state ~= Enum.UserInputState.Begin then return end
+		if not GuiService.SelectedCoreObject then return end
+
+		for i = 1, HOTBAR_SLOTS do
+			if Slots[i].Frame == GuiService.SelectedCoreObject and Slots[i].Tool then
+				Slots[i]:MoveToInventory()
+				return
+			end
+		end
+	end
+
+	local function openClose()
+		if not next(Dragging) then -- Only continue if nothing is being dragged
+			InventoryFrame.Visible = not InventoryFrame.Visible
+			local nowOpen = InventoryFrame.Visible
+			if arrowIcon then
+				arrowIcon.Image = (nowOpen) and ARROW_IMAGE_CLOSE or ARROW_IMAGE_OPEN
+			end
+			AdjustHotbarFrames()
+			UpdateArrowFrame()
+			HotbarFrame.Active = not HotbarFrame.Active
+			for i = 1, HOTBAR_SLOTS do
+				Slots[i]:SetClickability(not nowOpen)
+			end
+		end
+
+		if IsGamepadSupported then
+			if GamepadEnabled then
+				if InventoryFrame.Visible then
+					enableGamepadInventoryControl()
+				else
+					disableGamepadInventoryControl()
+				end
+			end
+
+			if InventoryFrame.Visible and GamepadEnabled then
+				ContextActionService:BindCoreAction("RBXRemoveSlot", removeHotBarSlot, false, Enum.KeyCode.ButtonX)
+				if UseExperimentalGamepadEquip then
+					HotbarFrame.Position = UDim2.new(1, -800, 0.5, -35)
+					setHotbarVisibility(true, true)
+				end
+			elseif GamepadEnabled then
+				ContextActionService:UnbindCoreAction("RBXRemoveSlot")
+
+				if UseExperimentalGamepadEquip then
+					setHotbarVisibility(false)
+					HotbarFrame.Position = UDim2.new(0.5, -HotbarFrame.AbsoluteSize.x/2, 0.5, -HotbarFrame.AbsoluteSize.y/2)
+				end
+			end
+		end
+		BackpackScript.StateChanged:Fire(InventoryFrame.Visible)
+	end
+	HotkeyFns[ARROW_HOTKEY] = openClose
+	BackpackScript.OpenClose = openClose -- Exposed
+
+	if not TopBarEnabled then
+		arrowFrame = NewGui('Frame', 'Arrow')
+		arrowFrame.BackgroundTransparency = BACKGROUND_FADE
+		arrowFrame.BackgroundColor3 = BACKGROUND_COLOR
+		arrowFrame.Size = UDim2.new(0, ICON_SIZE, 0, ICON_SIZE / 2)
+		local hotbarBottom = HotbarFrame.Position.Y.Offset + HotbarFrame.Size.Y.Offset
+		arrowFrame.Position = UDim2.new(0.5, -arrowFrame.Size.X.Offset / 2, 1, hotbarBottom - arrowFrame.Size.Y.Offset)
+
+		arrowIcon = NewGui('ImageLabel', 'Icon')
+		arrowIcon.Image = ARROW_IMAGE_OPEN
+		arrowIcon.Size = ARROW_SIZE
+		arrowIcon.Position = UDim2.new(0.5, -arrowIcon.Size.X.Offset / 2, 0.5, -arrowIcon.Size.Y.Offset / 2)
+		arrowIcon.Parent = arrowFrame
+
+		collapsed = arrowFrame.Position
+		closed = collapsed + UDim2.new(0, 0, 0, -HotbarFrame.Size.Y.Offset)
+		opened = closed + UDim2.new(0, 0, 0, -InventoryFrame.Size.Y.Offset)
+
+		arrowFrame.Parent = MainFrame
+	end
+
+	-- Define global function
+	UpdateArrowFrame = function()
+		if arrowFrame then
+			arrowFrame.Position = (InventoryFrame.Visible) and opened or ((FullHotbarSlots == 0) and collapsed or closed)
+		end
+	end
+end
+
+-- Now that we're done building the GUI, we connect to all the major events
+
+-- Wait for the player if LocalPlayer wasn't ready earlier
+while not Player do
+	wait()
+	Player = PlayersService.LocalPlayer
+end
+
+-- Listen to current and all future characters of our player
+Player.CharacterAdded:connect(OnCharacterAdded)
+if Player.Character then
+	OnCharacterAdded(Player.Character)
+end
+
+do -- Hotkey stuff
+	-- Init HotkeyStrings, used for eating hotkeys
+	for i = 0, 9 do
+		table.insert(HotkeyStrings, tostring(i))
+	end
+	table.insert(HotkeyStrings, ARROW_HOTKEY_STRING)
+
+	-- Listen to key down
+	UserInputService.InputBegan:connect(OnInputBegan)
+
+	-- Listen to ANY TextBox gaining or losing focus, for disabling all hotkeys
+	--UserInputService.TextBoxFocused:connect(function() TextBoxFocused = true end)
+	--UserInputService.TextBoxFocusReleased:connect(function() TextBoxFocused = false end)
+
+	-- Manual unequip for HopperBins on drop button pressed
+	HotkeyFns[DROP_HOTKEY_VALUE] = function() --NOTE: HopperBin
+		if ActiveHopper then
+			UnequipAllTools()
+		end
+	end
+
+	-- Listen to keyboard status, for showing/hiding hotkey labels
+	UserInputService.Changed:connect(OnUISChanged)
+	OnUISChanged('KeyboardEnabled')
+
+	-- Listen to gamepad status, for allowing gamepad style selection/equip
+	if IsGamepadSupported then
+		if UserInputService:GetGamepadConnected(Enum.UserInputType.Gamepad1) then
+			gamepadConnected()
+		end
+		UserInputService.GamepadConnected:connect(function(gamepadEnum) 
+			if gamepadEnum == Enum.UserInputType.Gamepad1 then
+				gamepadConnected()
+			end
+		end)
+		UserInputService.GamepadDisconnected:connect(function(gamepadEnum) 
+			if gamepadEnum == Enum.UserInputType.Gamepad1 then
+				gamepadDisconnected()
+			end
+		end)
+	end
+end
+
+-- Listen to enable/disable signals from the StarterGui
+--StarterGui.CoreGuiChangedSignal:connect(OnCoreGuiChanged)
+local backpackType, healthType = Enum.CoreGuiType.Backpack, Enum.CoreGuiType.Health
+OnCoreGuiChanged(backpackType, StarterGui:GetCoreGuiEnabled(backpackType))
+OnCoreGuiChanged(healthType, StarterGui:GetCoreGuiEnabled(healthType))
+
+return BackpackScript
+
+end
+function character(a)
+local player = workspace:FindFirstChild("%user%")
+if player~=nil and player==a then
+wait(0.5)
+origstring=""
+ local words = {}
+for w in (origstring .. ";"):gmatch("([^;]*);") do 
+    table.insert(words, w) 
+end
+--local num1=words[1]
+--game:GetObjects("rbxasset://../../../shareddata/charcustom/shirts/"..tostring(num1)..".rbxm")[1].Parent=player
+--local num2=words[2]
+--game:GetObjects("rbxasset://../../../shareddata/charcustom/pants/"..tostring(num2)..".rbxm")[1].Parent=player
+--local num3=words[3]
+--game:GetObjects("rbxasset://../../../shareddata/charcustom/hats/"..tostring(num3)..".rbxm")[1].Parent=player
+local offlinemode="2"--"%mode%"
+if offlinemode=="1" then
+function waitForChild(parent, childName)
+	local child = parent:findFirstChild(childName)
+	if child then return child end
+	while true do
+		child = parent.ChildAdded:wait()
+		if child.Name==childName then return child end
+	end
+end
+
+-- ANIMATION
+
+-- declarations
+
+local Figure = player
+local Torso = waitForChild(Figure, "Torso")
+local RightShoulder = waitForChild(Torso, "Right Shoulder")
+local LeftShoulder = waitForChild(Torso, "Left Shoulder")
+local RightHip = waitForChild(Torso, "Right Hip")
+local LeftHip = waitForChild(Torso, "Left Hip")
+local Neck = waitForChild(Torso, "Neck")
+local Humanoid = waitForChild(Figure, "Humanoid")
+local pose = "Standing"
+
+local toolAnim = "None"
+local toolAnimTime = 0
+
+local jumpMaxLimbVelocity = 0.75
+
+-- functions
+
+function onRunning(speed)
+	if speed>0 then
+		pose = "Running"
+	else
+		pose = "Standing"
+	end
+end
+
+function onDied()
+	pose = "Dead"
+end
+
+function onJumping()
+	pose = "Jumping"
+end
+
+function onClimbing()
+	pose = "Climbing"
+end
+
+function onGettingUp()
+	pose = "GettingUp"
+end
+
+function onFreeFall()
+	pose = "FreeFall"
+end
+
+function onFallingDown()
+	pose = "FallingDown"
+end
+
+function onSeated()
+	pose = "Seated"
+end
+
+function onPlatformStanding()
+	pose = "PlatformStanding"
+end
+
+function onSwimming(speed)
+	if speed>0 then
+		pose = "Running"
+	else
+		pose = "Standing"
+	end
+end
+
+function moveJump()
+	RightShoulder.MaxVelocity = jumpMaxLimbVelocity
+	LeftShoulder.MaxVelocity = jumpMaxLimbVelocity
+  RightShoulder:SetDesiredAngle(3.14)
+	LeftShoulder:SetDesiredAngle(-3.14)
+	RightHip:SetDesiredAngle(0)
+	LeftHip:SetDesiredAngle(0)
+end
+
+
+-- same as jump for now
+
+function moveFreeFall()
+	RightShoulder.MaxVelocity = jumpMaxLimbVelocity
+	LeftShoulder.MaxVelocity = jumpMaxLimbVelocity
+	RightShoulder:SetDesiredAngle(3.14)
+	LeftShoulder:SetDesiredAngle(-3.14)
+	RightHip:SetDesiredAngle(0)
+	LeftHip:SetDesiredAngle(0)
+end
+
+function moveSit()
+	RightShoulder.MaxVelocity = 0.15
+	LeftShoulder.MaxVelocity = 0.15
+	RightShoulder:SetDesiredAngle(3.14 /2)
+	LeftShoulder:SetDesiredAngle(-3.14 /2)
+	RightHip:SetDesiredAngle(3.14 /2)
+	LeftHip:SetDesiredAngle(-3.14 /2)
+end
+
+function getTool()	
+	for _, kid in ipairs(Figure:GetChildren()) do
+		if kid.className == "Tool" then return kid end
+	end
+	return nil
+end
+
+function getToolAnim(tool)
+	for _, c in ipairs(tool:GetChildren()) do
+		if c.Name == "toolanim" and c.className == "StringValue" then
+			return c
+		end
+	end
+	return nil
+end
+
+function animateTool()
+	
+	if (toolAnim == "None") then
+		RightShoulder:SetDesiredAngle(1.57)
+		return
+	end
+
+	if (toolAnim == "Slash") then
+		RightShoulder.MaxVelocity = 0.5
+		RightShoulder:SetDesiredAngle(0)
+		return
+	end
+
+	if (toolAnim == "Lunge") then
+		RightShoulder.MaxVelocity = 0.5
+		LeftShoulder.MaxVelocity = 0.5
+		RightHip.MaxVelocity = 0.5
+		LeftHip.MaxVelocity = 0.5
+		RightShoulder:SetDesiredAngle(1.57)
+		LeftShoulder:SetDesiredAngle(1.0)
+		RightHip:SetDesiredAngle(1.57)
+		LeftHip:SetDesiredAngle(1.0)
+		return
+	end
+end
+
+function move(time)
+	local amplitude
+	local frequency
+  
+	if (pose == "Jumping") then
+		moveJump()
+		return
+	end
+
+	if (pose == "FreeFall") then
+		moveFreeFall()
+		return
+	end
+ 
+	if (pose == "Seated") then
+		moveSit()
+		return
+	end
+
+	local climbFudge = 0
+	
+	if (pose == "Running") then
+    if (RightShoulder.CurrentAngle > 1.5 or RightShoulder.CurrentAngle < -1.5) then
+			RightShoulder.MaxVelocity = jumpMaxLimbVelocity
+		else			
+			RightShoulder.MaxVelocity = 0.15
+		end
+		if (LeftShoulder.CurrentAngle > 1.5 or LeftShoulder.CurrentAngle < -1.5) then
+			LeftShoulder.MaxVelocity = jumpMaxLimbVelocity
+		else			
+			LeftShoulder.MaxVelocity = 0.15
+		end
+		amplitude = 1
+		frequency = 9
+	elseif (pose == "Climbing") then
+		RightShoulder.MaxVelocity = 0.5 
+		LeftShoulder.MaxVelocity = 0.5
+		amplitude = 1
+		frequency = 9
+		climbFudge = 3.14
+	else
+		amplitude = 0.1
+		frequency = 1
+	end
+
+	desiredAngle = amplitude * math.sin(time*frequency)
+
+	RightShoulder:SetDesiredAngle(desiredAngle + climbFudge)
+	LeftShoulder:SetDesiredAngle(desiredAngle - climbFudge)
+	RightHip:SetDesiredAngle(-desiredAngle)
+	LeftHip:SetDesiredAngle(-desiredAngle)
+
+
+	local tool = getTool()
+
+	if tool then
+	
+		animStringValueObject = getToolAnim(tool)
+
+		if animStringValueObject then
+			toolAnim = animStringValueObject.Value
+			-- message recieved, delete StringValue
+			animStringValueObject.Parent = nil
+			toolAnimTime = time + .3
+		end
+
+		if time > toolAnimTime then
+			toolAnimTime = 0
+			toolAnim = "None"
+		end
+
+		animateTool()
+
+		
+	else
+		toolAnim = "None"
+		toolAnimTime = 0
+	end
+end
+
+
+-- connect events
+
+Humanoid.Died:connect(onDied)
+Humanoid.Running:connect(onRunning)
+Humanoid.Jumping:connect(onJumping)
+Humanoid.Climbing:connect(onClimbing)
+Humanoid.GettingUp:connect(onGettingUp)
+Humanoid.FreeFalling:connect(onFreeFall)
+Humanoid.FallingDown:connect(onFallingDown)
+Humanoid.Seated:connect(onSeated)
+Humanoid.PlatformStanding:connect(onPlatformStanding)
+Humanoid.Swimming:connect(onSwimming)
+-- main program
+
+local runService = game:service("RunService");
+
+while Figure.Parent~=nil do
+	local _, time = wait(0.1)
+	move(time)
+end
+end
+end 
+end 
+workspace.ChildAdded:connect(character) 
+function mainmenu()
+--[[
+		Filename: Settings2.lua
+		Written by: jmargh
+		Version 1.4
+		Description: Implements the in game settings menu with the new control schemes
+--]]
+
+--[[ Services ]]--
+local CoreGui = game:GetService('CoreGui')
+local GuiService = game:GetService('GuiService')
+local Players = game:GetService('Players')
+local UserInputService = game:GetService('UserInputService')
+local ContextActionService = game:GetService('ContextActionService')
+local CoreGuiService = game:GetService('CoreGui')
+--
+local Settings = UserSettings()
+local GameSettings = Settings.GameSettings
+local RbxGuiLibaray = nil
+if LoadLibrary then
+	RbxGuiLibaray = LoadLibrary("RbxGui")
+end
+
+--[[ Script Variables ]]--
+while not Players.LocalPlayer do
+	wait()
+end
+local LocalPlayer = Players.LocalPlayer
+local RobloxGui = CoreGuiService:WaitForChild('RobloxGui')
+
+--[[ Client Settings ]]--
+local IsMacClient = false
+local isMacSuccess, isMac = pcall(function() return not GuiService.IsWindows end)
+IsMacClient = isMacSuccess and isMac
+
+local IsTouchClient = false
+local isTouchSuccess, isTouch = pcall(function() return UserInputService.TouchEnabled end)
+IsTouchClient = isTouchSuccess and isTouch
+
+--[[ Fast Flags ]]--
+local topbarSuccess, topbarFlagValue = pcall(function() return settings():GetFFlag("UseInGameTopBar") end)
+local isTopBar = topbarSuccess and topbarFlagValue == true
+local luaControlsSuccess, luaControlsFlagValue = pcall(function() return settings():GetFFlag("UseLuaCameraAndControl") end)
+local isLuaControls = luaControlsSuccess and luaControlsFlagValue == true
+
+local gamepadSupportSuccess, gamepadSupportFlagValue = pcall(function() return settings():GetFFlag("TopbarGamepadSupport") end)
+local isGamepadSupport = gamepadSupportSuccess and gamepadSupportFlagValue == true
+
+--[[ Parent Frames ]]--
+-- TODO: Remove all references to engine created gui
+local ControlFrame = RobloxGui:WaitForChild('ControlFrame')
+local TopLeftControl = ControlFrame:WaitForChild('TopLeftControl')
+local BottomLeftControl = ControlFrame:WaitForChild('BottomLeftControl')
+
+--[[ Control Variables ]]--
+local CurrentYOffset = 24
+local IsShiftLockEnabled = false
+if isLuaControls then
+	IsShiftLockEnabled = LocalPlayer.DevEnableMouseLock and GameSettings.ControlMode == Enum.ControlMode.MouseLockSwitch
+else
+	IsShiftLockEnabled = GameSettings.ControlMode == Enum.ControlMode.MouseLockSwitch
+end
+local IsResumingGame = false
+-- TODO: Change dev console script to parent this to somewhere other than an engine created gui
+local BindableFunc_ToggleDevConsole = ControlFrame:WaitForChild('ToggleDevConsole')
+local MenuStack = {}
+local IsHelpMenuOpen = false
+local CurrentOpenedDropDownMenu = nil
+local IsMenuClosing = false
+local IsRecordingVideo = false
+local IsSmallScreen = GuiService:GetScreenResolution().y <= 500
+
+--[[ Debug Variables - PLEASE RESET BEFORE COMMIT ]]--
+local isTestingReportAbuse = false
+
+--[[ Constants ]]--
+local GRAPHICS_QUALITY_LEVELS = 10
+local BASE_Z_INDEX = 4
+local BG_TRANSPARENCY = 0.5
+local TWEEN_TIME = 0.2
+local SHOW_MENU_POS = IsSmallScreen and UDim2.new(0, 0, 0, 0) or UDim2.new(0.5, -262, 0.5, -215)
+local CLOSE_MENU_POS = IsSmallScreen and UDim2.new(0, 0, -1, 0) or UDim2.new(0.5, -262, -0.5, -215)
+local CAMERA_MODE_DEFAULT_STRING = IsTouchClient and "Default (Follow)" or "Default (Classic)"
+local MOVEMENT_MODE_DEFAULT_STRING = IsTouchClient and "Default (Thumbstick)" or "Default (Keyboard)"
+local MENU_BTN_LRG = UDim2.new(0, 340, 0, 50)
+local MENU_BTN_SML = UDim2.new(0, 168, 0, 50)
+local STOP_RECORD_IMG = 'rbxasset://textures/ui/RecordStop.png'
+local HELP_IMG = {
+	CLASSIC_MOVE = 'http://www.roblox.com/Asset?id=45915798',
+	SHIFT_LOCK = 'http://www.roblox.com/asset?id=54071825',
+	MOVEMENT = 'http://www.roblox.com/Asset?id=45915811',
+	GEAR = 'http://www.roblox.com/Asset?id=45917596',
+	ZOOM = 'http://www.roblox.com/Asset?id=45915825'
+}
+
+local PC_CHANGED_PROPS = {
+	DevComputerMovementMode = true,
+	DevComputerCameraMode = true,
+	DevEnableMouseLock = true,
+}
+local TOUCH_CHANGED_PROPS = {
+	DevTouchMovementMode = true,
+	DevTouchCameraMode = true,
+}
+
+local GRAPHICS_QUALITY_TO_INT = {
+	["Enum.SavedQualitySetting.Automatic"] = 0,
+	["Enum.SavedQualitySetting.QualityLevel1"] = 1,
+	["Enum.SavedQualitySetting.QualityLevel2"] = 2,
+	["Enum.SavedQualitySetting.QualityLevel3"] = 3,
+	["Enum.SavedQualitySetting.QualityLevel4"] = 4,
+	["Enum.SavedQualitySetting.QualityLevel5"] = 5,
+	["Enum.SavedQualitySetting.QualityLevel6"] = 6,
+	["Enum.SavedQualitySetting.QualityLevel7"] = 7,
+	["Enum.SavedQualitySetting.QualityLevel8"] = 8,
+	["Enum.SavedQualitySetting.QualityLevel9"] = 9,
+	["Enum.SavedQualitySetting.QualityLevel10"] = 10,
+}
+
+local ABUSE_TYPES_PLAYER = {
+	"Swearing",
+	"Inappropriate Username",
+	"Bullying",
+	"Scamming",
+	"Dating",
+	"Cheating/Exploiting",
+	"Personal Question",
+	"Offsite Links",
+}
+
+local ABUSE_TYPES_GAME = {
+	"Inappropriate Content",
+	"Bad Model or Script",
+	"Offsite Link",
+}
+
+
+--[[ Gui Creation Helper Functions ]]--
+
+local function Signal()
+	local sig = {}
+
+	local mSignaler = Instance.new('BindableEvent')
+
+	local mArgData = nil
+	local mArgDataCount = nil
+
+	function sig:fire(...)
+		mArgData = {...}
+		mArgDataCount = select('#', ...)
+		mSignaler:Fire()
+	end
+
+	function sig:connect(f)
+		if not f then error("connect(nil)", 2) end
+		return mSignaler.Event:connect(function()
+			f(unpack(mArgData, 1, mArgDataCount))
+		end)
+	end
+
+	function sig:wait()
+		mSignaler.Event:wait()
+		assert(mArgData, "Missing arg data, likely due to :TweenSize/Position corrupting threadrefs.")
+		return unpack(mArgData, 1, mArgDataCount)
+	end
+
+	return sig
+end
+
+local function createTextButton(size, position, text, fontSize, style)
+	local textButton = Instance.new('TextButton')
+	textButton.Size = size
+	textButton.Position = position
+	textButton.Font = Enum.Font.SourceSansBold
+	textButton.FontSize = fontSize
+	textButton.Style = style
+	textButton.TextColor3 = Color3.new(1, 1, 1)
+	textButton.Text = text
+	textButton.ZIndex = BASE_Z_INDEX + 4
+
+	return textButton
+end
+
+local function createTextLabel(position, text, name)
+	local textLabel = Instance.new('TextLabel')
+	textLabel.Name = name
+	textLabel.Size = UDim2.new(0, 0, 0, 0)
+	textLabel.Position = position
+	textLabel.BackgroundTransparency = 1
+	textLabel.Font = Enum.Font.SourceSansBold
+	textLabel.FontSize = Enum.FontSize.Size18
+	textLabel.TextColor3 = Color3.new(1, 1, 1)
+	textLabel.TextXAlignment = Enum.TextXAlignment.Right
+	textLabel.ZIndex = BASE_Z_INDEX + 4
+	textLabel.Text = text
+
+	return textLabel
+end
+
+local function createMenuFrame(name, position)
+	local frame = Instance.new('Frame')
+	frame.Name = name
+	frame.Size = UDim2.new(1, 0, 1, 0)
+	frame.Position = position
+	frame.BackgroundTransparency = 1
+	frame.ZIndex = BASE_Z_INDEX + 4
+
+	pcall(function() GuiService:AddSelectionParent(name .. "Group", frame) end)
+
+	return frame
+end
+
+local function createMenuTitleLabel(name, text, yOffset)
+	local label = Instance.new('TextLabel')
+	label.Name = name
+	label.Size = UDim2.new(0, 0, 0, 0)
+	label.Position = UDim2.new(0.5, 0, 0, yOffset)
+	label.BackgroundTransparency = 1
+	label.Font = Enum.Font.SourceSansBold
+	label.FontSize = Enum.FontSize.Size36
+	label.TextColor3 = Color3.new(1, 1, 1)
+	label.ZIndex = BASE_Z_INDEX + 4
+	label.Text = text
+
+	return label
+end
+
+local function closeCurrentDropDownMenu()
+	if CurrentOpenedDropDownMenu and CurrentOpenedDropDownMenu.IsOpen() then
+		CurrentOpenedDropDownMenu.Close()
+	end
+	CurrentOpenedDropDownMenu = nil
+end
+
+--[[ Gui Creation ]]--
+-- Main Container for everything in the settings menu
+
+local SettingsShowSignal = Signal()
+
+local SettingsMenuFrame = Instance.new('Frame')
+SettingsMenuFrame.Name = "SettingsMenu"
+SettingsMenuFrame.Size = UDim2.new(1, 0, 1, 0)
+SettingsMenuFrame.BackgroundTransparency = 1
+
+local SettingsButton = Instance.new('ImageButton')
+SettingsButton.Name = "SettingsButton"
+SettingsButton.Size = UDim2.new(0, 36, 0, 28)
+SettingsButton.Position = IsTouchClient and UDim2.new(0, 2, 0, 5) or UDim2.new(0, 15, 1, -42)
+SettingsButton.BackgroundTransparency = 1
+SettingsButton.Image = 'rbxasset://textures/ui/homeButton.png'
+if not isTopBar then
+	SettingsButton.Parent = SettingsMenuFrame
+end
+
+local SettingsShield = Instance.new('TextButton')
+SettingsShield.Name = "SettingsShield"
+SettingsShield.Size = UDim2.new(1, 0, 1, 36)
+SettingsShield.Position = UDim2.new(0,0,0,-36)
+SettingsShield.BackgroundTransparency = BG_TRANSPARENCY
+SettingsShield.BackgroundColor3 = Color3.new(31/255, 31/255, 31/255)
+SettingsShield.BorderColor3 = Color3.new(27/255, 42/255, 53/255)
+SettingsShield.BorderSizePixel = 0
+SettingsShield.Visible = false
+SettingsShield.AutoButtonColor = false
+SettingsShield.Text = ""
+SettingsShield.ZIndex = BASE_Z_INDEX + 2
+
+	local SettingClipFrame = Instance.new('Frame')
+	SettingClipFrame.Name = "SettingClipFrame"
+	SettingClipFrame.Size = IsSmallScreen and UDim2.new(1, 0, 1, 0) or UDim2.new(0, 525, 0, 430)--IsTouchClient and UDim2.new(0, 500, 0, 340) or UDim2.new(0, 500, 0, 430)
+	SettingClipFrame.Position = CLOSE_MENU_POS
+	SettingClipFrame.Active = true
+	SettingClipFrame.BackgroundTransparency = BG_TRANSPARENCY
+	SettingClipFrame.BackgroundColor3 = Color3.new(31/255, 31/255, 31/255)
+	SettingClipFrame.BorderSizePixel = 0
+	SettingClipFrame.ZIndex = BASE_Z_INDEX + 3
+	SettingClipFrame.ClipsDescendants = true
+	SettingClipFrame.Parent = SettingsShield
+
+--[[ Root Settings Menu ]]--
+	CurrentYOffset = 24
+	local RootMenuFrame = createMenuFrame("RootMenuFrame", UDim2.new(0, 0, 0, 0))
+	RootMenuFrame.Parent = SettingClipFrame
+
+		local RootMenuTitle = createMenuTitleLabel("RootMenuTitle", "Game Menu", CurrentYOffset)
+		RootMenuTitle.Parent = RootMenuFrame
+		CurrentYOffset = CurrentYOffset + 32
+
+		local ResumeGameButton = createTextButton(MENU_BTN_LRG, UDim2.new(0.5, -170, 0, CurrentYOffset),
+			"Resume Game", Enum.FontSize.Size24, Enum.ButtonStyle.RobloxRoundDefaultButton)
+		ResumeGameButton.Name = "ResumeGameButton"
+		ResumeGameButton.Modal = true
+		ResumeGameButton.Parent = RootMenuFrame
+		CurrentYOffset = CurrentYOffset + 51
+
+		local ResetCharacterButton = createTextButton(MENU_BTN_LRG, UDim2.new(0.5, -170, 0, CurrentYOffset),
+			"Reset Character", Enum.FontSize.Size24, Enum.ButtonStyle.RobloxRoundButton)
+		ResetCharacterButton.Name = "ResetCharacterButton"
+		ResetCharacterButton.Parent = RootMenuFrame
+		CurrentYOffset = CurrentYOffset + 51
+
+		local GameSettingsButton = createTextButton(MENU_BTN_LRG, UDim2.new(0.5, -170, 0, CurrentYOffset),
+			"Game Settings", Enum.FontSize.Size24, Enum.ButtonStyle.RobloxRoundButton)
+		GameSettingsButton.Name = "GameSettingsButton"
+		GameSettingsButton.Parent = RootMenuFrame
+		CurrentYOffset = CurrentYOffset + 51
+
+		local HelpButton = nil
+		if not IsTouchClient then
+			HelpButton = createTextButton(MENU_BTN_SML, UDim2.new(0.5, -170, 0, CurrentYOffset),
+				"Help", Enum.FontSize.Size24, Enum.ButtonStyle.RobloxRoundButton)
+			HelpButton.Name = "HelpButton"
+			if IsMacClient then HelpButton.Size = MENU_BTN_LRG end
+			HelpButton.Parent = RootMenuFrame
+		end
+
+		local ScreenshotButton = nil
+		if not IsMacClient and not IsTouchClient then
+			ScreenshotButton = createTextButton(MENU_BTN_SML, UDim2.new(0.5, 2, 0, CurrentYOffset),
+				"Screenshot", Enum.FontSize.Size24, Enum.ButtonStyle.RobloxRoundButton)
+			ScreenshotButton.Name = "ScreenshotButton"
+			ScreenshotButton.Parent = RootMenuFrame
+			ScreenshotButton:SetVerb("Screenshot")
+		end
+		if not IsTouchClient then CurrentYOffset = CurrentYOffset + 51 end
+
+		local ReportAbuseButton = createTextButton(MENU_BTN_SML, UDim2.new(0.5, -170, 0, CurrentYOffset),
+			"Report Abuse", Enum.FontSize.Size24, Enum.ButtonStyle.RobloxRoundButton)
+		ReportAbuseButton.Name = "ReportAbuseButton"
+		ReportAbuseButton.Parent = RootMenuFrame
+		if IsMacClient or IsTouchClient then
+			ReportAbuseButton.Size = MENU_BTN_LRG
+		end
+		ReportAbuseButton.Visible = game:FindService('NetworkClient')
+		if isTestingReportAbuse then
+			ReportAbuseButton.Visible = true
+		end
+		if not ReportAbuseButton.Visible then
+			game.ChildAdded:connect(function(child)
+				if child:IsA('NetworkClient') then
+					ReportAbuseButton.Visible = game:FindService('NetworkClient')
+				end
+			end)
+		end
+
+		local RecordVideoButton = nil
+		local StopRecordingVideoButton = nil
+		if not IsMacClient and not IsTouchClient then
+			RecordVideoButton = createTextButton(MENU_BTN_SML, UDim2.new(0.5, 2, 0, CurrentYOffset),
+				"Record Video", Enum.FontSize.Size24, Enum.ButtonStyle.RobloxRoundButton)
+			RecordVideoButton.Name = "RecordVideoButton"
+			RecordVideoButton.Parent = RootMenuFrame
+			RecordVideoButton:SetVerb("RecordToggle")
+
+			StopRecordingVideoButton = Instance.new('ImageButton')
+			StopRecordingVideoButton.Name = "StopRecordingVideoButton"
+			StopRecordingVideoButton.Size = UDim2.new(0, 59, 0, 27)
+			StopRecordingVideoButton.BackgroundTransparency = 1
+			StopRecordingVideoButton.Image = STOP_RECORD_IMG
+			StopRecordingVideoButton:SetVerb("RecordToggle")
+			StopRecordingVideoButton.Visible = false
+			StopRecordingVideoButton.Parent = SettingsMenuFrame
+		end
+		CurrentYOffset = CurrentYOffset + 51
+
+		local LeaveGameButton = createTextButton(MENU_BTN_LRG, UDim2.new(0.5, -170, 0, CurrentYOffset),
+			"Leave Game", Enum.FontSize.Size24, Enum.ButtonStyle.RobloxRoundButton)
+		LeaveGameButton.Name = "LeaveGameButton"
+		LeaveGameButton.Parent = RootMenuFrame
+
+--[[ Reset Character Confirmation Menu ]]--
+	CurrentYOffset = IsSmallScreen and 70 or 140
+	local ResetCharacterFrame = createMenuFrame("ResetCharacterFrame", UDim2.new(1, 0, 0, 0))
+	ResetCharacterFrame.Parent = SettingClipFrame
+
+		local ResetCharacterText = Instance.new('TextLabel')
+		ResetCharacterText.Name = "ResetCharacterText"
+		ResetCharacterText.Size = UDim2.new(1, 0, 0, 80)
+		ResetCharacterText.Position = UDim2.new(0, 0, 0, CurrentYOffset)
+		ResetCharacterText.BackgroundTransparency = 1
+		ResetCharacterText.Font = Enum.Font.SourceSansBold
+		ResetCharacterText.FontSize = Enum.FontSize.Size36
+		ResetCharacterText.TextColor3 = Color3.new(1, 1, 1)
+		ResetCharacterText.TextWrap = true
+		ResetCharacterText.ZIndex = BASE_Z_INDEX + 4
+		ResetCharacterText.Text = "Are you sure you want to reset\nyour character?"
+		ResetCharacterText.Parent = ResetCharacterFrame
+		CurrentYOffset = CurrentYOffset + 90
+
+		local ResetCharacterToolTipText = createTextLabel(UDim2.new(0.5, 0, 0, CurrentYOffset), "You will return to the spawn point", "ResetCharacterToolTipText")
+		ResetCharacterToolTipText.TextXAlignment = Enum.TextXAlignment.Center
+		ResetCharacterToolTipText.Parent = ResetCharacterFrame
+		CurrentYOffset = CurrentYOffset + 32
+
+		local ConfirmResetButton = createTextButton(MENU_BTN_SML, UDim2.new(0.5, 2, 0, CurrentYOffset),
+			"Confirm", Enum.FontSize.Size24, Enum.ButtonStyle.RobloxRoundDefaultButton)
+		ConfirmResetButton.Name = "ConfirmResetButton"
+		ConfirmResetButton.Modal = true
+		ConfirmResetButton.Parent = ResetCharacterFrame
+
+		local CancelResetButton = createTextButton(MENU_BTN_SML, UDim2.new(0.5, -170, 0, CurrentYOffset),
+			"Cancel", Enum.FontSize.Size24, Enum.ButtonStyle.RobloxRoundButton)
+		CancelResetButton.Name = "CancelResetButton"
+		CancelResetButton.Parent = ResetCharacterFrame
+
+--[[ Game Settings Menu ]]--
+	CurrentYOffset = 24
+	local GameSettingsMenuFrame = createMenuFrame("GameSettingsMenuFrame", UDim2.new(1, 0, 0, 0))
+	GameSettingsMenuFrame.Parent = SettingClipFrame
+
+		local GameSettingsMenuTitle = createMenuTitleLabel("GameSettingsMenuTitle", "Settings", CurrentYOffset)
+		GameSettingsMenuTitle.Parent = GameSettingsMenuFrame
+		CurrentYOffset = CurrentYOffset + 36
+		if IsTouchClient then CurrentYOffset = CurrentYOffset + 10 end
+
+		-- Shift Lock Controls
+		local shiftLockImageLabel = nil
+		if not isLuaControls then 	-- FFlag, remove when new controls are live
+			shiftLockImageLabel = not isLuaControls and RobloxGui:FindFirstChild('MouseLockLabel', true) or nil
+			if shiftLockImageLabel then
+				shiftLockImageLabel.Visible = GameSettings.ControlMode == Enum.ControlMode["Mouse Lock Switch"]
+			end
+		end
+		local ShiftLockText, ShiftLockCheckBox, ShiftLockOverrideText = nil, nil, nil
+		if not IsTouchClient then
+			ShiftLockText = createTextLabel(UDim2.new(0.5, -6, 0, CurrentYOffset), "Enable Shift Lock Switch:", "ShiftLockText")
+			ShiftLockText.Parent = GameSettingsMenuFrame
+
+			ShiftLockCheckBox = createTextButton(UDim2.new(0, 32, 0, 32), UDim2.new(0.5, 6, 0, CurrentYOffset - 18),
+				IsShiftLockEnabled and "X" or "", Enum.FontSize.Size24, Enum.ButtonStyle.RobloxRoundButton)
+			ShiftLockCheckBox.Name = "ShiftLockCheckBox"
+			ShiftLockCheckBox.ZIndex = BASE_Z_INDEX + 4
+			if isLuaControls then
+				ShiftLockCheckBox.Visible = LocalPlayer.DevEnableMouseLock
+			end
+			ShiftLockCheckBox.Parent = GameSettingsMenuFrame
+
+			ShiftLockOverrideText = createTextLabel(UDim2.new(0.5, 6, 0, CurrentYOffset), "Set By Developer", "ShiftLockOverrideText")
+			ShiftLockOverrideText.TextXAlignment = Enum.TextXAlignment.Left
+			ShiftLockOverrideText.TextColor3 = Color3.new(180/255, 180/255, 180/255)
+			ShiftLockOverrideText.Visible = false
+			if isLuaControls then
+				ShiftLockOverrideText.Visible = not LocalPlayer.DevEnableMouseLock
+			end
+			ShiftLockOverrideText.Parent = GameSettingsMenuFrame
+
+			CurrentYOffset = CurrentYOffset + 36
+		end
+
+		-- Camera Mode Controls
+		local CameraModeText = createTextLabel(UDim2.new(0.5, -6, 0, CurrentYOffset), "Camera Mode:", "CameraModeText")
+		CameraModeText.Parent = GameSettingsMenuFrame
+
+		local CameraModeDropDown = nil
+		do
+			local enumItems = nil
+			if not isLuaControls then
+				enumItems = Enum.CustomCameraMode:GetEnumItems()
+			elseif IsTouchClient then
+				enumItems = Enum.TouchCameraMovementMode:GetEnumItems()
+			else
+				enumItems = Enum.ComputerCameraMovementMode:GetEnumItems()
+			end
+
+			local enumNames = {}
+			local enumNameToItem = {}
+			for i = 1, #enumItems do
+				local displayName = enumItems[i].Name
+				if displayName == 'Default' then
+					displayName = CAMERA_MODE_DEFAULT_STRING
+				end
+				enumNames[i] = displayName
+				enumNameToItem[displayName] = enumItems[i].Value
+			end
+			CameraModeDropDown = RbxGuiLibaray.CreateScrollingDropDownMenu(
+				function(text)
+					if not isLuaControls then
+						GameSettings.CameraMode = enumNameToItem[text]
+					elseif IsTouchClient then
+						GameSettings.TouchCameraMovementMode = enumNameToItem[text]
+					else
+						GameSettings.ComputerCameraMovementMode = enumNameToItem[text]
+					end
+				end, UDim2.new(0, 200, 0, 32), UDim2.new(0.5, 6, 0, CurrentYOffset - 16), BASE_Z_INDEX + 4)
+			CameraModeDropDown.CreateList(enumNames)
+			local displayName = ""
+			if not isLuaControls then
+				displayName = GameSettings.CameraMode.Name
+			else
+				displayName = IsTouchClient and GameSettings.TouchCameraMovementMode.Name or GameSettings.ComputerCameraMovementMode.Name
+			end
+			if displayName == 'Default' then displayName = CAMERA_MODE_DEFAULT_STRING end
+			CameraModeDropDown.SetSelectionText(displayName)
+			CameraModeDropDown.Frame.Parent = GameSettingsMenuFrame
+		end
+
+		local CameraModeOverrideText = createTextLabel(UDim2.new(0.5, 6, 0, CurrentYOffset), "Set By Developer", "CameraModeOverrideText")
+		CameraModeOverrideText.TextColor3 = Color3.new(180/255, 180/255, 180/255)
+		CameraModeOverrideText.TextXAlignment = Enum.TextXAlignment.Left
+		CameraModeOverrideText.Parent = GameSettingsMenuFrame
+
+		do
+			local isUserChoice = false
+			if not isLuaControls then
+				isUserChoice = true
+			elseif IsTouchClient then
+				isUserChoice = LocalPlayer.DevTouchCameraMode == Enum.DevTouchCameraMovementMode.UserChoice
+			else
+				isUserChoice = LocalPlayer.DevComputerCameraMode == Enum.DevComputerCameraMovementMode.UserChoice
+			end
+			if CameraModeDropDown then
+				CameraModeDropDown.SetVisible(isUserChoice)
+			end
+			CameraModeOverrideText.Visible = not isUserChoice
+		end
+		CurrentYOffset = CurrentYOffset + 36
+
+		-- Movement Mode Controls
+		local MovementModeDropDown = nil
+		local MovementModeOverrideText = nil
+		if isLuaControls or IsTouchClient then
+			local MovementModeText = createTextLabel(UDim2.new(0.5, -6, 0, CurrentYOffset), "Movement Mode:", "MovementModeText")
+			MovementModeText.Parent = GameSettingsMenuFrame
+
+			do
+				local enumItems = IsTouchClient and Enum.TouchMovementMode:GetEnumItems() or Enum.ComputerMovementMode:GetEnumItems()
+				local enumNames = {}
+				local enumNameToItem = {}
+				for i = 1, #enumItems do
+					if not isLuaControls and enumItems[i].Name == "ClickToMove" then
+						-- lets skip click to move until new controls are live
+					else
+						local displayName = enumItems[i].Name
+						if displayName == "Default" then
+							displayName = MOVEMENT_MODE_DEFAULT_STRING
+						end
+						enumNames[i] = displayName
+						enumNameToItem[displayName] = enumItems[i]
+					end
+				end
+				--
+				MovementModeDropDown = RbxGuiLibaray.CreateScrollingDropDownMenu(
+					function(text)
+						if IsTouchClient then
+							GameSettings.TouchMovementMode = enumNameToItem[text]
+						else
+							GameSettings.ComputerMovementMode = enumNameToItem[text]
+						end
+					end, UDim2.new(0, 200, 0, 32), UDim2.new(0.5, 6, 0, CurrentYOffset - 16), BASE_Z_INDEX + 4)
+				MovementModeDropDown.CreateList(enumNames)
+				local displayName = IsTouchClient and GameSettings.TouchMovementMode.Name or GameSettings.ComputerMovementMode.Name
+				if displayName == 'Default' then displayName = MOVEMENT_MODE_DEFAULT_STRING end
+				MovementModeDropDown.SetSelectionText(displayName)
+				MovementModeDropDown.Frame.Parent = GameSettingsMenuFrame
+			end
+
+			MovementModeOverrideText = createTextLabel(UDim2.new(0.5, 6, 0, CurrentYOffset), "Set By Developer", "MovementModeOverrideText")
+			MovementModeOverrideText.TextColor3 = Color3.new(180/255, 180/255, 180/255)
+			MovementModeOverrideText.TextXAlignment = Enum.TextXAlignment.Left
+			MovementModeOverrideText.Parent = GameSettingsMenuFrame
+
+			do
+				local isUserChoice = false
+				if not isLuaControls then
+					isUserChoice = true
+				elseif IsTouchClient then
+					isUserChoice = LocalPlayer.DevTouchMovementMode == Enum.DevTouchMovementMode.UserChoice
+				else
+					isUserChoice = LocalPlayer.DevComputerMovementMode == Enum.DevComputerMovementMode.UserChoice
+				end
+				if MovementModeDropDown then
+					MovementModeDropDown.SetVisible(isUserChoice)
+				end
+				MovementModeOverrideText.Visible = not isUserChoice
+			end
+			CurrentYOffset = CurrentYOffset + 36
+		end
+
+		-- Video Capture Settings
+		local VideoCaptureDropDown = nil
+		if not IsMacClient and not IsTouchClient then
+			local videoCaptureText = createTextLabel(UDim2.new(0.5, -6, 0, CurrentYOffset), "After Capturing Video:", "VideoCaptureText")
+			videoCaptureText.Parent = GameSettingsMenuFrame
+
+			local enumNames = {}
+			local enumNamesToItem = {}
+			enumNames[1] = "Save To Disk"
+			enumNamesToItem[enumNames[1]] = Enum.UploadSetting["Never"]
+			enumNames[2] = "Upload to YouTube"
+			enumNamesToItem[enumNames[2]] = Enum.UploadSetting["Ask me first"]
+
+			VideoCaptureDropDown = RbxGuiLibaray.CreateScrollingDropDownMenu(
+				function(text)
+					GameSettings.VideoUploadPromptBehavior = enumNamesToItem[text]
+				end, UDim2.new(0, 200, 0, 32), UDim2.new(0.5, 6, 0, CurrentYOffset - 16), BASE_Z_INDEX + 4)
+			VideoCaptureDropDown.CreateList(enumNames)
+			VideoCaptureDropDown.Frame.Parent = GameSettingsMenuFrame
+
+			local displayName = ""
+			if GameSettings.VideoUploadPromptBehavior == Enum.UploadSetting["Never"] then
+				displayName = enumNames[1]
+			elseif GameSettings.VideoUploadPromptBehavior == Enum.UploadSetting["Ask me first"] then
+				displayName = enumNames[2]
+			else
+				GameSettings.VideoUploadPromptBehavior = Enum.UploadSetting["Ask me first"]
+				displayName = enumNames[2]
+			end
+			VideoCaptureDropDown.SetSelectionText(displayName)
+
+			CurrentYOffset = CurrentYOffset + 36
+		end
+
+		--[[ Fullscreen Mode ]]--
+		if not IsTouchClient then
+			local fullScreenText = createTextLabel(UDim2.new(0.5, -6, 0, CurrentYOffset), "Fullscreen:", "FullScreenText")
+			fullScreenText.Parent = GameSettingsMenuFrame
+
+			local fullScreenTextCheckBox = createTextButton(UDim2.new(0, 32, 0, 32), UDim2.new(0.5, 6, 0, CurrentYOffset - 18),
+			GameSettings:InFullScreen() and "X" or "", Enum.FontSize.Size24, Enum.ButtonStyle.RobloxRoundButton)
+			fullScreenTextCheckBox.Name = "FullScreenTextCheckBox"
+			fullScreenTextCheckBox.ZIndex = BASE_Z_INDEX + 4
+			fullScreenTextCheckBox.Parent = GameSettingsMenuFrame
+			fullScreenTextCheckBox.Modal = true
+			fullScreenTextCheckBox:SetVerb("ToggleFullScreen")
+
+			GameSettings.FullscreenChanged:connect(function(isFullscreen)
+				fullScreenTextCheckBox.Text = isFullscreen and "X" or ""
+			end)
+			CurrentYOffset = CurrentYOffset + 36
+		end
+
+		--[[ Graphics Slider ]]--
+		if not IsTouchClient then
+			local qualityText = createTextLabel(UDim2.new(0.5, -6, 0, CurrentYOffset), "Graphics Quality:", "QualityText")
+			qualityText.Parent = GameSettingsMenuFrame
+
+			local qualityAutoCheckBox = createTextButton(UDim2.new(0, 32, 0, 32), UDim2.new(0.5, 6, 0, CurrentYOffset - 18),
+				GameSettings.SavedQualityLevel == Enum.SavedQualitySetting.Automatic and "X" or "", Enum.FontSize.Size18, Enum.ButtonStyle.RobloxRoundButton)
+			qualityAutoCheckBox.Name = "QualityAutoCheckBox"
+			qualityAutoCheckBox.ZIndex = BASE_Z_INDEX + 4
+			qualityAutoCheckBox.Parent = GameSettingsMenuFrame
+
+			local qualityAutoText = createTextLabel(UDim2.new(0.5, 44, 0, CurrentYOffset), "Auto", "QualityAutoText")
+			qualityAutoText.TextXAlignment = Enum.TextXAlignment.Left
+			qualityAutoText.TextColor3 = GameSettings.SavedQualityLevel == Enum.SavedQualitySetting.Automatic and Color3.new(1, 1, 1) or Color3.new(128/255,128/255,128/255)
+			qualityAutoText.Parent = GameSettingsMenuFrame
+
+			local graphicsSlider, graphicsLevel = RbxGuiLibaray.CreateSliderNew(GRAPHICS_QUALITY_LEVELS, 300, UDim2.new(0.5, -150, 0, CurrentYOffset + 36))
+			graphicsSlider.Bar.ZIndex = BASE_Z_INDEX + 4
+			graphicsSlider.Bar.Slider.ZIndex = BASE_Z_INDEX + 6
+			graphicsSlider.BarLeft.ZIndex = BASE_Z_INDEX + 4
+			graphicsSlider.BarRight.ZIndex = BASE_Z_INDEX + 4
+			graphicsSlider.Bar.Fill.ZIndex = BASE_Z_INDEX + 5
+			graphicsSlider.FillLeft.ZIndex = BASE_Z_INDEX + 5
+			graphicsSlider.Parent = GameSettingsMenuFrame
+			-- TODO: We don't save the previous non-auto setting. So what should this default to?
+			graphicsLevel.Value = math.floor((settings().Rendering:GetMaxQualityLevel() - 1)/2)
+
+			local graphicsMinText = createTextLabel(UDim2.new(0.5, -164, 0, CurrentYOffset + 37), "Min", "GraphicsMinText")
+			graphicsMinText.Parent = GameSettingsMenuFrame
+
+			local graphicsMaxText = createTextLabel(UDim2.new(0.5, 158, 0, CurrentYOffset + 37), "Max", "GraphicsMaxText")
+			graphicsMaxText.TextXAlignment = Enum.TextXAlignment.Left
+			graphicsMaxText.Parent = GameSettingsMenuFrame
+
+			local isAutoGraphics = true
+			isAutoGraphics = GameSettings.SavedQualityLevel == Enum.SavedQualitySetting.Automatic
+
+			local function setGraphicsQualityLevel(newLevel)
+				local percentage = newLevel/GRAPHICS_QUALITY_LEVELS
+				local newQualityLevel = math.floor((settings().Rendering:GetMaxQualityLevel() - 1) * percentage)
+				if newQualityLevel == 20 then
+					newQualityLevel = 21
+				elseif newLevel == 1 then
+					newQualityLevel = 1
+				elseif newQualityLevel > settings().Rendering:GetMaxQualityLevel() then
+					newQualityLevel = settings().Rendering:GetMaxQualityLevel() - 1
+				end
+
+				GameSettings.SavedQualityLevel = newLevel
+				settings().Rendering.QualityLevel = newQualityLevel
+			end
+
+			local function setGraphicsGuiZIndex()
+				qualityAutoCheckBox.Text = isAutoGraphics and "X" or ""
+				if isAutoGraphics then
+					graphicsSlider.Bar.ZIndex = 1
+					graphicsSlider.BarLeft.ZIndex = 1
+					graphicsSlider.BarRight.ZIndex = 1
+					graphicsSlider.Bar.Fill.ZIndex = 1
+					graphicsSlider.Bar.Slider.ZIndex = 2
+					graphicsSlider.Bar.Slider.Active = false
+					graphicsSlider.FillLeft.ZIndex = 1
+					graphicsMinText.ZIndex = 1
+					graphicsMaxText.ZIndex = 1
+				else
+					graphicsSlider.Bar.ZIndex = BASE_Z_INDEX + 4
+					graphicsSlider.BarLeft.ZIndex = BASE_Z_INDEX + 4
+					graphicsSlider.BarRight.ZIndex = BASE_Z_INDEX + 4
+					graphicsSlider.Bar.Fill.ZIndex = BASE_Z_INDEX + 5
+					graphicsSlider.Bar.Slider.ZIndex = BASE_Z_INDEX + 6
+					graphicsSlider.Bar.Slider.Active = true
+					graphicsSlider.FillLeft.ZIndex = BASE_Z_INDEX + 5
+					graphicsMinText.ZIndex = BASE_Z_INDEX + 4
+					graphicsMaxText.ZIndex = BASE_Z_INDEX + 4
+				end
+			end
+
+			local function setGraphicsToAtuo()
+				GameSettings.SavedQualityLevel = Enum.SavedQualitySetting.Automatic
+				settings().Rendering.QualityLevel = Enum.QualityLevel.Automatic
+			end
+
+			local function setGraphicsToManual(level)
+				graphicsLevel.Value = level
+				setGraphicsQualityLevel(level)
+			end
+
+			local function onGraphicsCheckBoxPressed()
+				isAutoGraphics = not isAutoGraphics
+				setGraphicsGuiZIndex()
+				if isAutoGraphics then
+					setGraphicsToAtuo()
+				else
+					setGraphicsToManual(graphicsLevel.Value)
+				end
+			end
+
+			graphicsLevel.Changed:connect(function(newValue)
+				if isAutoGraphics then return end
+				--
+				setGraphicsQualityLevel(graphicsLevel.Value)
+			end)
+
+			qualityAutoCheckBox.MouseButton1Click:connect(onGraphicsCheckBoxPressed)
+
+			-- graphics can be changed with F10 and Shift+F10
+			game.GraphicsQualityChangeRequest:connect(function(isIncrease)
+				if isAutoGraphics then return end
+				--
+				if isIncrease then
+					if graphicsLevel.Value + 1 > GRAPHICS_QUALITY_LEVELS then return end
+					graphicsLevel.Value = graphicsLevel.Value + 1
+					setGraphicsQualityLevel(graphicsLevel.Value)
+				else
+					if graphicsLevel.Value - 1 <= 0 then return end
+					graphicsLevel.Value = graphicsLevel.Value - 1
+					setGraphicsQualityLevel(graphicsLevel.Value)
+				end
+			end)
+
+			-- initial load setup
+			setGraphicsGuiZIndex()
+			if GameSettings.SavedQualityLevel == Enum.SavedQualitySetting.Automatic then
+				settings().Rendering.EnableFRM = true
+				setGraphicsToAtuo()
+			else
+				settings().Rendering.EnableFRM = true
+				local level = tostring(GameSettings.SavedQualityLevel)
+				if GRAPHICS_QUALITY_TO_INT[level] then
+					setGraphicsToManual(GRAPHICS_QUALITY_TO_INT[level])
+				end
+			end
+			CurrentYOffset = CurrentYOffset + 72
+		end
+
+		--[[ Volume Slider ]]--
+		local maxVolumeLevel = 256
+
+		local volumeText = createTextLabel(UDim2.new(0.5, 0, 0, CurrentYOffset), "Volume", "VolumeText")
+		volumeText.TextXAlignment = Enum.TextXAlignment.Center
+		volumeText.Parent = GameSettingsMenuFrame
+
+		local volumeSlider, volumeLevel = RbxGuiLibaray.CreateSliderNew(maxVolumeLevel, 300, UDim2.new(0.5, -150, 0, CurrentYOffset + 20))
+		volumeSlider.Bar.ZIndex = BASE_Z_INDEX + 2
+		volumeSlider.Bar.Slider.ZIndex = BASE_Z_INDEX + 4
+		volumeSlider.BarLeft.ZIndex = BASE_Z_INDEX + 2
+		volumeSlider.BarRight.ZIndex = BASE_Z_INDEX + 2
+		volumeSlider.Bar.Fill.ZIndex = BASE_Z_INDEX + 3
+		volumeSlider.FillLeft.ZIndex = BASE_Z_INDEX + 3
+		volumeSlider.Parent = GameSettingsMenuFrame
+		volumeLevel.Value = math.min(math.max(GameSettings.MasterVolume * maxVolumeLevel, 1), maxVolumeLevel)
+
+		local volumeMinText = createTextLabel(UDim2.new(0.5, -164, 0, CurrentYOffset + 21), "Min", "VolumeMinText")
+		volumeMinText.Parent = GameSettingsMenuFrame
+
+		local volumeMaxText = createTextLabel(UDim2.new(0.5, 158, 0, CurrentYOffset + 21), "Max", "VolumeMaxText")
+		volumeMaxText.TextXAlignment = Enum.TextXAlignment.Left
+		volumeMaxText.Parent = GameSettingsMenuFrame
+
+		volumeLevel.Changed:connect(function(newValue)
+			local volume = volumeLevel.Value - 1
+			GameSettings.MasterVolume = volume/maxVolumeLevel
+		end)
+
+		CurrentYOffset = CurrentYOffset + 42
+		if not isLuaControls and not IsTouchClient then
+			CurrentYOffset = CurrentYOffset + 36
+		end
+
+		--[[ OK/Return button ]]--
+		if IsTouchClient then
+			if IsSmallScreen then
+				CurrentYOffset = CurrentYOffset + 64
+			else
+				CurrentYOffset = CurrentYOffset + 134
+			end
+		end
+		local GameSettingsBackButton = createTextButton(MENU_BTN_SML, UDim2.new(0.5, -84, 0, CurrentYOffset),
+			"Back", Enum.FontSize.Size24, Enum.ButtonStyle.RobloxRoundDefaultButton)
+		GameSettingsBackButton.Name = "GameSettingsBackButton"
+		GameSettingsBackButton.Parent = GameSettingsMenuFrame
+		GameSettingsBackButton.Modal = true
+
+		--[[ Game Settings Menu Drop Down Connections ]]--
+		if CameraModeDropDown then
+			CameraModeDropDown.CurrentSelectionButton.MouseButton1Click:connect(function()
+				if CurrentOpenedDropDownMenu ~= CameraModeDropDown then
+					closeCurrentDropDownMenu()
+					CurrentOpenedDropDownMenu = CameraModeDropDown
+				end
+			end)
+		end
+		if MovementModeDropDown then
+			MovementModeDropDown.CurrentSelectionButton.MouseButton1Click:connect(function()
+				if CurrentOpenedDropDownMenu ~= MovementModeDropDown then
+					closeCurrentDropDownMenu()
+					CurrentOpenedDropDownMenu = MovementModeDropDown
+				end
+			end)
+		end
+		if VideoCaptureDropDown then
+			VideoCaptureDropDown.CurrentSelectionButton.MouseButton1Click:connect(function()
+				if CurrentOpenedDropDownMenu ~= VideoCaptureDropDown then
+					closeCurrentDropDownMenu()
+					CurrentOpenedDropDownMenu = VideoCaptureDropDown
+				end
+			end)
+		end
+
+--[[ Help Menu ]]--
+	CurrentYOffset = 24
+	local HelpMenuFrame = createMenuFrame("HelpMenuFrame", UDim2.new(1, 0, 0, 0))
+	HelpMenuFrame.Parent = SettingClipFrame
+
+		local HelpMenuTitle = createMenuTitleLabel("HelpMenuTitle", "Keyboard & Mouse Controls", CurrentYOffset)
+		HelpMenuTitle.Parent = HelpMenuFrame
+		CurrentYOffset = CurrentYOffset + 32
+
+		local HelpMenuButtonFrame = Instance.new('Frame')
+		HelpMenuButtonFrame.Name = "HelpMenuButtonFrame"
+		HelpMenuButtonFrame.Size = UDim2.new(0.9, 0, 0, 45)
+		HelpMenuButtonFrame.Position = UDim2.new(0.05, 0, 0, CurrentYOffset)
+		HelpMenuButtonFrame.BackgroundTransparency = 1
+		HelpMenuButtonFrame.ZIndex = BASE_Z_INDEX + 4
+		HelpMenuButtonFrame.Parent = HelpMenuFrame
+		CurrentYOffset = CurrentYOffset + 60
+
+			local CurrentHelpDialogButton = nil
+			local HelpLookButton = createTextButton(UDim2.new(0.25, 0, 1, 0), UDim2.new(0, 0, 0, 0),
+				"Look", Enum.FontSize.Size24, Enum.ButtonStyle.RobloxRoundDefaultButton)
+			HelpLookButton.Name = "HelpLookButton"
+			HelpLookButton.Parent = HelpMenuButtonFrame
+
+			local HelpMoveButton = createTextButton(UDim2.new(0.25, 0, 1, 0), UDim2.new(0.25, 0, 0, 0),
+				"Movement", Enum.FontSize.Size24, Enum.ButtonStyle.RobloxRoundButton)
+			HelpMoveButton.Name = "HelpMoveButton"
+			HelpMoveButton.Parent = HelpMenuButtonFrame
+
+			local HelpGearButton = createTextButton(UDim2.new(0.25, 0, 1, 0), UDim2.new(0.5, 0, 0, 0),
+				"Gear", Enum.FontSize.Size24, Enum.ButtonStyle.RobloxRoundButton)
+			HelpGearButton.Name = "HelpGearButton"
+			HelpGearButton.Parent = HelpMenuButtonFrame
+
+			local HelpZoomButton = createTextButton(UDim2.new(0.25, 0, 1, 0), UDim2.new(0.75, 0, 0, 0),
+				"Zoom", Enum.FontSize.Size24, Enum.ButtonStyle.RobloxRoundButton)
+			HelpZoomButton.Name = "HelpZoomButton"
+			HelpZoomButton.Parent = HelpMenuButtonFrame
+
+			CurrentHelpDialogButton = HelpLookButton
+
+		local HelpMenuImage = Instance.new('ImageLabel')
+		HelpMenuImage.Name = "HelpMenuImage"
+		HelpMenuImage.Size = UDim2.new(0.9, 0, 0.5, 0)
+		HelpMenuImage.Position = UDim2.new(0.05, 0, 0, CurrentYOffset)
+		HelpMenuImage.BackgroundTransparency = 1
+		HelpMenuImage.Image = GameSettings.ControlMode == Enum.ControlMode.MouseLockSwitch and HELP_IMG.SHIFT_LOCK or HELP_IMG.CLASSIC_MOVE
+		HelpMenuImage.ZIndex = BASE_Z_INDEX + 4
+		HelpMenuImage.Parent = HelpMenuFrame
+		CurrentYOffset = CurrentYOffset + 234
+
+		local HelpConsoleButton = createTextButton(UDim2.new(0, 70, 0, 30), UDim2.new(1, -75, 0, CurrentYOffset + 20),
+			"Log:", Enum.FontSize.Size18, Enum.ButtonStyle.RobloxRoundButton)
+		HelpConsoleButton.Name = "HelpConsoleButton"
+		HelpConsoleButton.TextXAlignment = Enum.TextXAlignment.Left
+		HelpConsoleButton.Parent = HelpMenuFrame
+
+			local HelpConsoleText = Instance.new('TextLabel')
+			HelpConsoleText.Name = "HelpConsoleText"
+			HelpConsoleText.Size = UDim2.new(0, 16, 0, 30)
+			HelpConsoleText.Position = UDim2.new(1, -14, 0, -12)
+			HelpConsoleText.BackgroundTransparency = 1
+			HelpConsoleText.Font = Enum.Font.SourceSansBold
+			HelpConsoleText.FontSize = Enum.FontSize.Size18
+			HelpConsoleText.TextColor3 = Color3.new(0, 1, 0)
+			HelpConsoleText.ZIndex = BASE_Z_INDEX + 4
+			HelpConsoleText.Text = "F9"
+			HelpConsoleText.Parent = HelpConsoleButton
+
+		local HelpMenuBackButton = createTextButton(MENU_BTN_SML, UDim2.new(0.5, -84, 0, CurrentYOffset),
+			"Back", Enum.FontSize.Size24, Enum.ButtonStyle.RobloxRoundDefaultButton)
+		HelpMenuBackButton.Name = "HelpMenuBackButton"
+		HelpMenuBackButton.Modal = true
+		HelpMenuBackButton.Parent = HelpMenuFrame
+
+--[[ Report Abuse Menu ]]--
+	CurrentYOffset = 24
+	local IsReportingPlayer = false
+	local CurrentAbusingPlayer = nil
+	local AbuseReason = nil
+
+	local ReportAbuseFrame = createMenuFrame("ReportAbuseFrame", UDim2.new(1, 0, 0, 0))
+	ReportAbuseFrame.Parent = SettingClipFrame
+
+		local ReportAbuseTitle = createMenuTitleLabel("ReportAbuseTitle", "Report Abuse", CurrentYOffset)
+		ReportAbuseTitle.Parent = ReportAbuseFrame
+		CurrentYOffset = IsSmallScreen and (CurrentYOffset + 20) or (CurrentYOffset + 32)
+
+		local ReportAbuseDescription = Instance.new('TextLabel')
+		ReportAbuseDescription.Name = "ReportAbuseDescription"
+		ReportAbuseDescription.Size = UDim2.new(1, -40, 0, 40)
+		ReportAbuseDescription.Position = UDim2.new(0, 35, 0, CurrentYOffset)
+		ReportAbuseDescription.BackgroundTransparency = 1
+		ReportAbuseDescription.Font = Enum.Font.SourceSans
+		ReportAbuseDescription.FontSize = Enum.FontSize.Size18
+		ReportAbuseDescription.TextColor3 = Color3.new(1, 1, 1)
+		ReportAbuseDescription.TextWrap = true
+		ReportAbuseDescription.TextXAlignment = Enum.TextXAlignment.Left
+		ReportAbuseDescription.TextYAlignment = Enum.TextYAlignment.Top
+		ReportAbuseDescription.ZIndex = BASE_Z_INDEX + 4
+		ReportAbuseDescription.Text = "This will send a complete report to a moderator. The moderator will review the chat log and take appropriate action."
+		ReportAbuseDescription.Parent = ReportAbuseFrame
+		CurrentYOffset = IsSmallScreen and (CurrentYOffset + 48) or (CurrentYOffset + 70)
+
+		local ReportGameOrPlayerText = createTextLabel(UDim2.new(0.5, -6, 0, CurrentYOffset), "Game or Player:", "ReportGameOrPlayerText")
+		ReportGameOrPlayerText.Parent = ReportAbuseFrame
+		CurrentYOffset = CurrentYOffset + 40
+
+		local ReportPlayerText = createTextLabel(UDim2.new(0.5, -6, 0, CurrentYOffset), "Which Player:", "ReportPlayerText")
+		ReportPlayerText.Parent = ReportAbuseFrame
+		CurrentYOffset = CurrentYOffset + 40
+
+		local ReportTypeOfAbuseText = createTextLabel(UDim2.new(0.5, -6, 0, CurrentYOffset), "Type of Abuse:", "ReportTypeOfAbuseText")
+		ReportTypeOfAbuseText.Parent = ReportAbuseFrame
+		CurrentYOffset = IsSmallScreen and (CurrentYOffset + 10) or (CurrentYOffset + 40)
+
+		local ReportDescriptionText = ReportAbuseDescription:Clone()
+		ReportDescriptionText.Name = "ReportDescriptionText"
+		ReportDescriptionText.Text = "Short Description: (optional)"
+		ReportDescriptionText.Position = UDim2.new(0, 35, 0, CurrentYOffset)
+		ReportDescriptionText.Parent = ReportAbuseFrame
+		CurrentYOffset = CurrentYOffset + 28
+
+		local ReportDescriptionTextBox = Instance.new('TextBox')
+		ReportDescriptionTextBox.Name = "ReportDescriptionTextBox"
+		ReportDescriptionTextBox.Size = UDim2.new(1, -70, 1, IsSmallScreen and (-CurrentYOffset - 60) or (-CurrentYOffset - 100))
+		ReportDescriptionTextBox.Position = UDim2.new(0, 35, 0, CurrentYOffset)
+		ReportDescriptionTextBox.BackgroundTransparency = 1
+		ReportDescriptionTextBox.Font = Enum.Font.SourceSans
+		ReportDescriptionTextBox.FontSize = Enum.FontSize.Size18
+		ReportDescriptionTextBox.ClearTextOnFocus = false
+		ReportDescriptionTextBox.TextColor3 = Color3.new(0, 0, 0)
+		ReportDescriptionTextBox.TextXAlignment = Enum.TextXAlignment.Left
+		ReportDescriptionTextBox.TextYAlignment = Enum.TextYAlignment.Top
+		ReportDescriptionTextBox.Text = ""
+		ReportDescriptionTextBox.TextWrap = true
+		ReportDescriptionTextBox.ZIndex = BASE_Z_INDEX + 4
+		ReportDescriptionTextBox.Visible = false
+		ReportDescriptionTextBox.Parent = ReportAbuseFrame
+
+		local ReportDescriptionTextBoxBg = Instance.new('TextButton')
+		ReportDescriptionTextBoxBg.Name = "ReportDescriptionTextBoxBg"
+		ReportDescriptionTextBoxBg.Size = UDim2.new(1, 16, 1, 16)
+		ReportDescriptionTextBoxBg.Position = UDim2.new(0, -8, 0, -8)
+		ReportDescriptionTextBoxBg.Text = ""
+		ReportDescriptionTextBoxBg.Active = false
+		ReportDescriptionTextBoxBg.AutoButtonColor = false
+		ReportDescriptionTextBoxBg.Style = Enum.ButtonStyle.RobloxRoundDropdownButton
+		ReportDescriptionTextBoxBg.ZIndex = BASE_Z_INDEX + 4
+		ReportDescriptionTextBoxBg.Parent = ReportDescriptionTextBox
+		CurrentYOffset = CurrentYOffset + ReportDescriptionTextBox.AbsoluteSize.y + 20
+
+		local buttonPosition = IsSmallScreen and UDim2.new(0.5, 2, 1, -MENU_BTN_SML.Y.Offset - 4) or
+			UDim2.new(0.5, 2, 0, CurrentYOffset)
+
+		local ReportSubmitButton = createTextButton(MENU_BTN_SML, buttonPosition,
+			"Submit", Enum.FontSize.Size24, Enum.ButtonStyle.RobloxRoundDefaultButton)
+		ReportSubmitButton.Name = "ReportSubmitButton"
+		ReportSubmitButton.ZIndex = BASE_Z_INDEX
+		ReportSubmitButton.Active = false
+		ReportSubmitButton.Parent = ReportAbuseFrame
+
+		buttonPosition = IsSmallScreen and UDim2.new(0.5, -170, 1, -MENU_BTN_SML.Y.Offset - 4) or
+			UDim2.new(0.5, -170, 0, CurrentYOffset)
+
+		local ReportCancelButton = createTextButton(MENU_BTN_SML, buttonPosition,
+			"Cancel", Enum.FontSize.Size24, Enum.ButtonStyle.RobloxRoundButton)
+		ReportCancelButton.Name = "ReportSubmitButton"
+		ReportCancelButton.Parent = ReportAbuseFrame
+		ReportCancelButton.Modal = true
+
+		local ReportPlayerDropDown = nil
+		local ReportTypeOfAbuseDropDown = nil
+		local ReportPlayerOrGameDropDown = nil
+
+		local function cleanupReportAbuseMenu()
+			ReportDescriptionTextBox.Visible = false
+			ReportDescriptionTextBox.Text = ""
+			ReportSubmitButton.ZIndex = BASE_Z_INDEX
+			ReportSubmitButton.Active = false
+			if ReportPlayerDropDown then
+				ReportPlayerDropDown.Frame:Destroy()
+				ReportPlayerDropDown = nil
+			end
+			if ReportTypeOfAbuseDropDown then
+				ReportTypeOfAbuseDropDown.Frame:Destroy()
+				ReportTypeOfAbuseDropDown = nil
+			end
+			if ReportPlayerOrGameDropDown then
+				ReportPlayerOrGameDropDown.Frame:Destroy()
+				ReportPlayerOrGameDropDown = nil
+			end
+		end
+
+		local function createReportAbuseMenu()
+			local playerNames = {}
+			local nameToRbxPlayer = {}
+			local players = Players:GetChildren()
+			local index = 1
+			for i = 1, #players do
+				local player = players[i]
+				if player:IsA('Player') and player ~= LocalPlayer then
+					playerNames[index] = player.Name
+					nameToRbxPlayer[player.Name] = player
+					index = index + 1
+				end
+			end
+
+			ReportTypeOfAbuseDropDown = RbxGuiLibaray.CreateScrollingDropDownMenu(
+				function(text)
+					AbuseReason = text
+					ReportSubmitButton.ZIndex = BASE_Z_INDEX + 4
+					ReportSubmitButton.Active = true
+				end, UDim2.new(0, 200, 0, 32), UDim2.new(0.5, 6, 0, ReportTypeOfAbuseText.Position.Y.Offset - 16), BASE_Z_INDEX)
+			ReportTypeOfAbuseDropDown.SetActive(false)
+			ReportTypeOfAbuseDropDown.Frame.Parent = ReportAbuseFrame
+			-- list will be set depending on which type of report it is (game or player)
+
+			ReportPlayerDropDown = RbxGuiLibaray.CreateScrollingDropDownMenu(
+				function(text)
+					CurrentAbusingPlayer = nameToRbxPlayer[text] or LocalPlayer
+					ReportTypeOfAbuseText.ZIndex = BASE_Z_INDEX + 4
+					ReportTypeOfAbuseDropDown.CreateList(ABUSE_TYPES_PLAYER)
+					ReportTypeOfAbuseDropDown.UpdateZIndex(BASE_Z_INDEX + 4)
+					ReportTypeOfAbuseDropDown.SetActive(true)
+				end, UDim2.new(0, 200, 0, 32), UDim2.new(0.5, 6, 0, ReportPlayerText.Position.Y.Offset - 16), BASE_Z_INDEX)
+			ReportPlayerDropDown.SetActive(false)
+			ReportPlayerDropDown.CreateList(playerNames)
+			ReportPlayerDropDown.Frame.Parent = ReportAbuseFrame
+
+			ReportPlayerOrGameDropDown = RbxGuiLibaray.CreateScrollingDropDownMenu(
+				function(text)
+					if text == "Player" then
+						IsReportingPlayer = true
+						ReportPlayerText.ZIndex = BASE_Z_INDEX + 4
+						ReportPlayerDropDown.UpdateZIndex(BASE_Z_INDEX + 4)
+						ReportPlayerDropDown.SetActive(true)
+						--
+						ReportTypeOfAbuseText.ZIndex = BASE_Z_INDEX
+						ReportTypeOfAbuseDropDown.CreateList(ABUSE_TYPES_PLAYER)
+						ReportTypeOfAbuseDropDown.UpdateZIndex(BASE_Z_INDEX)
+						ReportTypeOfAbuseDropDown.SetActive(false)
+					elseif text == "Game" then
+						IsReportingPlayer = false
+						if CurrentAbusingPlayer then
+							CurrentAbusingPlayer = nil
+						end
+						ReportPlayerDropDown.SetSelectionText("Choose One")
+						ReportPlayerText.ZIndex = BASE_Z_INDEX
+						ReportPlayerDropDown.SetActive(false)
+						ReportPlayerDropDown.UpdateZIndex(BASE_Z_INDEX)
+						--
+						ReportTypeOfAbuseText.ZIndex = BASE_Z_INDEX + 4
+						ReportTypeOfAbuseDropDown.CreateList(ABUSE_TYPES_GAME)
+						ReportTypeOfAbuseDropDown.UpdateZIndex(BASE_Z_INDEX + 4)
+						ReportTypeOfAbuseDropDown.SetActive(true)
+					else
+						IsReportingPlayer = false
+						ReportPlayerText.ZIndex = BASE_Z_INDEX
+						ReportPlayerDropDown.SetActive(false)
+						ReportPlayerDropDown.UpdateZIndex(BASE_Z_INDEX)
+					end
+					ReportSubmitButton.ZIndex = BASE_Z_INDEX
+					ReportSubmitButton.Active = false
+				end, UDim2.new(0, 200, 0, 32), UDim2.new(0.5, 6, 0, ReportGameOrPlayerText.Position.Y.Offset - 16), BASE_Z_INDEX + 4)
+			ReportPlayerOrGameDropDown.Frame.Parent = ReportAbuseFrame
+			ReportPlayerOrGameDropDown.CreateList({ "Game", "Player", })
+
+			-- drop down menu connections
+			ReportPlayerDropDown.CurrentSelectionButton.MouseButton1Click:connect(function()
+				if CurrentOpenedDropDownMenu ~= ReportPlayerDropDown then
+					closeCurrentDropDownMenu()
+					CurrentOpenedDropDownMenu = ReportPlayerDropDown
+				end
+			end)
+			ReportTypeOfAbuseDropDown.CurrentSelectionButton.MouseButton1Click:connect(function()
+				if CurrentOpenedDropDownMenu ~= ReportTypeOfAbuseDropDown then
+					closeCurrentDropDownMenu()
+					CurrentOpenedDropDownMenu = ReportTypeOfAbuseDropDown
+				end
+			end)
+			ReportPlayerOrGameDropDown.CurrentSelectionButton.MouseButton1Click:connect(function()
+				if CurrentOpenedDropDownMenu ~= ReportPlayerOrGameDropDown then
+					closeCurrentDropDownMenu()
+					CurrentOpenedDropDownMenu = ReportPlayerOrGameDropDown
+				end
+			end)
+			ReportDescriptionTextBox.Visible = true
+		end
+
+	CurrentYOffset = IsSmallScreen and 70 or 140
+	local ReportAbuseConfirmationFrame = createMenuFrame("ReportAbuseConfirmationFrame", UDim2.new(1, 0, 0, 0))
+	ReportAbuseConfirmationFrame.Parent = SettingClipFrame
+
+		local ReportAbuseConfirmationText = Instance.new('TextLabel')
+		ReportAbuseConfirmationText.Name = "ReportAbuseConfirmationText"
+		ReportAbuseConfirmationText.Size = UDim2.new(1, -20, 0, 80)
+		ReportAbuseConfirmationText.Position = UDim2.new(0, 10, 0, CurrentYOffset)
+		ReportAbuseConfirmationText.BackgroundTransparency = 1
+		ReportAbuseConfirmationText.Font = Enum.Font.SourceSans
+		ReportAbuseConfirmationText.FontSize = Enum.FontSize.Size24
+		ReportAbuseConfirmationText.TextColor3 = Color3.new(1, 1, 1)
+		ReportAbuseConfirmationText.TextWrap = true
+		ReportAbuseConfirmationText.TextScaled = true
+		ReportAbuseConfirmationText.ZIndex = BASE_Z_INDEX + 4
+		ReportAbuseConfirmationText.Text = ""
+		ReportAbuseConfirmationText.Parent = ReportAbuseConfirmationFrame
+		CurrentYOffset = CurrentYOffset + 122
+
+		local ReportAbuseConfirmationButton = createTextButton(MENU_BTN_SML, UDim2.new(0.5, -MENU_BTN_SML.X.Offset/2, 0, CurrentYOffset),
+			"OK", Enum.FontSize.Size24, Enum.ButtonStyle.RobloxRoundDefaultButton)
+		ReportAbuseConfirmationButton.Name = "ReportAbuseConfirmationButton"
+		ReportAbuseConfirmationButton.Parent = ReportAbuseConfirmationFrame
+
+--[[ Leave Game Confirmation Menu ]]--
+	CurrentYOffset = IsSmallScreen and 70 or 140
+	local LeaveGameMenuFrame = createMenuFrame("LeaveGameMenuFrame", UDim2.new(1, 0, 0, 0))
+	LeaveGameMenuFrame.Parent = SettingClipFrame
+
+		local LeaveGameText = Instance.new('TextLabel')
+		LeaveGameText.Name = "LeaveGameText"
+		LeaveGameText.Size = UDim2.new(1, 0, 0, 80)
+		LeaveGameText.Position = UDim2.new(0, 0, 0, CurrentYOffset)
+		LeaveGameText.BackgroundTransparency = 1
+		LeaveGameText.Font = Enum.Font.SourceSansBold
+		LeaveGameText.FontSize = Enum.FontSize.Size36
+		LeaveGameText.TextColor3 = Color3.new(1, 1, 1)
+		LeaveGameText.TextWrap = true
+		LeaveGameText.ZIndex = BASE_Z_INDEX + 4
+		LeaveGameText.Text = "Are you sure you want to leave this game?"
+		LeaveGameText.Parent = LeaveGameMenuFrame
+		CurrentYOffset = CurrentYOffset + 122
+
+		local LeaveConfirmButton = createTextButton(MENU_BTN_SML, UDim2.new(0.5, 2, 0, CurrentYOffset),
+			"Confirm", Enum.FontSize.Size24, Enum.ButtonStyle.RobloxRoundDefaultButton)
+		LeaveConfirmButton.Name = "LeaveConfirmButton"
+		LeaveConfirmButton.Parent = LeaveGameMenuFrame
+		LeaveConfirmButton.Modal = true
+		LeaveConfirmButton:SetVerb("Exit")
+
+		local LeaveCancelButton = createTextButton(MENU_BTN_SML, UDim2.new(0.5, -170, 0, CurrentYOffset),
+			"Cancel", Enum.FontSize.Size24, Enum.ButtonStyle.RobloxRoundButton)
+		LeaveCancelButton.Name = "LeaveCancelButton"
+		LeaveCancelButton.Parent = LeaveGameMenuFrame
+
+--[[ Menu Functions ]]--
+local function setGamepadButton(currentMenu)
+	if not isGamepadSupport then return end
+ 	if not UserInputService.GamepadEnabled then return end 
+ 	
+ 	if currentMenu == LeaveGameMenuFrame then 
+ 		pcall(function() GuiService.SelectedCoreObject = LeaveGameMenuFrame.LeaveConfirmButton end)
+	elseif currentMenu == RootMenuFrame then 
+		pcall(function() GuiService.SelectedCoreObject = ResumeGameButton end)
+	elseif currentMenu == ResetCharacterFrame then 
+		pcall(function() GuiService.SelectedCoreObject = ConfirmResetButton end)
+	elseif currentMenu == GameSettingsMenuFrame then 
+		if GameSettingsMenuFrame.ShiftLockCheckBox and GameSettingsMenuFrame.ShiftLockCheckBox.Visible then 
+			pcall(function() GuiService.SelectedCoreObject = GameSettingsMenuFrame.ShiftLockCheckBox end)
+		else 
+			pcall(function() GuiService.SelectedCoreObject = CameraModeDropDown.CurrentSelectionButton end)
+		end 
+	end 
+ end 
+
+local function pushMenu(nextMenu)
+	if IsMenuClosing then return end
+	local prevMenu = MenuStack[#MenuStack]
+	MenuStack[#MenuStack + 1] = nextMenu
+	--
+	if prevMenu then
+		prevMenu:TweenPosition(UDim2.new(-1, 0, 0, 0), Enum.EasingDirection.InOut, Enum.EasingStyle.Sine, TWEEN_TIME, true)
+	end
+	if #MenuStack > 1 then
+		nextMenu:TweenPosition(UDim2.new(0, 0, 0, 0), Enum.EasingDirection.InOut, Enum.EasingStyle.Sine, TWEEN_TIME, true)
+	end
+
+	setGamepadButton(nextMenu)
+end
+
+local function popMenu()
+	if #MenuStack == 0 then return end
+	--
+	local currentMenu = MenuStack[#MenuStack]
+	MenuStack[#MenuStack] = nil
+	local prevMenu = MenuStack[#MenuStack]
+	--
+	if #MenuStack > 0 then
+		currentMenu:TweenPosition(UDim2.new(1, 0, 0, 0), Enum.EasingDirection.InOut, Enum.EasingStyle.Sine, TWEEN_TIME, true)
+		-- special case to close drop down menus on game settings menu when it goes out of focus
+		closeCurrentDropDownMenu()
+	end
+	if prevMenu then
+		prevMenu:TweenPosition(UDim2.new(0, 0, 0, 0), Enum.EasingDirection.InOut, Enum.EasingStyle.Sine, TWEEN_TIME, true)
+		setGamepadButton(prevMenu)
+	end
+end
+
+local function emptyMenuStack()
+	for k,v in pairs(MenuStack) do
+		if k ~= 1 then
+			v.Position = UDim2.new(1, 0, 0, 0)
+		else
+			v.Position = UDim2.new(0, 0, 0, 0)
+		end
+		MenuStack[k] = nil
+	end
+end
+
+
+local function turnOffSettingsMenu()
+	SettingsShield.Active = false
+	SettingsShield.Visible = false
+	SettingsButton.Active = true
+	SettingClipFrame.Position = CLOSE_MENU_POS
+	--
+	emptyMenuStack()
+	IsMenuClosing = false
+	pcall(function() game:GetService("UserInputService").OverrideMouseIconEnabled = false end)
+end
+
+local function closeSettingsMenu(forceClose)
+	IsMenuClosing = true
+	if forceClose then
+		turnOffSettingsMenu()
+	else
+		SettingClipFrame:TweenPosition(CLOSE_MENU_POS, Enum.EasingDirection.InOut, Enum.EasingStyle.Sine, TWEEN_TIME, true, turnOffSettingsMenu)
+	end
+
+	if UserInputService.GamepadEnabled and isGamepadSupport then
+		pcall(function() GuiService.SelectedCoreObject = nil
+		ContextActionService:UnbindCoreAction("backbutton")
+		ContextActionService:UnbindCoreAction("DontMove") end)
+	end
+
+	SettingsShowSignal:fire(false)
+end
+
+local backButtonFunc = function(actionName, state, input)
+	if state ~= Enum.UserInputState.Begin then return end
+
+	if #MenuStack == 1 then
+		closeSettingsMenu(true)
+	else
+		popMenu()
+	end
+end
+
+local noOptFunc = function() end
+
+local function showSettingsRootMenu()
+	SettingsButton.Active = false
+	pushMenu(RootMenuFrame)
+	pcall(function() UserInputService.OverrideMouseIconEnabled = true end)
+	--
+	SettingsShield.Visible = true
+	SettingsShield.Active = true
+	--
+	SettingClipFrame:TweenPosition(SHOW_MENU_POS, Enum.EasingDirection.InOut, Enum.EasingStyle.Sine, TWEEN_TIME, true)
+	SettingsShowSignal:fire(true)
+
+	if not isGamepadSupport then return end
+	if UserInputService.GamepadEnabled then
+		pcall(function() game.ContextActionService:BindCoreAction("DontMove", noOptFunc, false, Enum.KeyCode.Thumbstick1, Enum.KeyCode.Thumbstick2, 
+				Enum.KeyCode.ButtonA, Enum.KeyCode.ButtonB, Enum.KeyCode.ButtonX, Enum.KeyCode.ButtonY, Enum.KeyCode.ButtonSelect,
+				Enum.KeyCode.ButtonL1, Enum.KeyCode.ButtonL2, Enum.KeyCode.ButtonL3, Enum.KeyCode.ButtonR1, Enum.KeyCode.ButtonR2, Enum.KeyCode.ButtonR3,
+				Enum.KeyCode.DPadLeft, Enum.KeyCode.DPadRight, Enum.KeyCode.DPadUp, Enum.KeyCode.DPadDown)
+
+		ContextActionService:BindCoreAction("backbutton", backButtonFunc, false, Enum.KeyCode.ButtonB) end)
+	end
+end
+
+local function showHelpMenu()
+	SettingClipFrame:TweenPosition(CLOSE_MENU_POS, Enum.EasingDirection.InOut, Enum.EasingStyle.Sine, TWEEN_TIME, true,
+	function()
+		SettingClipFrame.Visible = false
+	end)
+	HelpMenuFrame.Visible = true
+	HelpMenuFrame:TweenPosition(UDim2.new(0.2, 0, 0.2, 0), Enum.EasingDirection.InOut, Enum.EasingStyle.Sine, TWEEN_TIME, true)
+end
+
+local function hideHelpMenu()
+	HelpMenuFrame:TweenPosition(UDim2.new(0.2, 0, 1, 0), Enum.EasingDirection.InOut, Enum.EasingStyle.Sine, TWEEN_TIME, true,
+	function()
+		HelpMenuFrame.Visible = false
+	end)
+	SettingClipFrame.Visible = true
+	SettingClipFrame:TweenPosition(SHOW_MENU_POS, Enum.EasingDirection.InOut, Enum.EasingStyle.Sine, TWEEN_TIME, true)
+end
+
+local function changeHelpDialog(button, img)
+	if CurrentHelpDialogButton == button then return end
+	--
+	CurrentHelpDialogButton.Style = Enum.ButtonStyle.RobloxRoundButton
+	CurrentHelpDialogButton = button
+	CurrentHelpDialogButton.Style = Enum.ButtonStyle.RobloxRoundDefaultButton
+	HelpMenuImage.Image = img
+end
+
+local function resetLocalCharacter()
+	-- NOTE: This should be fixed at some point to not find humanoid by name.
+	-- Devs can rename the players humanoid and bypass this. I am leaving it this way
+	-- as to not break any games that currently do this. We need to come up with
+	-- a better solution to allow devs to disable character reset
+	local player = Players.LocalPlayer
+	if player then
+		local character = player.Character
+		if character then
+			local humanoid = character:FindFirstChild('Humanoid')
+			if humanoid then
+				humanoid.Health = 0
+			end
+		end
+	end
+end
+
+local function onRecordVideoToggle()
+	if not StopRecordingVideoButton then return end
+	IsRecordingVideo = not IsRecordingVideo
+	if IsRecordingVideo then
+		StopRecordingVideoButton.Visible = true
+		RecordVideoButton.Text = "Stop Recording"
+	else
+		StopRecordingVideoButton.Visible = false
+		RecordVideoButton.Text = "Record Video"
+	end
+end
+
+local function onReportSubmitted()
+	if not ReportSubmitButton.Active then return end
+	--
+	if IsReportingPlayer then
+		if CurrentAbusingPlayer and AbuseReason then
+			Players:ReportAbuse(CurrentAbusingPlayer, AbuseReason, ReportDescriptionTextBox.Text)
+		end
+	else
+		if AbuseReason then
+			Players:ReportAbuse(nil, AbuseReason, ReportDescriptionTextBox.Text)
+		end
+	end
+	if AbuseReason == 'Cheating/Exploiting' then
+		ReportAbuseConfirmationText.Text = "Thanks for your report!\n We've recorded your report for evaluation."
+	elseif AbuseReason == 'Bullying' or AbuseReason == 'Swearing' then
+		ReportAbuseConfirmationText.Text = "Thanks for your report! Our moderators will review the chat logs and determine what happened. The other user is probably just trying to make you mad. If anyone used swear words, inappropriate language, or threatened you in real life, please report them for Bad Words or Threats"
+	else
+		ReportAbuseConfirmationText.Text = "Thanks for your report! Our moderators will review the chat logs and determine what happened."
+	end
+	pushMenu(ReportAbuseConfirmationFrame)
+	cleanupReportAbuseMenu()
+end
+
+local function toggleDevConsole(actionName, inputState, inputObject)
+	if actionName == "Open Dev Console" then 	-- ContextActionService->F9
+		if inputState and inputState == Enum.UserInputState.Begin and BindableFunc_ToggleDevConsole then
+			BindableFunc_ToggleDevConsole:Invoke()
+		end
+	elseif BindableFunc_ToggleDevConsole then 	-- Button Press from help menu
+		BindableFunc_ToggleDevConsole:Invoke()
+	end
+end
+
+local function updateUserSettingsMenu(property)
+	if not isLuaControls then return end
+	if property == "DevEnableMouseLock" then
+		ShiftLockCheckBox.Visible = LocalPlayer.DevEnableMouseLock
+		ShiftLockOverrideText.Visible = not LocalPlayer.DevEnableMouseLock
+		IsShiftLockEnabled = LocalPlayer.DevEnableMouseLock and GameSettings.ControlMode == Enum.ControlMode.MouseLockSwitch
+		ShiftLockCheckBox.Text = IsShiftLockEnabled and "X" or ""
+	elseif property == "DevComputerCameraMode" then
+		local isUserChoice = LocalPlayer.DevComputerCameraMode == Enum.DevComputerCameraMovementMode.UserChoice
+		CameraModeDropDown.SetVisible(isUserChoice)
+		CameraModeOverrideText.Visible = not isUserChoice
+	elseif property == "DevComputerMovementMode" then
+		local isUserChoice = LocalPlayer.DevComputerMovementMode == Enum.DevComputerMovementMode.UserChoice
+		if MovementModeDropDown then MovementModeDropDown.SetVisible(isUserChoice) end
+		if MovementModeOverrideText then MovementModeOverrideText.Visible = not isUserChoice end
+	-- TOUCH
+	elseif property == "DevTouchMovementMode" then
+		local isUserChoice = LocalPlayer.DevTouchMovementMode == Enum.DevTouchMovementMode.UserChoice
+		if MovementModeDropDown then MovementModeDropDown.SetVisible(isUserChoice) end
+		if MovementModeOverrideText then MovementModeOverrideText.Visible = not isUserChoice end
+	elseif property == "DevTouchCameraMode" then
+		local isUserChoice = LocalPlayer.DevTouchCameraMode == Enum.DevTouchCameraMovementMode.UserChoice
+		CameraModeDropDown.SetVisible(isUserChoice)
+		CameraModeOverrideText.Visible = not isUserChoice
+	end
+end
+
+--[[ Input Actions ]]--
+do
+	SettingsShield.InputBegan:connect(function(inputObject)
+		local inputType = inputObject.UserInputType
+		if inputType == Enum.UserInputType.MouseButton1 or inputType == Enum.UserInputType.Touch then
+			closeCurrentDropDownMenu()
+		end
+	end)
+	--
+	local escapePressedCn = nil
+	SettingsShield.Parent = SettingsMenuFrame
+	--
+
+	escapePressedCn = GuiService.EscapeKeyPressed:connect(function()
+		if #MenuStack == 0 then
+			showSettingsRootMenu()
+		elseif #MenuStack == 1 then
+			closeSettingsMenu()
+		else
+			local currentMenu = MenuStack[#MenuStack]
+			popMenu()
+			if currentMenu == ReportAbuseFrame then
+				cleanupReportAbuseMenu()
+			end
+		end
+	end)
+	SettingsButton.MouseButton1Click:connect(showSettingsRootMenu)
+	-- Root Menu Connections
+	ResumeGameButton.MouseButton1Click:connect(closeSettingsMenu)
+	ResetCharacterButton.MouseButton1Click:connect(function() pushMenu(ResetCharacterFrame) end)
+	GameSettingsButton.MouseButton1Click:connect(function() pushMenu(GameSettingsMenuFrame) end)
+	ReportAbuseButton.MouseButton1Click:connect(function()
+		createReportAbuseMenu()
+		pushMenu(ReportAbuseFrame)
+	end)
+	LeaveGameButton.MouseButton1Click:connect(function() pushMenu(LeaveGameMenuFrame) end)
+	if ScreenshotButton then
+		ScreenshotButton.MouseButton1Click:connect(function()
+			closeSettingsMenu(true)
+		end)
+	end
+	if HelpButton then
+		HelpButton.MouseButton1Click:connect(function() pushMenu(HelpMenuFrame) end)
+	end
+
+	--[[ Video Recording ]]--
+	if RecordVideoButton then
+		RecordVideoButton.MouseButton1Click:connect(function()
+			closeSettingsMenu(true)
+		end)
+	end
+	local gameOptions = settings():FindFirstChild("Game Options")
+	if gameOptions then
+		local success, result = pcall(function()
+			gameOptions.VideoRecordingChangeRequest:connect(function(recording)
+				if isTopBar then
+					IsRecordingVideo = not IsRecordingVideo
+					RecordVideoButton.Text = IsRecordingVideo and "Stop Recording" or "Record Video"
+				else
+					onRecordVideoToggle()
+				end
+			end)
+		end)
+		if not success then
+			print("Settings2.lua: VideoRecordingChangeRequest connection failed because", result)
+		end
+	end
+
+	-- Reset Character Menu Connections
+	ConfirmResetButton.MouseButton1Click:connect(function()
+		resetLocalCharacter()
+		closeSettingsMenu()
+	end)
+	CancelResetButton.MouseButton1Click:connect(popMenu)
+
+	if ShiftLockCheckBox then
+		ShiftLockCheckBox.MouseButton1Click:connect(function()
+			IsShiftLockEnabled = not IsShiftLockEnabled
+			ShiftLockCheckBox.Text = IsShiftLockEnabled and "X" or ""
+			GameSettings.ControlMode = IsShiftLockEnabled and "MouseLockSwitch" or "Classic"
+			if shiftLockImageLabel then
+				shiftLockImageLabel.Visible = IsShiftLockEnabled
+			end
+		end)
+	end
+	-- Game Settings Menu Connections
+
+	GameSettingsBackButton.MouseButton1Click:connect(popMenu)
+
+	-- Help Menu Connections
+	HelpMenuBackButton.MouseButton1Click:connect(popMenu)
+	HelpLookButton.MouseButton1Click:connect(function()
+		changeHelpDialog(HelpLookButton, GameSettings.ControlMode == Enum.ControlMode.MouseLockSwitch and HELP_IMG.SHIFT_LOCK or HELP_IMG.CLASSIC_MOVE)
+	end)
+	HelpMoveButton.MouseButton1Click:connect(function()
+		changeHelpDialog(HelpMoveButton, HELP_IMG.MOVEMENT)
+	end)
+	HelpGearButton.MouseButton1Click:connect(function()
+		changeHelpDialog(HelpGearButton, HELP_IMG.GEAR)
+	end)
+	HelpZoomButton.MouseButton1Click:connect(function()
+		changeHelpDialog(HelpZoomButton, HELP_IMG.ZOOM)
+	end)
+
+	-- Report Abuse Connections
+	ReportCancelButton.MouseButton1Click:connect(function()
+		popMenu()
+		cleanupReportAbuseMenu()
+	end)
+	ReportSubmitButton.MouseButton1Click:connect(onReportSubmitted)
+	ReportAbuseConfirmationButton.MouseButton1Click:connect(closeSettingsMenu)
+
+	-- Leave Game Menu
+	LeaveCancelButton.MouseButton1Click:connect(popMenu)
+
+	-- Dev Console Connections
+	HelpConsoleButton.MouseButton1Click:connect(toggleDevConsole)
+	local success = pcall(function() ContextActionService:BindCoreAction("Open Dev Console", toggleDevConsole, false, Enum.KeyCode.F9) end)
+	if not success then
+		UserInputService.InputBegan:connect(function(inputObject)
+			if inputObject.KeyCode == Enum.KeyCode.F9 then
+				toggleDevConsole("Open Dev Console", Enum.UserInputState.Begin, inputObject)
+			end
+		end)
+		UserInputService.InputEnded:connect(function(inputObject)
+			if inputObject.KeyCode == Enum.KeyCode.F9 then
+				toggleDevConsole("Open Dev Console", Enum.UserInputState.End, inputObject)
+			end
+		end)
+	end
+
+	LocalPlayer.Changed:connect(function(property)
+		if IsTouchClient then
+			if TOUCH_CHANGED_PROPS[property] then
+				updateUserSettingsMenu(property)
+			end
+		else
+			if PC_CHANGED_PROPS[property] then
+				updateUserSettingsMenu(property)
+			end
+		end
+	end)
+
+	-- connect back button on android
+	local showLeaveEvent = nil
+	pcall(function() showLeaveEvent = GuiService.ShowLeaveConfirmation end)
+	if showLeaveEvent then
+		GuiService.ShowLeaveConfirmation:connect(function()
+			if #MenuStack == 0 then
+				showSettingsRootMenu()
+				RootMenuFrame.Position = UDim2.new(-1, 0, 0, 0)
+				LeaveGameMenuFrame.Position = UDim2.new(0, 0, 0, 0)
+				pushMenu(LeaveGameMenuFrame)
+			else
+				closeSettingsMenu()
+			end
+		end)
+	end
+
+	-- Remove old gui buttons
+	-- TODO: Gut this from the engine code
+	local oldLeaveGameButton = TopLeftControl:FindFirstChild('Exit')
+	if oldLeaveGameButton then
+		oldLeaveGameButton:Destroy()
+	else
+		oldLeaveGameButton = BottomLeftControl:FindFirstChild('Exit')
+		if oldLeaveGameButton then oldLeaveGameButton:Destroy() end
+	end
+
+	SettingsMenuFrame.Parent = RobloxGui
+end
+
+local moduleApiTable = {}
+
+function moduleApiTable:ToggleVisibility(visible)
+	if visible then
+		showSettingsRootMenu()
+	else
+		closeSettingsMenu()
+	end
+end
+
+ moduleApiTable.SettingsShowSignal = SettingsShowSignal
+
+return moduleApiTable
+
+end
+--loadbackpack()
+mainmenu()
+
+pcall(function() game:SetScreenshotInfo("") end)
+
+
+--repeat wait() until game:IsLoaded()
+
+--wait(3)
+--checkfocused()
