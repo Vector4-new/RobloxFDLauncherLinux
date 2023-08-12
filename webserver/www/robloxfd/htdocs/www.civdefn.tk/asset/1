@@ -55,39 +55,39 @@ scriptContext:AddCoreScript(15, screenGui, "CoreScripts/HealthScript")
 
 if not touchEnabled then
 	-- New Player List
-	scriptContext:AddCoreScript(16,screenGui,"CoreScripts/PlayerListScript")
+	--scriptContext:AddCoreScript(16,screenGui,"CoreScripts/PlayerListScript")
 elseif screenGui.AbsoluteSize.Y > 600 then
 	-- New Player List
-	scriptContext:AddCoreScript(16,screenGui,"CoreScripts/PlayerListScript")
+	--scriptContext:AddCoreScript(16,screenGui,"CoreScripts/PlayerListScript")
 else
 	delay(5, function()
 		if screenGui.AbsoluteSize.Y >= 600 then
 			-- New Player List
-			scriptContext:AddCoreScript(16,screenGui,"CoreScripts/PlayerListScript")
+			--scriptContext:AddCoreScript(16,screenGui,"CoreScripts/PlayerListScript")
 		end
 	end)
 end
 
 if game.CoreGui.Version >= 3 then
 	-- Backpack Builder, creates most of the backpack gui
-	scriptContext:AddCoreScript(17,screenGui,"CoreScripts/BackpackScripts/BackpackBuilder")
+	--scriptContext:AddCoreScript(17,screenGui,"CoreScripts/BackpackScripts/BackpackBuilder")
 
-	waitForChild(screenGui,"CurrentLoadout")
-	waitForChild(screenGui,"Backpack")
-	local Backpack = screenGui.Backpack
+	--waitForChild(screenGui,"CurrentLoadout")
+	--waitForChild(screenGui,"Backpack")
+	--local Backpack = screenGui.Backpack
 
 	-- Manager handles all big backpack state changes, other scripts subscribe to this and do things accordingly
 	if game.CoreGui.Version >= 7 then
-		scriptContext:AddCoreScript(18,Backpack,"CoreScripts/BackpackScripts/BackpackManager")
+		--scriptContext:AddCoreScript(18,Backpack,"CoreScripts/BackpackScripts/BackpackManager")
 	end
 
 	-- Backpack Gear (handles all backpack gear tab stuff)
-	game:GetService("ScriptContext"):AddCoreScript(19,Backpack,"CoreScripts/BackpackScripts/BackpackGear")
+	--game:GetService("ScriptContext"):AddCoreScript(19,Backpack,"CoreScripts/BackpackScripts/BackpackGear")
 	-- Loadout Script, used for gear hotkeys
-	scriptContext:AddCoreScript(20,screenGui.CurrentLoadout,"CoreScripts/BackpackScripts/LoadoutScript")
+	--scriptContext:AddCoreScript(20,screenGui.CurrentLoadout,"CoreScripts/BackpackScripts/LoadoutScript")
 	if game.CoreGui.Version >= 8 then
 		-- Wardrobe script handles all character dressing operations
-		scriptContext:AddCoreScript(-1,Backpack,"CoreScripts/BackpackScripts/BackpackWardrobe")
+		--scriptContext:AddCoreScript(-1,Backpack,"CoreScripts/BackpackScripts/BackpackWardrobe")
 	end
 end
 

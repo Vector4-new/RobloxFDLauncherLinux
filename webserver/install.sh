@@ -82,7 +82,7 @@ HTTPD_SUPERVISOR_PASS=$(printf '%s\n' "$HTTPD_SUPERVISOR_PASS" | sed -e 's/[\/&]
 MYSQL_ROOT_PASS=$(printf '%s\n' "$MYSQL_ROOT_PASS" | sed -e 's/[\/&]/\\&/g')
 
 # we have to do it this way because otherwise the file will just be blank (I assume due to trying to read and write to it at the same time)
-sed "s/%USERID%/$(id -u)/g" .env.bak > .env
+sed "s/%USERID%/$(id -u)/g" storage/.env > .env
 sed "s/%GROUPID%/$(id -g)/g" .env > .env2
 sed "s/%DEVILBOXUIPASS%/$DEVILBOX_UI_PASS/g" .env2 > .env3
 sed "s/%SUPERVISORDPASS%/$HTTPD_SUPERVISOR_PASS/g" .env3 > .env4
@@ -98,8 +98,9 @@ fi
 
 rm .env2 .env3 .env4 .env5
 
-cp .env .env.new
+cp .env storage/.env.bak
 mv .env devilbox/.env
+cp storage/caseinsensitive.conf devilbox/cfg/apache-2.4
 
 echo "Do you want to start up the webserver for the first time to download all necessary binaries?"
 echo "This may take some time."
@@ -113,7 +114,7 @@ do
         docker-compose up httpd mysql php bind &
 
         # wait until the server is up
-        while [[ "$(curl -sf localhost)" != "$(cat ../htdocs/index.php)" ]]; do
+        while [[ "$(curl -sf localhost)" != "$(cat ../www/robloxfd/htdocs/index.php)" ]]; do
             sleep 1
         done
 

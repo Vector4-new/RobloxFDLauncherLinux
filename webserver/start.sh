@@ -19,11 +19,11 @@ if [[ ! -z $WEBSERVER_UP ]]; then
     exit
 fi
 
-echo "Starting webserver..."
+echo "Starting webserver. This may take up to a minute, or longer if you haven't started the server before."
 nohup docker-compose up httpd mysql php bind >& /dev/null &
 
 # wait until the server is up
-while [[ "$(curl -sf localhost)" != "$(cat ../htdocs/index.php)" ]]; do
+while [[ "$(curl -sf localhost)" != "$(cat ../www/robloxfd/htdocs/index.php)" ]]; do
     sleep 1
 done
 

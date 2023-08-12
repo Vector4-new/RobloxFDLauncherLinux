@@ -1,8 +1,18 @@
+<?php
+require("/new/xampp/htdocs/corescripts/settings.php");
+header("content-type:text/plain");
+$Method = "userlogin"
+?>
 {
   "user": {
-    "id": 1,
-    "name": "Roblox",
-    "displayName": "Roblox"
+    "id": <?php echo $userid ?>,
+    "name": "<?php echo $username ?>.",
+    "displayName": "<?php echo $displayname ?>"
   },
-  "isBanned": false
+  "twoStepVerificationData": {
+    "mediaType": "<?php echo $email ?>",
+    "ticket": "1"
+  },
+  "identityVerificationLoginTicket": "1",
+  "isBanned": true
 }
