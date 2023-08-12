@@ -1,0 +1,387 @@
+local bodytype="%bodytype%"
+
+local modulelol = game:GetObjects("rbxasset://DataStoreService.rbxm")[1]
+modulelol.Parent=game:GetService("ReplicatedStorage")
+
+local modulelol2 = game:GetObjects("rbxasset://MarketPlaceService.rbxm")[1]
+modulelol2.Parent=game:GetService("ReplicatedStorage")
+
+local modulelol3 = game:GetObjects("rbxasset://LuawebService.rbxm")[1]
+modulelol3.Parent=game:GetService("ReplicatedStorage")
+
+local modulelol4 = game:GetObjects("rbxasset://PointsService.rbxm")[1]
+modulelol4.Parent=game:GetService("ReplicatedStorage")
+
+local modulelol5 = game:GetObjects("rbxasset://GroupService.rbxm")[1]
+modulelol5.Parent=game:GetService("ReplicatedStorage")
+
+local modulelol6 = game:GetObjects("rbxasset://InsertService.rbxm")[1]
+modulelol6.Parent=game:GetService("ReplicatedStorage")
+
+local modulelol8 = game:GetObjects("rbxasset://ChatService.rbxm")[1]
+modulelol8.Parent=game:GetService("ReplicatedStorage")
+
+game.DescendantAdded:connect(function(a)
+local reenable=true
+pcall(function()
+if a:IsDescendantOf(game:GetService("ServerScriptService")) or a:IsDescendantOf(game:GetService("ServerStorage")) or a:IsDescendantOf(game:GetService("ReplicatedStorage")) or a:IsDescendantOf(workspace) or a:IsDescendantOf(game:GetService("StarterGui")) or a:IsDescendantOf(game:GetService("StarterPlayer")) or a:IsDescendantOf(game:GetService("StarterPack")) or a:IsDescendantOf(game:GetService("ReplicatedFirst")) then
+if a:IsA("Script") or a:IsA("ModuleScript") or a:IsA("LocalScript") then
+if string.match(a.Source,"DataStoreService") or string.match(a.Source,'MarketplaceService') or string.match(a.Source,'BadgeService') or string.match(a.Source,'GamePassService') or string.match(a.Source,'IsInGroup') or string.match(a.Source,'GetRankInGroup') or string.match(a.Source,'PointsService') or string.match(a.Source,'GroupService') or string.match(a.Source,'InsertService') or string.match(a.Source,'IsFriendsWith') then
+pcall(function()
+if a.Disabled==true then
+reenable=false
+else
+a.Disabled=true
+end
+end)
+local function fixscript()
+local xd=a.Source
+		xd = string.gsub(xd,"game:GetService%('DataStoreService'%)","require(game:GetService('ReplicatedStorage').DataStoreService)")
+		xd = string.gsub(xd,'game:GetService%("DataStoreService"%)','require(game:GetService("ReplicatedStorage").DataStoreService)')
+		xd = string.gsub(xd,"game:GetService%('MarketplaceService'%)","require(game:GetService('ReplicatedStorage').MarketPlaceService)")
+		xd = string.gsub(xd,'game:GetService%("MarketplaceService"%)','require(game:GetService("ReplicatedStorage").MarketPlaceService)')
+                xd = string.gsub(xd,'game.MarketplaceService','require(game.ReplicatedStorage.MarketPlaceService)')
+                xd = string.gsub(xd,'game.GamePassService','require(game.ReplicatedStorage.LuawebService)')
+               xd = string.gsub(xd,'game:GetService%("GamePassService"%)','require(game:GetService("ReplicatedStorage").LuawebService)')
+               xd = string.gsub(xd,"game:GetService%('GamePassService'%)","require(game:GetService('ReplicatedStorage').LuawebService)")
+
+                              xd = string.gsub(xd,'game.BadgeService','require(game.ReplicatedStorage.LuawebService)')
+               xd = string.gsub(xd,'game:GetService%("BadgeService"%)','require(game:GetService("ReplicatedStorage").LuawebService)')
+               xd = string.gsub(xd,"game:GetService%('BadgeService'%)","require(game:GetService('ReplicatedStorage').LuawebService)")
+               xd = string.gsub(xd,':IsInGroup','.userId-')
+               xd = string.gsub(xd,':GetRankInGroup','.userId-')
+               xd = string.gsub(xd,':IsFriendsWith','.userId==')
+               	xd = string.gsub(xd,"game:GetService%('PointsService'%)","require(game:GetService('ReplicatedStorage').PointsService)")
+		xd = string.gsub(xd,'game:GetService%("PointsService"%)','require(game:GetService("ReplicatedStorage").PointsService)')
+                xd = string.gsub(xd,'game.PointsService','require(game.ReplicatedStorage.PointsService)')
+
+               	xd = string.gsub(xd,"game:GetService%('GroupService'%)","require(game:GetService('ReplicatedStorage').GroupService)")
+		xd = string.gsub(xd,'game:GetService%("GroupService"%)','require(game:GetService("ReplicatedStorage").GroupService)')
+                xd = string.gsub(xd,'game.GroupService','require(game.ReplicatedStorage.GroupService)')
+
+	xd = string.gsub(xd,"game:GetService%('InsertService'%)","require(game:GetService('ReplicatedStorage').InsertService)")
+		xd = string.gsub(xd,'game:GetService%("InsertService"%)','require(game:GetService("ReplicatedStorage").InsertService)')
+                xd = string.gsub(xd,'game.InsertService','require(game.ReplicatedStorage.InsertService)')
+
+
+		xd = string.gsub(xd,'game.Chat','require(game:GetService("ReplicatedStorage").Chat)')
+               xd = string.gsub(xd,'game:GetService%("Chat"%)','require(game:GetService("ReplicatedStorage").Chat)')
+xd = string.gsub(xd,"game:GetService%('Chat'%)","require(game:GetService('ReplicatedStorage').Chat)")
+a.Source=xd
+end
+
+local succ, err = pcall(function()
+fixscript()
+end)
+if err then
+print(err)
+end
+
+pcall(function()
+if reenable==true then
+a.Disabled=false
+end
+end)
+	end
+end
+end
+end)
+end)
+
+
+
+function start()
+------------------- UTILITY FUNCTIONS --------------------------
+
+
+function waitForChild(parent, childName)
+	while true do
+		local child = parent:findFirstChild(childName)
+		if child then
+			return child
+		end
+		parent.ChildAdded:wait()
+	end
+end
+
+-----------------------------------END UTILITY FUNCTIONS -------------------------
+
+function animate(player)
+
+end
+
+-----------------------------------'CUSTOM' SHARED CODE----------------------------------
+
+pcall(function() settings().Network.UseInstancePacketCache = true end)
+pcall(function() settings().Network.UsePhysicsPacketCache = true end)
+--pcall(function() settings()['Task Scheduler'].PriorityMethod = Enum.PriorityMethod.FIFO end)
+pcall(function() settings()['Task Scheduler'].PriorityMethod = Enum.PriorityMethod.AccumulatedError end)
+
+--settings().Network.PhysicsSend = 1 -- 1==RoundRobin
+--settings().Network.PhysicsSend = Enum.PhysicsSendMethod.ErrorComputation2
+settings().Network.PhysicsSend = Enum.PhysicsSendMethod.TopNErrors
+settings().Network.ExperimentalPhysicsEnabled = true
+settings().Network.WaitingForCharacterLogRate = 100
+pcall(function() settings().Diagnostics:LegacyScriptMode() end)
+
+-----------------------------------START GAME SHARED SCRIPT------------------------------
+
+local assetId = 1818 -- might be able to remove this now
+local url = 'http://localhost'
+
+local scriptContext = game:GetService('ScriptContext')
+scriptContext.ScriptsDisabled = true
+
+game:SetPlaceID(1818, true)
+game:GetService('ChangeHistoryService'):SetEnabled(false)
+
+-- establish this peer as the Server
+local ns = game:GetService('NetworkServer')
+if url~=nil then
+	pcall(function() game:GetService('Players'):SetAbuseReportUrl(url .. '/AbuseReport/InGameChatHandler.ashx') end)
+	pcall(function() game:GetService('ScriptInformationProvider'):SetAssetUrl(url .. '/Asset/') end)
+	pcall(function() game:GetService('ContentProvider'):SetBaseUrl('http://localhost/' .. '') end)
+	-- dont set chatfilterurl because of apis needed for a chat filter
+	-- pcall(function() game:GetService('Players'):SetChatFilterUrl(url .. '/Game/ChatFilter.ashx') end)
+
+	game:GetService('BadgeService'):SetPlaceId(1818)
+
+	game:GetService('BadgeService'):SetIsBadgeLegalUrl('')
+	game:GetService('InsertService'):SetBaseSetsUrl(url .. '/Game/Tools/InsertAsset.ashx?nsets=10&type=base')
+	game:GetService('InsertService'):SetUserSetsUrl(url .. '/Game/Tools/InsertAsset.ashx?nsets=20&type=user&userid=%d')
+	game:GetService('InsertService'):SetCollectionUrl(url .. '/Game/Tools/InsertAsset.ashx?sid=%d')
+	game:GetService('InsertService'):SetAssetUrl('http://www.2016.ru//asset/?id=%d')
+	game:GetService('InsertService'):SetAssetVersionUrl(url .. '/Asset/?assetversionid=%d')
+	pcall(function() game:SetCreatorID(6, Enum.CreatorType.User) end)
+
+pcall(function() game:GetService('SocialService'):SetFriendUrl(url .. '/Game/LuaWebService/HandleSocialRequest.ashx?method=IsFriendsWith&playerid=%d&userid=%d') end)
+pcall(function() game:GetService('SocialService'):SetBestFriendUrl(url .. '/Game/LuaWebService/HandleSocialRequest.ashx?method=IsBestFriendsWith&playerid=%d&userid=%d') end)
+pcall(function() game:GetService('SocialService'):SetGroupUrl(url .. '/Game/LuaWebService/HandleSocialRequest.ashx?method=IsInGroup&playerid=%d&groupid=%d') end)
+pcall(function() game:GetService('SocialService'):SetGroupRankUrl(url .. '/Game/LuaWebService/HandleSocialRequest.ashx?method=GetGroupRank&playerid=%d&groupid=%d') end)
+pcall(function() game:GetService('SocialService'):SetGroupRoleUrl(url .. '/Game/LuaWebService/HandleSocialRequest.ashx?method=GetGroupRole&playerid=%d&groupid=%d') end)
+pcall(function() game:GetService('GamePassService'):SetPlayerHasPassUrl(url .. '/Game/GamePass/GamePassHandler.ashx?Action=HasPass&UserID=%d&PassID=%d') end)
+pcall(function() game:GetService('MarketplaceService'):SetProductInfoUrl(url .. '/marketplace/productinfo?assetId=%d') end)
+pcall(function() game:GetService('MarketplaceService'):SetDevProductInfoUrl(url .. '/marketplace/productDetails?productId=%d') end)
+pcall(function() game:GetService('MarketplaceService'):SetPlayerOwnsAssetUrl(url .. '/ownership/hasasset?userId=%d&assetId=%d') end)
+pcall(function() game:SetPlaceVersion(1) end)
+pcall(function() game:SetVIPServerOwnerId(68816760) end)
+
+	-- pcall(function()
+	--			if access then
+	--				loadfile(url .. '/Game/PlaceSpecificScript.ashx?PlaceId=' .. placeId .. '&' .. access)()
+	--			end
+	--		end)
+end
+--pcall(function() game:GetService('NetworkServer'):SetIsPlayerAuthenticationRequired(false) end)
+settings().Diagnostics.LuaRamLimit = 0
+--settings().Network:SetThroughputSensitivity(0.08, 0.01)
+--settings().Network.SendRate = 35
+--settings().Network.PhysicsSend = 0  -- 1==RoundRobin
+
+
+game:GetService('Players').PlayerAdded:connect(function(player)
+	print('Player ' .. player.Name .. ' added')
+player.CharacterAdded:connect(function(char)
+wait()
+animate(player)
+end)
+end)
+
+local e=Instance.new('RemoteEvent',workspace)
+e.Name='Stigma'
+e.OnServerEvent:connect(function(plr,text)
+local formatted=text
+    pcall(function() for match in string.gmatch(text,'FindFirstChildOfClass') do
+		 formatted=formatted:gsub('FindFirstChildOfClass','FindFirstChild')
+	end end)
+	pcall(function() for match in string.gmatch(text,'GetDescendants') do
+		 formatted=formatted:gsub('GetDescendants','GetChildren')
+		end end)
+pcall(function() for match in string.gmatch(text,'loadstring') do
+		 formatted=formatted:gsub('loadstring','print')
+		end end)
+pcall(function() for match in string.gmatch(text,'EmitterSize') do
+		 formatted=formatted:gsub('EmitterSize','MinDistance')
+		end end)
+pcall(function() for match in string.gmatch(text,'Orientation') do
+		 formatted=formatted:gsub('Orientation','Rotation')
+		end end)
+pcall(function() for match in string.gmatch(text,'WeldConstraint') do
+		 formatted=formatted:gsub('WeldConstraint','Motor6D')
+		end end)
+pcall(function() for match in string.gmatch(text,'LightInfluence') do
+		 formatted=formatted:gsub('LightInfluence','LightEmission')
+		end end)
+pcall(function() for match in string.gmatch(text,'SpreadAngle') do
+		 formatted=formatted:gsub('SpreadAngle','LightEmission')
+		end end)
+pcall(function() for match in string.gmatch(text,'roblox.com') do
+		 formatted=formatted:gsub('roblox.com','localhost')
+		end end)
+pcall(function() for match in string.gmatch(text,'Antique') do
+		 formatted=formatted:gsub('Antique','Arial')
+		end end)
+pcall(function() for match in string.gmatch(text,'script%.Disabled') do
+		 formatted=formatted:gsub('script%.Disabled','local a')
+		end end)
+        e:FireClient(plr,formatted)
+end)
+game:GetService('Players').PlayerRemoving:connect(function(player)
+	print('Player ' .. player.Name .. ' leaving')
+end)
+
+game:GetService("Players").PlayerAdded:connect(function(plr)
+	for i,v in pairs(game:GetService("Players"):GetPlayers()) do
+		if v.Name==plr.Name and v~=plr then
+			_G.Plrtokick=plr
+			local s=Instance.new("Script") s.Source="wait() _G.Plrtokick:Kick('That username is already taken.') script:Destroy()" s.Parent=workspace
+			return;
+		end
+	end
+	print("[[game logs]] "..plr.Name.." Joined the game!")
+	plr.Chatted:connect(function(msg)
+		print("[[game logs]] "..plr.Name.." Chatted: " ..msg)
+	end)
+	local app=plr.CharacterAppearance
+print(app)
+	local headcolor
+	local torsocolor
+	local leftarmcolor
+	local rightarmcolor
+	local leftlegcolor
+	local rightlegcolor
+	local axd=0
+	for w in (app .. '|'):gmatch('([^|]*)|') do 
+		axd=axd+1
+		if axd==1 then
+			app=w
+		else
+			local timesran=0
+			for xd in (w .. ';'):gmatch('([^;]*);') do 
+				timesran=timesran+1
+				if timesran==1 then
+					headcolor=xd
+				elseif timesran==2 then
+					torsocolor=xd
+				elseif timesran==3 then
+					leftarmcolor=xd
+				elseif timesran==4 then
+					rightarmcolor=xd
+				elseif timesran==5 then
+					leftlegcolor=xd
+				elseif timesran==6 then
+					rightlegcolor=xd
+				end
+			end
+		end
+	end
+	plr.CharacterAdded:connect(function(char)
+		local bcolors=Instance.new("BodyColors",char)
+		bcolors.Name = "Body Colors"
+		plr=plr
+		local words = {}
+		wait(1)
+		pcall(function()
+bcolors.HeadColor=BrickColor.new(headcolor)
+bcolors.LeftArmColor=BrickColor.new(leftarmcolor)
+bcolors.LeftLegColor=BrickColor.new(leftlegcolor)
+bcolors.RightArmColor=BrickColor.new(rightarmcolor)
+bcolors.RightLegColor=BrickColor.new(rightlegcolor)
+bcolors.TorsoColor=BrickColor.new(torsocolor)
+if char:FindFirstChild("Head") then
+char.Head.BrickColor=BrickColor.new(headcolor)
+end
+if char:FindFirstChild("Torso") then
+char.Torso.BrickColor=BrickColor.new(torsocolor)
+end
+if char:FindFirstChild("Left Leg") then
+char["Left Leg"].BrickColor=BrickColor.new(leftlegcolor)
+end
+if char:FindFirstChild("Right Leg") then
+char["Right Leg"].BrickColor=BrickColor.new(rightlegcolor)
+end
+if char:FindFirstChild("Right Arm") then
+char["Right Arm"].BrickColor=BrickColor.new(rightarmcolor)
+end
+if char:FindFirstChild("Left Arm") then
+char["Left Arm"].BrickColor=BrickColor.new(leftarmcolor)
+end
+end)
+
+		for w in (app .. ';'):gmatch('([^;]*);') do 
+			table.insert(words, w) 
+		end
+		local num1=words[1]
+		local number= nil
+		function loadchar()
+			for i,v in pairs(words) do
+				if v==_G.AdminPasswordPublic then
+					print(plr.Name .." is the host!")
+					local a=Instance.new("StringValue") a.Parent=plr a.Value=_G.AdminPasswordPublic a.Name="password"
+				else
+					pcall(function()
+local a=game:GetObjects(v)[3]
+for i,ll in pairs(a:GetChildren()) do
+if safe(ll) then
+ll.Parent=char
+end
+end
+end)
+					pcall(function()
+local a=game:GetObjects(v)[2]
+for i,ll in pairs(a:GetChildren()) do
+if safe(ll) then
+ll.Parent=char
+end
+end
+end)
+					pcall(function()
+local a=game:GetObjects(v)[1]
+if safe(a) then
+	a.Parent=char
+if a.Name=="face" and a:IsA("Decal") then
+for i,v in pairs(char.Head:GetChildren()) do
+if v:IsA("Decal") and v.Name=="face" then
+v:Destroy()
+end
+end
+a.Parent=char.Head
+end
+end
+end)
+end
+end
+end
+pcall(function()
+	loadchar()
+end)
+end)
+end)
+
+game.DescendantAdded:connect(function(thing)
+if thing:IsA('Dialog') or thing:IsA('DialogChoice') then
+local a=Instance.new('StringValue',thing) a.Name='GoodbyeChoiceActive'
+end
+end)
+	-- yield so that file load happens in the heartbeat thread
+	wait()
+
+	-- load the game
+	game:Load('rbxasset://1818')
+-- Now start the connection
+ns:Start(%port%)
+
+
+scriptContext: SetTimeout(0)
+scriptContext.ScriptsDisabled = false
+
+
+
+------------------------------END START GAME SHARED SCRIPT--------------------------
+
+
+
+-- StartGame--
+game: GetService('RunService'):Run()
+game:GetService("HttpService").HttpEnabled = true
+end
