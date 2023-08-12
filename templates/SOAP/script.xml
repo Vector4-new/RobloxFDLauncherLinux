@@ -1,0 +1,5 @@
+<ns1:script>
+            <ns1:name>%SCRIPTNAME%</ns1:name>
+            <ns1:script>%SCRIPT%</ns1:script>
+            <ns1:arguments>%ARGUMENTS%</ns1:arguments>
+</ns1:script>

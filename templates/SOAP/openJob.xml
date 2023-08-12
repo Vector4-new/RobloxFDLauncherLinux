@@ -1,0 +1,4 @@
+        <ns1:OpenJob>
+            %JOB%
+            %SCRIPT%
+        </ns1:OpenJob>

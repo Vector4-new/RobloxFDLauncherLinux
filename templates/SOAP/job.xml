@@ -1,0 +1,6 @@
+<ns1:job>
+            <ns1:id>%JOBID%</ns1:id>
+            <ns1:expirationInSeconds>%EXPIRATIONINSECONDS%</ns1:expirationInSeconds>
+            <ns1:category>%CATEGORY%</ns1:category>
+            <ns1:cores>%CORES%</ns1:cores>
+</ns1:job>

@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # usage: host.sh <client> <map path> <port>
+# note: hosting on port 32768 and above has a 1/32768 chance of port collision
 # other settings like rig type, filtering status, and asset saving can be configured using the 'customize.sh' script.
 
 if [[ $# -ne 3 ]]; then
@@ -18,7 +19,6 @@ if [[ ! -d "shared" || ! -d "Clients" ]]; then
 fi
 
 pushd $(dirname $0) > /dev/null
-
 
 if [[ ! -d "webserver/devilbox" ]]; then
     echo "The webserver is not installed!"
@@ -61,8 +61,65 @@ echo $(($RANDOM * 32768 + $RANDOM)) > settings/server/serverPassword.txt
 CLIENT=${1^^}
 PORT=$3
 
+# $1 = input
+function XMLEscape() {
+    ESCAPED="$1"
+    ESCAPED="${ESCAPED//&/&amp;}"
+    ESCAPED="${ESCAPED//</&gt;}"
+    ESCAPED="${ESCAPED//>/&lt;}"
+    ESCAPED="${ESCAPED//\'/&apos;}"
+    
+    echo "${ESCAPED//\"/&quot;}"
+}
+
+# this was annoying af to write because there's no good tool to replace strings that have newlines in them
+
+# $1 = ip, $2 = port, $3 = action, $4 = content
+function SOAPSend() {
+    echo "$(curl -sf -X POST -H "Accept: text/html" -H "Cache-Control: no-cache" -H "Pragma: no-cache" -H "SOAPAction: $3" --data "$4" "http://$1:$2")"
+}
+
+# $1 = baseurl, $2 = content
+function SOAPPrepareSend() {
+    SOAP_DATA=$(cat templates/SOAP/base.xml)
+    SOAP_DATA="${SOAP_DATA//%BASEURL%/$1}"
+    echo "${SOAP_DATA//%BASECONTENT%/$2}"
+}
+
+# $1 = job, $2 = script
+function SOAPCreateOpenJob() {
+    OPENJOB=$(cat templates/SOAP/openJob.xml)
+    OPENJOB="${OPENJOB//%JOB%/$1}"
+    echo "${OPENJOB//%SCRIPT%/$2}"
+}
+
+# $1 = name, $2 = script, $3 = arguments
+function SOAPFormatScript() {
+
+    SCRIPT=$(cat templates/SOAP/script.xml)
+    SCRIPT="${SCRIPT//%SCRIPTNAME%/$(XMLEscape $1)}"
+    SCRIPT="${SCRIPT//%SCRIPT%/$2}"
+    echo "${SCRIPT//%ARGUMENTS%/Not implemented}"
+}
+
+# $1 = jobid, $2 = expirationInSeconds, $3 = category, $4 = cores
+function SOAPFormatJob() {
+    JOB=$(cat templates/SOAP/job.xml)
+    JOB="${JOB//%JOBID%/$(XMLEscape $1)}"
+    JOB="${JOB//%EXPIRATIONINSECONDS%/$(XMLEscape $2)}"
+    JOB="${JOB//%CATEGORY%/$(XMLEscape $3)}"
+    echo "${JOB//%CORES%/$(XMLEscape $4)}"
+}
+
+# $1 = jobid, $2 = script
+function SOAPFormatExecute() {
+    EXECUTE=$(cat templates/SOAP/execute.xml)
+    EXECUTE="${EXECUTE//%JOBID%/$(XMLEscape $1)}"
+    echo "${EXECUTE//%SCRIPT%/$2}"
+}
+
 function Host2022M() {
-    # TODO: test
+    # not working
     
     (sed "s/%FILTERINGENABLED%/$(cat settings/server/filteringEnabled.txt)/g" templates/filteringenabled.xml > shared/content/server.rbxmx) &> /dev/null
 
@@ -78,15 +135,39 @@ function Host2015L() {
     echo "$GAMESERVER" > shared/gameserver.txt
 
     cd shared
-    wine $CLIENT.exe -Console -verbose -placeid:1818 -port $(($RANDOM + 1024))
+    wine $CLIENT.exe -Console -verbose -placeid:1818 -port $(($RANDOM + 32768))
 }
 
 function Host2017M() {
-    : # TODO: get soap thingamajig working
+    SOAP_PORT=$(($RANDOM + 32768))
+    GAMESERVER="$(sed "s/%bodytype%/$(cat settings/server/rigType.txt)/g; s/%port%/$PORT/g" templates/2017Mhost.txt)"
+
+    JOB=$(SOAPFormatScript RanScript "$GAMESERVER" "")
+    EXECUTE=$(SOAPFormatExecute Test "$JOB")
+    CONTENT=$(SOAPPrepareSend roblox.com "$EXECUTE")
+
+    (sleep 15; SOAPSend localhost $SOAP_PORT Execute "$CONTENT" &> /dev/null) &
+
+    cd shared
+    wine 2017M.exe -Console -verbose -placeid:1818 -port $SOAP_PORT
 }
 
 function Host2021E() {
-    : # TODO: get soap thingamajig working
+    # TODO: seems to host, but need to test
+    
+    SOAP_PORT=$(($RANDOM + 32768))
+    GAMESERVER="$(sed "s/%bodytype%/$(cat settings/server/rigType.txt)/g; s/%port%/$PORT/g" templates/2017Mhost.txt)"
+
+    JOB=$(SOAPFormatScript RanScript "$GAMESERVER" "")
+    EXECUTE=$(SOAPFormatExecute Test "$JOB")
+    CONTENT=$(SOAPPrepareSend roblox.com "$EXECUTE")
+
+    (sleep 15; SOAPSend localhost $SOAP_PORT Execute "$CONTENT" &> /dev/null) &
+
+    sed "s/%port%/$PORT/g" templates/gameserver.json > shared/gameserver.json
+
+    cd shared
+    wine 2021E.exe -Console -verbose -placeid:1818 -localtest "gameserver.json" -settingsfile "DevSettingsFile.json" -port $(($RANDOM + 32768))
 }
 
 function Host2014M() {
@@ -97,14 +178,24 @@ function Host2014M() {
 }
 
 function Host2008M() {
-    : # TODO
+    SOAP_PORT=$(($RANDOM + 32768))
+    GAMESERVER=$(sed "s/%port%/$PORT/g" templates/2008Mhost.txt)
+
+    JOB=$(SOAPFormatJob Test 600000 0 0)
+    SCRIPT=$(SOAPFormatScript GameServer "$GAMESERVER" "")
+    CONTENT=$(SOAPPrepareSend localhost/ "$(SOAPCreateOpenJob "$JOB" "$SCRIPT")")
+
+    (sleep 15; SOAPSend localhost $SOAP_PORT OpenJob "$CONTENT" &> /dev/null) &
+
+    cd Clients/2008M/RCCService
+    wine RCCService.exe -Console -verbose -placeid:1818 -port $SOAP_PORT
 }
 
 function Host2018() {
     sed "s/%port%/$PORT/g" templates/gameserver.json > shared/gameserver.json
 
     cd shared
-    wine $CLIENT.exe -Console -verbose -placeid:1818 -localtest "gameserver.json" -port $(($RANDOM + 1024))
+    wine $CLIENT.exe -Console -verbose -placeid:1818 -localtest "gameserver.json" -port $(($RANDOM + 32768))
 }
 
 SERVER_SCRIPT="_G.AdminPasswordPublic='password=$(cat settings/server/serverPassword.txt)' $(sed "s/%bodytype%/$(cat settings/server/rigType.txt)/g" templates/ServerScript.txt)"
@@ -113,7 +204,7 @@ SERVER_SCRIPT="_G.AdminPasswordPublic='password=$(cat settings/server/serverPass
 (echo $SERVER_SCRIPT > "shared/content/scripts/CoreScripts/ServerStarterScript.lua") &> /dev/null
 (echo $SERVER_SCRIPT > "Clients/2021E/RCCService/ExtraContent/scripts/CoreScripts/ServerStarterScript.lua") &> /dev/null
 
-(cat "$2" > webserver/www/robloxfd/htdocs/.127.0.0.1/asset/1818)
+(cat "$2" > webserver/www/robloxfd/htdocs/.127.0.0.1/asset/1818) &> /dev/null
 (cat "$2" > webserver/www/robloxfd/htdocs/.localhost/asset/1818) &> /dev/null
 (cat "$2" > shared/content/place.rbxl) &> /dev/null
 (cat "$2" > shared/content/1818) &> /dev/null

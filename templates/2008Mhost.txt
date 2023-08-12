@@ -1,0 +1,156 @@
+local port = %port%
+local sleepTime = 10
+local ns = game:service("NetworkServer")
+
+function GetDescendants(o)
+    local allObjects = {}
+    function FindChildren(Object)
+       for i,v in pairs(Object:children()) do
+            table.insert(allObjects,v)
+            FindChildren(v)
+        end
+    end
+    FindChildren(o)
+    return allObjects
+end
+local assetPropertyNames = {"Texture", "TextureId", "SoundId", "MeshId", "SkyboxUp", "SkyboxLf", "SkyboxBk", "SkyboxRt", "SkyboxFt", "SkyboxDn", "PantsTemplate", "ShirtTemplate", "Graphic", "Image", "LinkedSource", "AnimationId"}
+local variations = {"http://www.roblox.com/asset/%?id=", "http://www.roblox.com/asset%?id="}
+local function spawnchar(plr)
+
+
+                	plr.Character.ChildAdded:connect(function(a)
+	for ii, property in pairs(assetPropertyNames) do
+		pcall(function()
+			if a[property] and not a:FindFirstChild(property) then --Check for property, make sure we're not getting a child instead of a property
+				assetText = string.lower(a[property])
+				for _, variation in pairs(variations) do
+					a[property], matches = string.gsub(assetText, variation, "http://localhost/asset/%?id=")
+					if matches > 0 then
+						replacedProperties = replacedProperties + 1
+						break
+					end
+				end
+			end
+		end)
+	end
+	end)
+
+for i,a in pairs(plr.Character:GetChildren()) do
+for ii, property in pairs(assetPropertyNames) do
+		pcall(function()
+			if a[property] and not a:FindFirstChild(property) then --Check for property, make sure we're not getting a child instead of a property
+				assetText = string.lower(a[property])
+				for _, variation in pairs(variations) do
+					a[property], matches = string.gsub(assetText, variation, "http://localhost/asset/%?id=")
+					if matches > 0 then
+						replacedProperties = replacedProperties + 1
+						break
+					end
+				end
+			end
+		end)
+	end
+end
+
+
+
+local spawns={}
+for i,v in pairs(GetDescendants(workspace)) do
+if v.className=="SpawnLocation" and plr.Neutral==false then
+if v.Neutral==false and v.TeamColor==plr.TeamColor then
+table.insert(spawns,v)
+end
+elseif plr.Neutral==true and v.className=="SpawnLocation" then
+if v.Neutral==true then
+table.insert(spawns,v)
+end
+end
+end
+local tpto = spawns[math.random(1,#spawns)]
+local lol=Instance.new("ForceField")
+lol.Parent=plr.Character
+plr.Character.Torso.CFrame = CFrame.new(tpto.CFrame.x,tpto.CFrame.y+5,tpto.CFrame.z)
+wait(5)
+lol.Parent=nil
+end
+
+game:service("Players"):setAbuseReportUrl("http://www.roblox.com/AbuseReport/InGameChatHandler.ashx")
+function waitForChild(parent, childName)
+	while true do
+		local child = parent:findFirstChild(childName)
+		if child then
+			return child
+		end
+		parent.ChildAdded:wait()
+	end
+end
+function getKillerOfHumanoidIfStillInGame(humanoid)
+	local tag = humanoid:findFirstChild("creator")
+	if tag then
+		local killer = tag.Value
+		if killer.Parent then -- killer still in game
+			return killer
+		end
+	end
+	return nil
+end
+function onDied(victim, humanoid)
+	local killer = getKillerOfHumanoidIfStillInGame(humanoid)
+
+	local victorId = 0
+	if killer then
+		victorId = killer.userId
+		print("STAT: kill by " .. victorId .. " of " .. victim.userId)
+		game:httpGet("http://www.roblox.com/Game/Statistics.ashx?TypeID=15&UserID=" .. victorId .. "&AssociatedUserID=" .. victim.userId .. "&AssociatedPlaceID=0")
+	end
+	print("STAT: death of " .. victim.userId .. " by " .. victorId)
+	game:httpGet("http://www.roblox.com/Game/Statistics.ashx?TypeID=16&UserID=" .. victim.userId .. "&AssociatedUserID=" .. victorId .. "&AssociatedPlaceID=0")
+end
+function createDeathMonitor(player)
+	if player.Character then
+		local humanoid = waitForChild(player.Character, "Humanoid")
+		humanoid.Died:connect(
+			function ()
+				onDied(player, humanoid)
+			end
+		)
+	end
+end
+game:service("Players").ChildAdded:connect(
+	function (player)
+                 player.Chatted:connect(function(msg)
+                     print("["..player.Name.." chatted]: "..msg)
+                end)
+		createDeathMonitor(player)
+		player.Changed:connect(
+			function (property)
+				if property=="Character" then
+					createDeathMonitor(player)
+				end
+			end
+		)
+	end
+)
+function characterRessurection(player)
+	if player.Character then
+		local humanoid = player.Character.Humanoid
+		humanoid.Died:connect(function() wait(5) pcall(function() player:LoadCharacter() end) spawnchar(player) end)
+	end
+end
+game:service("Players").PlayerAdded:connect(function(player)
+	print("Player " .. player.Name .. " added")
+	pcall(function() player:LoadCharacter() end)
+        spawnchar(player)
+	characterRessurection(player)
+	player.Changed:connect(function(name)
+		if name=="Character" then
+			characterRessurection(player)
+		end
+	end)
+end)
+game:service("Players").PlayerRemoving:connect(function(player)
+	print("Player " .. player.Name .. " Leaving")
+end)
+game:Load("http://localhost/.127.0.0.1/asset?id=1818")
+ns:start(port, sleepTime)
+game:service("RunService"):run()
