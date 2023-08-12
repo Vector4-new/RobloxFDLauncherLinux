@@ -2295,6 +2295,10 @@ local createChatBar = function()
 		chatBox.Text = ""
 		chatBox.Visible = true
 		chatBox:CaptureFocus()
+                wait()
+                chatBox.Text = " "
+wait()
+chatBox.Text = ""
 	end
 
 	chatButton.MouseButton1Click:connect(activateChat)

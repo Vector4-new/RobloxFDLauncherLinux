@@ -955,6 +955,10 @@ function Chat:FocusOnChatBar()
 		self.Frame.Background.Visible = false
 	end
 	self.ChatBar:CaptureFocus()
+        wait()
+        self.ChatBar.Text = " "
+wait()
+self.ChatBar.Text = ""
 end
 
 -- For touch devices we create a button instead

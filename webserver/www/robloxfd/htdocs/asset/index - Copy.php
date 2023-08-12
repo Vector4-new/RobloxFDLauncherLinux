@@ -1,26 +1,28 @@
 <?php
-function is_connected()
+$this_dir = dirname(__FILE__);
+$parent_dir = realpath($this_dir . '/../');
+$target_path = $parent_dir . '/SavedAssets/';
+if(file_exists("./".$_GET["id"]))
 {
-    $connected = @fsockopen("assetdelivery.roblox.com", 80); 
-                                        //website, port  (try 80 or 443)
-    if ($connected){
-        $is_conn = true; //action when connected
-        fclose($connected);
-    }else{
-        $is_conn = false; //action in connection failure
-    }
-    return $is_conn;
-
+    header("Content-type: text/plain");
+    die(file_get_contents("./".$_GET['id']));
 }
-if(is_connected() && !file_exists("./".$_GET["id"]) ||  ( 0 == filesize("./".$_GET["id"])) && is_connected())
+else
 {
-$url = "https://assetdelivery.roblox.com/v1/asset/?id=".$_GET['id'];
-$file_name = $_GET['id'];
+if(file_exists($target_path.$_GET["id"]))
+{
+if (0 ==filesize($target_path.$_GET["id"]))
+{
+$stringxd = $_GET['id'];
+$url = "https://api.hyra.io/audio/".$stringxd;
+$url2 = "https://assetdelivery.roblox.com/v1/asset/?id=".$stringxd;
+$file_name = $target_path.$_GET['id'];
 $myfile = fopen($file_name, "w");
 file_put_contents($file_name,file_get_contents($url));
-//Header("Location: ".$url);
-header("Content-type: text/plain");
-die(file_get_contents("./".$_GET['id']));
+Header("Location: ".$url2);
+}
+    header("Content-type: text/plain");
+    die(file_get_contents($target_path.$_GET['id']));
 }
 else
 {
@@ -31,10 +33,24 @@ Header("Location: ".$url2);
 }
 else
 {
-if(file_exists("./".$_GET["id"])) {
-    header("Content-type: text/plain");
-    die(file_get_contents("./".$_GET['id']));
-
+$stringxd = $_GET['id'];
+if (strstr($stringxd,'1111111'))
+{
+$s2=explode("1111111", $stringxd)[1];
+$urlxd = "https://assetdelivery.roblox.com/v1/asset/?id=".$s2."&version=1";
+$file_name = $target_path.$_GET['id'];
+$myfile = fopen($file_name, "w");
+file_put_contents($file_name,file_get_contents($urlxd));
+Header("Location: ".$urlxd);
+}
+else
+{
+$url = "https://assetdelivery.roblox.com/v1/asset/?id=".$stringxd;
+$file_name = $target_path.$_GET['id'];
+$myfile = fopen($file_name, "w");
+file_put_contents($file_name,file_get_contents($url));
+Header("Location: ".$url);
+}
 }
 }
 }
