@@ -11,14 +11,14 @@ if [[ $# -ne 3 ]]; then
     exit
 fi
 
+pushd $(dirname $0) > /dev/null
+
 if [[ ! -d "shared" || ! -d "Clients" ]]; then
     echo "Clients don't exist!"
     echo "Install it by going jetray.itch.io, download FilteringDisabled.7z, and extract the 'shared' and 'Clients' folders here"
     popd > /dev/null
     exit
 fi
-
-pushd $(dirname $0) > /dev/null
 
 if [[ ! -d "webserver/devilbox" ]]; then
     echo "The webserver is not installed!"
@@ -218,9 +218,7 @@ case ${1^^} in
     "2014M") Host2014M ;;
     "2008M") Host2008M ;;
     "2018E"|"2018M"|"2018L") Host2018 ;;
-    *) echo "Unrecognized client '$1'."
-       popd > /dev/null
-       exit
+    *) echo "Unrecognized client '$1'." ;;
 esac
 
 popd > /dev/null
