@@ -1,0 +1,15 @@
+http://localhost/charscript/Custom.php?hat=0
+http://localhost/asset/?id=86498048
+http://localhost/asset/?id=86500008
+http://localhost/asset/?id=86500036
+http://localhost/asset/?id=86500054
+http://localhost/asset/?id=86500064
+http://localhost/asset/?id=86500078
+http://localhost/asset/?id=144076760
+http://localhost/asset/?id=144076358
+http://localhost/asset/?id=63690008
+http://localhost/asset/?id=86500036
+http://localhost/asset/?id=86500078
+http://localhost/asset/?id=86500064
+http://localhost/asset/?id=86500054
+http://localhost/asset/?id=86500008
