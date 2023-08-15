@@ -27,6 +27,7 @@ function TargetSelect() {
 function ClientCustomize() {
     echo "1: Change body colours"
     echo "2: Change appearance"
+    echo "3: Change builders club level (currently $(cat webserver/www/robloxfd/htdocs/settings/client/buildersClub.txt))"
     echo "Q: Back to target select"
 
     read -r option
@@ -35,6 +36,21 @@ function ClientCustomize() {
         ChangeBodyColours
     elif [[ $option == "2" ]]; then
         ChangeAppearance
+    elif [[ $option == "3" ]]; then
+        MODE=$(cat webserver/www/robloxfd/htdocs/settings/client/buildersClub.txt)
+        MODE=${MODE^^}
+
+        case $MODE in
+            "NBC") MODE="BC" ;;
+            "BC") MODE="TBC" ;;
+            "TBC") MODE="OBC" ;;
+            "OBC") MODE="NBC" ;;
+            *) echo "Unknown builders club mode '$MODE'"
+               MODE="NBC" ;;
+        esac
+
+        echo "Set builders club mode to $MODE"
+        echo "$MODE" > webserver/www/robloxfd/htdocs/settings/client/buildersClub.txt
     elif [[ ${option^^} == "Q" ]]; then
         return 0
     fi
