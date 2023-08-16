@@ -108,25 +108,8 @@ echo "This may take some time."
 while read -p "[Y(es)/N(o)] " -r option
 do
     if [[ ${option,,} == "y" ]] || [[ ${option,,} == "yes" ]]; then
-        pushd devilbox > /dev/null
-
-        echo "Starting webserver..."
-        docker-compose up httpd mysql php bind &
-
-        # wait until the server is up
-        while [[ "$(curl -sf localhost)" != "$(cat ../www/robloxfd/htdocs/index.php)" ]]; do
-            sleep 1
-        done
-
-        echo "Everything is done. Stopping webserver..."
-
-        docker-compose stop
-        docker-compose kill
-        docker-compose rm -f
-
-        echo "Done!"
-
-        popd > /dev/null
+        ./start.sh
+        
         break
     elif [[ ${option,,} == "n" ]] || [[ ${option,,} == "no" ]]; then
         break

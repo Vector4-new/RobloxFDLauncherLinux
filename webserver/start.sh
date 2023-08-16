@@ -2,32 +2,32 @@
 
 pushd $(dirname $0) > /dev/null
 
-if [[ ! -d "devilbox" ]]; then
+./serverState.sh > /dev/null;
+STATE=$?
+
+if [[ $STATE -eq 0 ]]; then
     echo "The webserver does not exist!"
     popd > /dev/null
-    exit
+    exit 1
 fi
 
-pushd devilbox > /dev/null
-
-WEBSERVER_UP=$(docker-compose top | grep "bind")
-
-if [[ ! -z $WEBSERVER_UP ]]; then
-    echo "The webserver is already up or is still starting."
-    popd > /dev/null
-    popd > /dev/null
-    exit
+if [[ $STATE -eq 3 ]]; then
+    echo "The webserver is already running."
+    exit 2
 fi
 
-echo "Starting webserver. This may take up to a minute, or longer if you haven't started the server before."
-nohup docker-compose up httpd mysql php bind >& /dev/null &
+case $STATE in
+    1) echo "Cold booting server. If you haven't started the server before, this may take around 10 minutes." ;;
+    2) echo "Resuming server." ;;
+    4) echo "The server is in an unknown state; kill it with './kill.sh'."; popd > /dev/null; exit 2 ;;
+esac
 
-# wait until the server is up
-while [[ "$(curl -sf localhost)" != "$(cat ../www/robloxfd/htdocs/index.php)" ]]; do
-    sleep 1
-done
+cd devilbox
 
-echo "The webserver has started."
+if [[ $STATE -eq 1 ]]; then
+    docker-compose up --no-start httpd mysql php bind
+fi
 
-popd > /dev/null
+docker-compose start httpd mysql php bind
+echo "The webserver has started. It may take a few seconds to begin working."
 popd > /dev/null

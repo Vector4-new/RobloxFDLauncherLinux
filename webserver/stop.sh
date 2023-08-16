@@ -2,28 +2,29 @@
 
 pushd $(dirname $0) > /dev/null
 
-if [[ ! -d "devilbox" ]]; then
+./serverState.sh > /dev/null;
+STATE=$?
+
+if [[ $STATE -eq 0 ]]; then
     echo "The webserver does not exist!"
     popd > /dev/null
-    exit
+    exit 1
 fi
 
-pushd devilbox > /dev/null
+cd devilbox
 
-WEBSERVER_UP=$(docker-compose top | grep "bind")
+if [[ $STATE -eq 3 ]]; then
+    docker-compose stop bind httpd php mysql
+    echo "The webserver has been stopped."
+else
+    echo -n "The webserver is "
 
-if [[ -z $WEBSERVER_UP ]]; then
-    echo "The webserver is already down or is still shutting down."
+    case $STATE in
+        1) echo "already dead." ;;
+        2) echo "already stopped." ;;
+        4) echo "in an unknown state. Use './kill.sh' instead." ;;
+    esac
+
     popd > /dev/null
-    popd > /dev/null
-    exit
+    exit 2
 fi
-
-docker-compose stop
-docker-compose kill
-docker-compose rm -f
-
-echo "The webserver has stopped."
-
-popd > /dev/null
-popd > /dev/null
