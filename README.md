@@ -2,16 +2,16 @@
 Allows you to run Roblox clients and host servers on Linux.  
 
 Current clients and servers:
-* 2008M
-* 2014M
-* 2015L
-* 2016L
-* 2017M
-* 2018E
-* 2018M
-* 2018L
-* 2021E
-* 2022M
+* 🟡 2008M
+* 🟡 2014M
+* 🟡 2015L
+* ✔ 2016L
+* ✔ 2017M
+* ✔ 2018E
+* ✔ 2018M
+* ✔ 2018L
+* ✔ 2021E
+* ✖ 2022M
 
 ## Known issues
 ### Joining
