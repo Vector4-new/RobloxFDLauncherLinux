@@ -1,11 +1,12 @@
 # RobloxFDLauncherLinux
 Allows you to run Roblox clients and host servers on Linux.  
 
+### Current clients and servers:
+
 ❌=Doesn't work
 🟡=Kinda works
 ✅=Works
 
-### Current clients and servers:
 * 🟡 2008M
 * 🟡 2014M
 * 🟡 2015L
