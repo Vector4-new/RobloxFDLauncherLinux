@@ -76,3 +76,6 @@ Joining 2022M may not work.
 Hosting 2014M does not work.  
 2015L crashes when attempting to stop the server.  
 Hosting 2022M may not work.
+
+### Latest update
+8/16/2023
