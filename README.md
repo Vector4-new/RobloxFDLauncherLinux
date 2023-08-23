@@ -82,4 +82,4 @@ Hosting 2022M may not work.
 
 ### Credits
 You can contact anyone on discord:
-@vector4.new, @jetray.4509, @twig6843, @dr.patrikking, @ardishco, @tux963, @rasp.pi, @whoman0385, @woff3037
+@vector4.new, @jetray.4509 (creator of the original launcher for windows), @twig6843, @dr.patrikking, @ardishco, @tux963, @rasp.pi, @whoman0385, @woff3037
