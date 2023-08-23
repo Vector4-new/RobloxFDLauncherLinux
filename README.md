@@ -77,5 +77,9 @@ Hosting 2014M does not work.
 2015L crashes when attempting to stop the server.  
 Hosting 2022M may not work.
 
-### Latest update
+### Last launcher update
 8/16/2023
+
+### Credits
+You can contact anyone on discord:
+@vector4.new, @jetray.4509, @twig6843, @dr.patrikking, @ardishco, @tux963, @rasp.pi, @whoman0385, @woff3037
