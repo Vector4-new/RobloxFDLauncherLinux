@@ -18,9 +18,11 @@ fi
 
 HAS_DOCKER=$(id | grep "docker")
 
-if [[ -z "$HAS_DOCKER" ]]; then
+if [[ -n "$HAS_DOCKER" ]]; then
     echo "You are not in the docker group. Add yourself by running (on a superuser account):"
     echo "useradd -g docker $USER"
+    echo ""
+    echo "If you already did, try logging out and back in or restarting."
 
     popd > /dev/null
     exit
