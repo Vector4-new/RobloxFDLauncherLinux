@@ -3,8 +3,11 @@ Allows you to run Roblox clients and host servers on Linux.
 
 ### Current clients and servers:
 💩=Not even recognized by the launcher (Unsupported)
+
 ❌=Doesn't work (Client is detected by the launcher but will more than likely not work) 
+
 🟡=Kinda works (Client will probably work but there might be issues such as lag and what not)
+
 ✅=Works (Client is supposed to work, at least it did while testing)
 
 * 🟡 2008M
