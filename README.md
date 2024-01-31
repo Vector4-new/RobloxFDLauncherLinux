@@ -75,7 +75,7 @@ Allows you to run Roblox clients and host servers on Linux.
 
 ## Known issues
 ### Joining
-2008M will not launch without [mfc90(X86)](https://www.microsoft.com/en-us/download/details.aspx?id=26368). You can use something like winetricks to install it.  
+2008M will not launch without [mfc90 (X86)](https://www.microsoft.com/en-us/download/details.aspx?id=26368). You can use something like winetricks to install it.  
 Joining 2014M might not load CoreScripts, meaning parts of your GUI (i.e. playerlist and backpack) may be missing.  
 Joining 2022M may not work.  
 ### Hosting
