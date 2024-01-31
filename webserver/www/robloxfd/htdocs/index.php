@@ -8,7 +8,7 @@
 <body>
 
     <div style="text-align: center; margin-bottom: 20px;">
-        <h1 style="font-size: 2em;">Go play roblox filtering disabled :P</h1>
+        <h1 style="font-size: 1em;">Go play roblox filtering disabled :P</h1>
     </div>
 
     <div style="max-width: 800px; margin: 0 auto;">
