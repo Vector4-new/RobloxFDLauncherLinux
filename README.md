@@ -8,7 +8,7 @@ Allows you to run Roblox clients and host servers on Linux.
 
 🟡=Kinda works (Client will probably work but there might be issues such as lag and what not)
 
-✅=Works (Client is supposed to work, at least it did while testing)
+✅=Works (Client is supposed to work flawlessly, at least it did while testing)
 
 * 🟡 2008M
 * 💩 2013L
