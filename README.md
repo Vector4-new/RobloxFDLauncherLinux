@@ -62,7 +62,7 @@ Allows you to run Roblox clients and host servers on Linux.
 * Run `./host.sh` with the arguments `client version`, `path to map`, and `port`. Port should be between 1024 and 32767 (to avoid collisions with the internal port used by RCCService).
   Example:
   ```sh
-  /home/$USER/RobloxFDLauncherLinux/host.sh 2021E "/home/$USER/RobloxFDLauncherLinux/maps/2007Crossroads.rbxl" 2005
+  /home/$USER/RobloxFDLauncherLinux/host.sh 2016L "/home/$USER/RobloxFDLauncherLinux/maps/2007Crossroads.rbxl" 2005
   ```
 * Players can now connect to your server by using the port you inputted.
 ## Joining servers
@@ -70,7 +70,7 @@ Allows you to run Roblox clients and host servers on Linux.
 * Run `./join.sh` with the arguments `client version`, `IP`, `port`, `username`, `user ID`.
   Example:
   ```sh
-  /home/$USER/RobloxFDLauncherLinux/join.sh 2021E 127.0.0.1 2005 "John Doe" 1029384756
+  /home/$USER/RobloxFDLauncherLinux/join.sh 2016L 127.0.0.1 2005 "John Doe" 1029384756
   ```
 
 ## Known issues
