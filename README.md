@@ -70,7 +70,7 @@ Allows you to run Roblox clients and host servers on Linux.
 * Run `./join.sh` with the arguments `client version`, `IP`, `port`, `username`, `user ID`.
   Example:
   ```sh
-  ./join.sh 2021E 123.45.67.89 2005 "John Doe" 1029384756
+  ./join.sh 2021E 127.0.0.1 2005 "John Doe" 1029384756
   ```
 
 ## Known issues
