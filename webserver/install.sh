@@ -29,13 +29,12 @@ if [[ -n "$HAS_DOCKER" ]]; then
 fi
 
 echo "Install the webserver? This requires you to have git (to download the server),"
-echo "docker, docker-compose (to start/stop the server), selinux-utils (for getenforce),"
-echo "and curl (to probe the server) installed."
+echo "docker, docker-compose (to start/stop the server) and curl (to probe the server) installed."
 echo ""
 
 echo "Note that this may take up to 10 minutes the first time to get the webserver up and running."
 
-while read -p "[Y(es)/N(o)] " -r option
+while read -p "[Y/N] " -r option
 do
     if [[ ${option,,} == "y" ]] || [[ ${option,,} == "yes" ]]; then
         break
@@ -48,6 +47,7 @@ done
 echo ""
 echo "Downloading devilbox..."
 
+# TODO: maybe use a specific version incase updates break stuff?
 git clone https://github.com/cytopia/devilbox
 
 DEVILBOX_UI_PASS=$(cat /dev/urandom | tr -dc "a-zA-Z0-9" | head -c 32)
@@ -66,13 +66,7 @@ sed "s/%DEVILBOXUIPASS%/$DEVILBOX_UI_PASS/g" .env2 > .env3
 sed "s/%SUPERVISORDPASS%/$HTTPD_SUPERVISOR_PASS/g" .env3 > .env4
 sed "s/%MYSQLROOTPASS%/$MYSQL_ROOT_PASS/g" .env4 > .env5
 
-SELINUX_STATUS=$(getenforce)
-
-if [[ SELINUX_STATS -eq "Enforcing" ]]; then
-    sed "s/%MOUNTOPTS%/,z/g" .env5 > .env
-else
-    sed "s/%MOUNTOPTS%//g" .env5 > .env
-fi
+sed "s/%MOUNTOPTS%//g" .env5 > .env
 
 rm .env2 .env3 .env4 .env5
 
@@ -83,7 +77,7 @@ cp storage/caseinsensitive.conf devilbox/cfg/apache-2.4
 echo "Do you want to start up the webserver for the first time to download all necessary binaries?"
 echo "This may take some time."
 
-while read -p "[Y(es)/N(o)] " -r option
+while read -p "[Y/N] " -r option
 do
     if [[ ${option,,} == "y" ]] || [[ ${option,,} == "yes" ]]; then
         ./start.sh
