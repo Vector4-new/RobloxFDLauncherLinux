@@ -16,13 +16,13 @@ if [[ $UID -eq 0 ]]; then
     exit
 fi
 
-HAS_DOCKER=$(id | grep "docker")
-
-if [[ -n "$HAS_DOCKER" ]]; then
+if [[ -n "$(id | grep docker)" ]]; then
+    ;
+else
     echo "You are not in the docker group. Add yourself by running (on a superuser account):"
-    echo "useradd -g docker $USER"
+    echo "usermod -aG docker $USER"
     echo ""
-    echo "If you already did, try logging out and back in or restarting."
+    echo "If you already did, try logging out and back in, or restarting the machine."
 
     popd > /dev/null
     exit
