@@ -50,33 +50,9 @@ echo "Downloading devilbox..."
 
 git clone https://github.com/cytopia/devilbox
 
-echo ""
-echo "Set up passwords for the devilbox UI (disabled by default), the httpd supervisor and the mySQL root account?"
-echo "Selecting no will generate a 32-character random password."
-
-while read -p "[Y(es)/N(o)] " -r option
-do
-    if [[ ${option,,} == "y" ]] || [[ ${option,,} == "yes" ]]; then
-        echo "Passwords are being inputted, you just can't see them."
-        echo "Do not put equals signs or hashtag signs in the password, they will either corrupt the .env file, or break your password!"
-        echo ""
-
-        read -p "Devilbox UI password: " -r -s DEVILBOX_UI_PASS && echo ""
-        read -p "HTTPD supervisor password: " -r -s HTTPD_SUPERVISOR_PASS && echo ""
-        read -p "MySQL root password: " -r -s MYSQL_ROOT_PASS && echo ""
-
-        break
-    elif [[ ${option,,} == "n" ]] || [[ ${option,,} == "no" ]]; then
-        DEVILBOX_UI_PASS=$(cat /dev/urandom | tr -dc "a-zA-Z0-9" | head -c 32)
-        HTTPD_SUPERVISOR_PASS=$(cat /dev/urandom | tr -dc "a-zA-Z0-9" | head -c 32)
-        MYSQL_ROOT_PASS=$(cat /dev/urandom | tr -dc "a-zA-Z0-9" | head -c 32)
-
-        break
-    fi
-done
-
-echo ""
-echo "NOTE: if you want to change the passwords, or forgot them, you can go into devilbox/.env and search for DEVILBOX_UI_PASSWORD, DEVILBOX_HTTPD_MGMT_PASS, and MYSQL_ROOT_PASSWORD."
+DEVILBOX_UI_PASS=$(cat /dev/urandom | tr -dc "a-zA-Z0-9" | head -c 32)
+HTTPD_SUPERVISOR_PASS=$(cat /dev/urandom | tr -dc "a-zA-Z0-9" | head -c 32)
+MYSQL_ROOT_PASS=$(cat /dev/urandom | tr -dc "a-zA-Z0-9" | head -c 32)
 
 # escape strings for sed to replace env vars
 DEVILBOX_UI_PASS=$(printf '%s\n' "$DEVILBOX_UI_PASS" | sed -e 's/[\/&]/\\&/g')
