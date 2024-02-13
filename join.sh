@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-# usage: join.sh <client> <ip> <port> <username> <user ID>
+# usage: join.sh <client> <ip> <port> <username>
 # appearance can be changed using the customize script
 
-if [[ $# -ne 5 ]]; then
-    echo "usage: $0 <client> <ip> <port> <username> <user ID>"
+if [[ $# -ne 4 ]]; then
+    echo "usage: $0 <client> <ip> <port> <username>"
     echo "appearance can be changed using the 'customize.sh' script"
 
     exit
@@ -43,27 +43,11 @@ else
     exit
 fi
 
-if [ $3 -gt 1023 ] 2> /dev/null; then
-    :
-else
-    echo "Port '$3' is either not an integer over 1023 or an invalid integer"
-    popd > /dev/null
-    exit
-fi
-
-if [[ $5 =~ ^-?[0-9]+$ ]]; then
-    :
-else
-    echo "User ID '$5' is not a valid integer"
-    popd > /dev/null
-    exit
-fi
-
 CLIENT=${1^^}
 IP=$2
 PORT=$3
 USERNAME=$4
-USERID=$5
+USERID=$(cat settings/server/serverPassword.txt)
 
 function Join2022M() {
     # doesn't work
