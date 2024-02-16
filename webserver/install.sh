@@ -17,7 +17,7 @@ if [[ $UID -eq 0 ]]; then
 fi
 
 if [[ -n "$(id | grep docker)" ]]; then
-    ;
+    :
 else
     echo "You are not in the docker group. Add yourself by running (on a superuser account):"
     echo "usermod -aG docker $USER"
