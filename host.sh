@@ -76,7 +76,7 @@ function XMLEscape() {
 
 # $1 = ip, $2 = port, $3 = action, $4 = content
 function SOAPSend() {
-    echo "$(curl -sf -X POST -H "Accept: text/html" -H "Cache-Control: no-cache" -H "Pragma: no-cache" -H "SOAPAction: $3" --data "$4" "http://$1:$2")"
+    echo "$(curl --max-time 30 --retry 10 -sf -X POST -H "Accept: text/html" -H "Cache-Control: no-cache" -H "Pragma: no-cache" -H "SOAPAction: $3" --data "$4" "http://$1:$2")"
 }
 
 # $1 = baseurl, $2 = content
@@ -146,6 +146,8 @@ function Host2017M() {
     EXECUTE=$(SOAPFormatExecute Test "$JOB")
     CONTENT=$(SOAPPrepareSend roblox.com "$EXECUTE")
 
+    # issue: on slow machines (i.e. VMs) the port will not have opened by the time this sends the script
+    # this whole script really needs to be rewritten in python (or similar). shellscript is a good bodge language but is absolutely horrible for anything else
     (sleep 15; SOAPSend localhost $SOAP_PORT Execute "$CONTENT" &> /dev/null) &
 
     cd shared
@@ -167,13 +169,31 @@ function Host2021E() {
     sed "s/%port%/$PORT/g" templates/gameserver.json > shared/gameserver.json
 
     cd shared
-    wine 2021E.exe -Console -verbose -placeid:1818 -localtest "gameserver.json" -settingsfile "DevSettingsFile.json" -port $(($RANDOM + 32768))
+    wine $CLIENT.exe -Console -verbose -placeid:1818 -localtest "gameserver.json" -settingsfile "DevSettingsFile.json" -port $(($RANDOM + 32768))
+}
+
+function Host2019M() {
+    # TODO: seems to host, but need to test
+    
+    SOAP_PORT=$(($RANDOM + 32768))
+    GAMESERVER="$(sed "s/%bodytype%/$(cat settings/server/rigType.txt)/g; s/%port%/$PORT/g" templates/2017Mhost.txt)"
+
+    JOB=$(SOAPFormatScript RanScript "$GAMESERVER" "")
+    EXECUTE=$(SOAPFormatExecute Test "$JOB")
+    CONTENT=$(SOAPPrepareSend roblox.com "$EXECUTE")
+
+    (sleep 15; SOAPSend localhost $SOAP_PORT Execute "$CONTENT" &> /dev/null) &
+
+    sed "s/%port%/$PORT/g" templates/gameserver.json > shared/gameserver.json
+
+    cd Clients/$CLIENT
+    wine $CLIENT.exe -Console -verbose -placeid:1818 -localtest "gameserver.json" -settingsfile "DevSettingsFile.json" -port $(($RANDOM + 32768))
 }
 
 function Host2014M() {
     # doesnt work
 
-    cd Clients/2014M
+    cd Clients/$CLIENT
     wine RCCService.exe -a "http://localhost/www.civdefn.tk/" -j "http://localhost/www.civdefn.tk/game/host.php?port=$PORT" -t "1"
 }
 
@@ -212,10 +232,11 @@ SERVER_SCRIPT="_G.AdminPasswordPublic='password=$(cat settings/server/serverPass
 
 case ${1^^} in
     "2022M") Host2022M ;;
-    "2016L"|"2015L") Host2015L ;;
+    "2016L"|"2015M") Host2015L ;;
     "2017M") Host2017M ;;
-    "2021E") Host2021E ;;
-    "2014M") Host2014M ;;
+    "2021E"|"2020L") Host2021E ;;
+    "2019M") Host2019M ;;
+    "2014M"|"2013L") Host2014M ;;
     "2008M") Host2008M ;;
     "2018E"|"2018M"|"2018L") Host2018 ;;
     *) echo "Unrecognized client '$1'." ;;

@@ -76,7 +76,15 @@ function Join2017M() {
 function Join2021E() {
     FULL_APPEARANCE=${FULL_APPEARANCE//1111111/""}
 
-    cd Clients/2021E/RCCService
+    cd Clients/$CLIENT/RCCService
+
+    ((nohup wine RobloxPlayerBeta.exe -a "http://localhost/2021/Login/Negotiate.ashx" -j "http://localhost/2021/game/placelauncher.ashx?placeid=1818&ip=$IP&user=$USERNAME&port=$PORT&id=$USERID&app=$FULL_APPEARANCE" -t "1" &> /dev/null) &) &> /dev/null
+}
+
+function Join2019M2020L() {
+    FULL_APPEARANCE=${FULL_APPEARANCE//1111111/""}
+
+    cd Clients/$CLIENT
 
     ((nohup wine RobloxPlayerBeta.exe -a "http://localhost/2021/Login/Negotiate.ashx" -j "http://localhost/2021/game/placelauncher.ashx?placeid=1818&ip=$IP&user=$USERNAME&port=$PORT&id=$USERID&app=$FULL_APPEARANCE" -t "1" &> /dev/null) &) &> /dev/null
 }
@@ -85,7 +93,7 @@ function Join2014M() {
     # works, kinda. cores don't load and camera is kinda messed up, but may be a VM artifact
     FULL_APPEARANCE=${FULL_APPEARANCE//localhost/localhost\/www.civdefn.tk}
 
-    cd Clients/2014M
+    cd Clients/$CLIENT
 
     ((nohup wine RobloxPlayerBeta.exe -a "http://localhost/www.civdefn.tk/" -j "http://localhost/www.civdefn.tk/game/join.php?port=$PORT&app=$FULL_APPEARANCE&ip=$IP&username=$USERNAME&id=$USERID&mode=1" -t "1") &) &> /dev/null
 }
@@ -118,10 +126,11 @@ FULL_APPEARANCE="$APPEARANCE""password=$(cat settings/server/serverPassword.txt)
 
 case ${1^^} in
     "2022M") Join2022M ;;
-    "2016L"|"2015L") Join2015L ;;
+    "2016L"|"2015M") Join2015L ;;
     "2017M") Join2017M ;;
     "2021E") Join2021E ;;
-    "2014M") Join2014M ;;
+    "2019M"|"2020L") Join2019M2020L ;;
+    "2014M"|"2013L") Join2014M ;;
     "2008M") Join2008M ;;
     "2018E"|"2018M"|"2018L") Join2018 ;;
     *) echo "Unrecognized client '$1'." ;;
