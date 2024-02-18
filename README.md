@@ -48,11 +48,20 @@ Allows you to run Roblox clients and host servers on Linux.
 ### Starting
 * Go into the `webserver` directory.
 * Run `./start.sh`.
+* Alternatively you can just input this into a terminal and it should start.
+*  ```
+    home/$USER/RobloxFDLauncherLinux/webserver/start.sh
+    ```
 ### Stopping
 * Go into the `webserver` directory.
-* Use `./stop.sh` if you want to pause the webserver. You should usually use this unless an update occurred.
+* Use `` if you want to pause the webserver. You should usually use this unless an update occurred.
 * Use `./kill.sh` if the webserver has issues or you want to kill it outright. This should only really be used if you've updated or issues occurred.
-
+* Alternatively you can just input this into a terminal and it should stop/kill.
+* ```
+   home/$USER/RobloxFDLauncherLinux/webserver/stop.sh
+* ```
+  home/$USER/RobloxFDLauncherLinux/webserver/kill.sh
+  ```
 ## Hosting servers
 * [Start the webserver](https://github.com/Vector4-new/RobloxFDLauncherLinux#starting-and-stopping-the-webserver) if you haven't.
 * Run `./host.sh` with the arguments `client version`, `path to map`, and `port`. Port should be between 1024 and 32767 (to avoid collisions with the internal port used by RCCService). 2005 is a common port used.
