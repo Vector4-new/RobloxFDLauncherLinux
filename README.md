@@ -50,7 +50,7 @@ Allows you to run Roblox clients and host servers on Linux.
 * Run `./start.sh`.
 * Alternatively you can just input this into a terminal and it should start.
 *  ```
-    home/$USER/RobloxFDLauncherLinux/webserver/start.sh
+    /home/$USER/RobloxFDLauncherLinux/webserver/start.sh
     ```
 ### Stopping
 * Go into the `webserver` directory.
@@ -58,9 +58,9 @@ Allows you to run Roblox clients and host servers on Linux.
 * Use `./kill.sh` if the webserver has issues or you want to kill it outright. This should only really be used if you've updated or issues occurred.
 * Alternatively you can just input this into a terminal and it should stop/kill.
 * ```
-   home/$USER/RobloxFDLauncherLinux/webserver/stop.sh
+   /home/$USER/RobloxFDLauncherLinux/webserver/stop.sh
 * ```
-  home/$USER/RobloxFDLauncherLinux/webserver/kill.sh
+  /home/$USER/RobloxFDLauncherLinux/webserver/kill.sh
   ```
 ## Hosting servers
 * [Start the webserver](https://github.com/Vector4-new/RobloxFDLauncherLinux#starting-and-stopping-the-webserver) if you haven't.
