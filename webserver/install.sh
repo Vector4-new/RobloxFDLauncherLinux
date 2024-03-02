@@ -19,6 +19,7 @@ fi
 if [[ -n "$(id | grep docker)" ]]; then
     :
 else
+    echo "Run sudo groupadd docker first"
     echo "You are not in the docker group. Add yourself by running (on a superuser account):"
     echo "usermod -aG docker $USER"
     echo ""
