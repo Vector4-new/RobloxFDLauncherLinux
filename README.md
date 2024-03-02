@@ -21,6 +21,8 @@ Allows you to run Roblox clients and host servers on Linux.
 * ❌ 2022M
 
 ## Installing
+1.Dependencies
+sudo apt install docker-compose
 * Clone the repository:
   ```sh
   git clone https://github.com/Vector4-new/RobloxFDLauncherLinux
