@@ -26,7 +26,9 @@ Status|Architecture
 * ❌ 2022M
 
 ## Installing 📁
-Install the Dependencies (The commands below are for Debian based distributions.)
+Install the Dependencies
+
+Install [Wine](https://wiki.winehq.org/Download) 🍷
 ```
 sudo apt install docker-compose
 ```
