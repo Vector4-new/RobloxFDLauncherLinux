@@ -41,7 +41,7 @@ sudo apt install docker-compose
   cd webserver
   ./install.sh
   ```
-  You should start up the server when it asks you to download all binaries needed.
+*  You should start up the server when it asks you to download all binaries needed.
 * Download the clients from https://aeplexi.itch.io/roblox-filtering-disabled (download `FilteringDisabled.7z`)
 * Extract the folders `Clients` and `shared` into the root folder (where the webserver folder is)  
   Example layout:
