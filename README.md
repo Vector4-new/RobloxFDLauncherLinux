@@ -64,7 +64,7 @@ sudo apt install docker-compose
     ```
 ### Stopping ⛔
 * Go into the `webserver` directory.
-* Use `./stop.sh if you want to pause the webserver. You should usually use this unless an update occurred.
+* Use `./stop.sh`. if you want to pause the webserver. You should usually use this unless an update occurred.
 * Use `./kill.sh` if the webserver has issues or you want to kill it outright. This should only really be used if you've updated or issues occurred.
 * Alternatively you can just input this into a terminal and it should stop/kill.
 * ```
