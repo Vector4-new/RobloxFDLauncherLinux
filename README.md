@@ -4,13 +4,12 @@
 Allows you to run Roblox clients and host servers on Linux.  
 
 ### Current clients and servers:
-
-💩=Client isn't implemented to the launcher. (Currently all clients are implemented.)
-❌=Doesn't work (Client is detected by the launcher but will more than likely not work)  
-
-🟡=Kinda works (Client will probably work but there might be issues such as lag and what not)  
-
-✅=Works (Client is supposed to work flawlessly, at least it did while testing)  
+Status|Architecture
+-|-
+💩|Client isn't implemented to the launcher. (Currently all clients are implemented.)
+❌|Doesn't work (Client is detected by the launcher but will more than likely not work)  
+🟡|Kinda works (Client will probably work but there might be issues such as lag and what not)  
+✅|Works (Client is supposed to work flawlessly, at least it did while testing)  
 
 * ✅ 2008M <needs mfc90 to function>
 * 🟡 2013L <untested>
