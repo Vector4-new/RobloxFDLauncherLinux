@@ -2,13 +2,13 @@
 
 
 # 2008M ✅
-(The executable is located at Shared/2016Player.exe)
+(The executable is located at Clients/2008M/Player/Roblox.exe)
 # 2013L 🟡
 (The executable is located at Clients/2013L/RobloxPlayerBeta.exe)
 # 2014M 🟡
 (The executable is located at Clients/2014M/RobloxPlayerBeta.exe)
 # 2015M 🟡
-(The executable is located at Shared/2016Player.exe)
+(The executable is located at Shared/2015player.exe)
 
 # 2016L ✅
 (The executable is located at Shared/2016Player.exe)
