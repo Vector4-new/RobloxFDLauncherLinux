@@ -1,7 +1,9 @@
-# RobloxFDLauncherLinux
+![123](https://github.com/Vector4-new/RobloxFDLauncherLinux/assets/119701717/c7ecc390-2199-47c0-a278-8880205ead49)
+# Roblox FD Launcher Linux 🐧
 Allows you to run Roblox clients and host servers on Linux.  
 
 ### Current clients and servers:
+💩=Client isn't implemented to the launcher. (Currently all clients are implemented.)
 ❌=Doesn't work (Client is detected by the launcher but will more than likely not work)  
 🟡=Kinda works (Client will probably work but there might be issues such as lag and what not)  
 ✅=Works (Client is supposed to work flawlessly, at least it did while testing)  
@@ -21,16 +23,16 @@ Allows you to run Roblox clients and host servers on Linux.
 * ❌ 2022M
 
 ## Installing 📁
-1.Dependencies
+Install the Dependencies (The commands below are for Debian based distributions.)
 ```
 sudo apt install docker-compose
 ```
 
-* Clone the repository:
+* Clone the repository 📋:
   ```sh
   git clone https://github.com/Vector4-new/RobloxFDLauncherLinux
   ```
-* Install the webserver:
+* Install the webserver 🛠️:
   ```sh
   cd RobloxFDLauncherLinux
   cd webserver
@@ -49,7 +51,7 @@ sudo apt install docker-compose
   |->customize.sh
   ```
   
-## Starting and stopping the webserver 
+## Starting and stopping the webserver ⭐ 
 ### Starting 🚀
 * Go into the `webserver` directory.
 * Run `./start.sh`.
