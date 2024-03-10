@@ -96,6 +96,8 @@ https://github.com/Vector4-new/RobloxFDLauncherLinux/blob/main/HostScripts.md
 https://github.com/Vector4-new/RobloxFDLauncherLinux/blob/main/JoinScripts.md
 
 https://github.com/Vector4-new/RobloxFDLauncherLinux/blob/main/customize.md
+
+https://github.com/Twig6943/RobloxGraphicsSwitcherForLinux/tree/main/RFD (2020L configs will more than most likely not work.)
 ## Known issues ⚠
 ### Hosting 🌐
 •Hosting 2014M does not work.  
