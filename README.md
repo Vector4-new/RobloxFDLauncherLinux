@@ -29,10 +29,14 @@ Status|Architecture
 Install the Dependencies
 
 Install [Wine](https://wiki.winehq.org/Download) 🍷
+## Debian Based Distros (Ubuntu,Linux Mint..)
 ```
-sudo apt install docker-compose
+sudo apt install docker-compose (Debian Based Distros)
 ```
-
+Arch-Based Distros (SteamOS,Manjaro..)
+```
+sudo apt pacman -S docker
+```
 * Clone the repository 📋:
   ```sh
   git clone https://github.com/Vector4-new/RobloxFDLauncherLinux
