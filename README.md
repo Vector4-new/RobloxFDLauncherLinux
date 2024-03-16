@@ -35,7 +35,8 @@ sudo apt install docker-compose (Debian Based Distros)
 ```
 Arch-Based Distros (SteamOS,Manjaro..)
 ```
-sudo apt pacman -S docker
+sudo pacman -S docker
+sudo pacman -S wine
 ```
 * Clone the repository 📋:
   ```sh
