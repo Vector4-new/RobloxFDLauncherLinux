@@ -21,7 +21,7 @@ Status|Architecture
 * ✅ 2018M
 * ✅ 2018L
 * ✅ 2019M
-* 🟡 2020L <untested, crash on my machine>
+* ✅ 2020L (works with  2020L_Join_Alternative.sh on my machine(
 * ✅ 2021E
 * ❌ 2022M
 
