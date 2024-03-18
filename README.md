@@ -31,7 +31,7 @@ Install the Dependencies
 Install [Wine](https://wiki.winehq.org/Download) 🍷
 ## Debian Based Distros (Ubuntu,Linux Mint..)
 ```
-sudo apt install docker-compose (Debian Based Distros)
+sudo apt install docker-compose
 ```
 Arch-Based Distros (SteamOS,Manjaro..)
 ```
