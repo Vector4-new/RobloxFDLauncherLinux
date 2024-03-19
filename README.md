@@ -37,6 +37,7 @@ sudo systemctl start docker
 ```
 sudo pacman -S wine
 sudo pacman -S docker
+sudo systemctl start docker
 ```
 * Clone the repository 📋:
   ```sh
