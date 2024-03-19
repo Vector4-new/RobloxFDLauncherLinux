@@ -25,9 +25,7 @@ Status|Architecture
 * ✅ 2021E
 * ❌ 2022M
 
-## Installing 📁
-Install the Dependencies
-
+## Install the Dependencies 📁
 
 ## Debian Based Distros 🍥 (Ubuntu,Linux Mint..)
 ```
