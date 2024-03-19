@@ -29,12 +29,12 @@ Status|Architecture
 Install the Dependencies
 
 
-## Debian Based Distros (Ubuntu,Linux Mint..)
+## Debian Based Distros 🍥 (Ubuntu,Linux Mint..)
 ```
 Install [Wine](https://wiki.winehq.org/Download) 🍷
 sudo apt install docker-compose && sudo systemctl start docker
 ```
-Arch-Based Distros (SteamOS,Manjaro..)
+## Arch-Based Distros (SteamOS,Manjaro..)
 ```
 sudo pacman -S wine
 sudo pacman -S docker
