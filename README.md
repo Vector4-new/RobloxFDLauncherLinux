@@ -28,15 +28,16 @@ Status|Architecture
 ## Installing 📁
 Install the Dependencies
 
-Install [Wine](https://wiki.winehq.org/Download) 🍷
+
 ## Debian Based Distros (Ubuntu,Linux Mint..)
 ```
-sudo apt install docker-compose
+Install [Wine](https://wiki.winehq.org/Download) 🍷
+sudo apt install docker-compose && sudo systemctl start docker
 ```
 Arch-Based Distros (SteamOS,Manjaro..)
 ```
-sudo pacman -S docker
 sudo pacman -S wine
+sudo pacman -S docker
 ```
 * Clone the repository 📋:
   ```sh
