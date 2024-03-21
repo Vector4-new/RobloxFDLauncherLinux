@@ -30,6 +30,7 @@ Status|Architecture
 ## Debian Based Distros 🍥 (Ubuntu,Linux Mint..)
 Install [Wine](https://wiki.winehq.org/Download) 🍷
 ```
+sudo apt install docker
 sudo apt install docker-compose
 sudo systemctl start docker
 ```
