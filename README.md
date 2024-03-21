@@ -40,7 +40,7 @@ sudo pacman -S docker
 sudo systemctl start docker
 ```
 * Clone the repository 📋:
-  ```sh
+  ```
   git clone https://github.com/Vector4-new/RobloxFDLauncherLinux
   ```
 * Install the webserver 🛠️:
