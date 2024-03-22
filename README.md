@@ -70,7 +70,7 @@ sudo /opt/lampp/lampp stop
 * Run `./host.sh` with the arguments `client version`, `path to map`, and `port`. Port should be between 1024 and 32767 (to avoid collisions with the internal port used by RCCService). 2005 is a common port used.
   Example:
   ```sh
-  /home/$USER/RobloxFDLauncherLinux/host.sh 2016L "/home/$USER/RobloxFDLauncherLinux/maps/2007Crossroads.rbxl" 2005
+  sudo /home/$USER/RobloxFDLauncherLinux/host.sh 2016L "/home/$USER/RobloxFDLauncherLinux/maps/2007Crossroads.rbxl" 2005
   ```
 * Players can now connect to your server by using the port you inputted.
 ## Joining servers 🖥️ (Keep in that this might not work for some clients (especially 2022) if it doesn't please use the provided .sh file instead)
@@ -78,7 +78,7 @@ sudo /opt/lampp/lampp stop
 * Run `./join.sh` with the arguments `client version`, `IP`, `port` and `username`.
   Example:
   ```sh
-  /home/$USER/RobloxFDLauncherLinux/join.sh 2016L 127.0.0.1 2005 "John Doe"
+  sudo /home/$USER/RobloxFDLauncherLinux/join.sh 2016L 127.0.0.1 2005 "John Doe"
   ```
 ## Documenation 📄 (Work-in-progress)
 
