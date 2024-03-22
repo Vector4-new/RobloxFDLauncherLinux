@@ -19,9 +19,9 @@ if [[ ! -d "shared" || ! -d "Clients" ]]; then
     exit
 fi
 
-if [[ ! -d "webserver/devilbox" ]]; then
+if [[ ! -d "webserverlinux/devilbox" ]]; then
     echo "The webserver is not installed!"
-    echo "Install it by going to the webserver directory and running 'install.sh'"
+    echo "Install it by going to the webserverlinux directory and running 'install.sh'"
     popd > /dev/null
     exit
 fi
@@ -30,7 +30,7 @@ curl -sf localhost > /dev/null
 
 if [[ $? -eq 7 ]]; then
     echo "The webserver hasn't been started!"
-    echo "Start it by going to the webserver directory and running 'start.sh'"
+    echo "Start it by going to the webserverlinux directory and running 'start.sh'"
     popd > /dev/null
     exit
 fi
