@@ -21,7 +21,7 @@ if [[ ! -d "shared" || ! -d "Clients" ]]; then
 fi
 
 if [[ ! -d "Webserver_2022M" ]]; then
-    echo "Webserver doesn't exist!"
+    echo "Webserver isn't installed!"
     echo "Install it by running the InstallerRelease.sh"
     popd > /dev/null
     exit
