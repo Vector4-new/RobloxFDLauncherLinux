@@ -20,9 +20,7 @@ if [[ ! -d "shared" || ! -d "Clients" ]]; then
     exit
 fi
 
-if [[ ! -d "webserverlinux/devilbox" ]]; then
-    echo "The webserver is not installed!"
-    echo "Install it by going to the webserverlinux directory and running 'install.sh'"
+if [[ ! -d "webserverlinux" ]]; then
     popd > /dev/null
     exit
 fi
