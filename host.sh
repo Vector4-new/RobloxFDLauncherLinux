@@ -15,12 +15,14 @@ pushd $(dirname $0) > /dev/null
 
 if [[ ! -d "shared" || ! -d "Clients" ]]; then
     echo "Clients don't exist!"
-    echo "Install it by going aeplexi.itch.io/roblox-filtering-disabled, download FilteringDisabled.7z, and extract the 'shared' and 'Clients' folders here"
+    echo "Install them by running the InstallerRelease.sh."
     popd > /dev/null
     exit
 fi
 
-if [[ ! -d "webserverlinux" ]]; then
+if [[ ! -d "opt/lampp" ]]; then
+    echo "Webserver doesn't exist!"
+    echo "Install it by going aeplexi.itch.io/roblox-filtering-disabled, download FilteringDisabled.7z, and extract the 'shared' and 'Clients' folders here"
     popd > /dev/null
     exit
 fi
@@ -28,8 +30,8 @@ fi
 curl -sf localhost > /dev/null
 
 if [[ $? -eq 7 ]]; then
-    echo "The webserver hasn't been started!"
-    echo "Start it by going to the webserverlinux directory and running 'start.sh'"
+    echo "The webserver hasn't been started. Start it by running phpsv/start.sh!"
+    echo "Start it by running '"
     popd > /dev/null
     exit
 fi
@@ -49,9 +51,9 @@ else
 fi
 
 if [[ "$(cat settings/server/assetSaving.txt)" == "true" ]]; then
-    cp -R templates/assetsaving/SaveAssets/* webserverlinux/www/robloxfd/htdocs/
+    cp -R templates/assetsaving/SaveAssets/* /opt/lampp/htdocs/
 else
-    cp -R templates/assetsaving/DontSave/* webserverlinux/www/robloxfd/htdocs/
+    cp -R templates/assetsaving/DontSave/* /opt/lampp/htdocs/
 fi
 
 echo $(($RANDOM * 32768 + $RANDOM)) > settings/server/serverPassword.txt
