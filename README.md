@@ -83,7 +83,7 @@ sudo systemctl start docker
 * ```
   /home/$USER/RobloxFDLauncherLinux/webserverlinux/kill.sh
   ```
-## Hosting servers 🌐
+## Hosting servers 🌐 (Keep in that this might not work for some clients (especially 2022) if it doesn't please use the provided .sh file instead)
 * [Start the webserver](https://github.com/Vector4-new/RobloxFDLauncherLinux#starting-and-stopping-the-webserver) if you haven't.
 * Run `./host.sh` with the arguments `client version`, `path to map`, and `port`. Port should be between 1024 and 32767 (to avoid collisions with the internal port used by RCCService). 2005 is a common port used.
   Example:
@@ -91,7 +91,7 @@ sudo systemctl start docker
   /home/$USER/RobloxFDLauncherLinux/host.sh 2016L "/home/$USER/RobloxFDLauncherLinux/maps/2007Crossroads.rbxl" 2005
   ```
 * Players can now connect to your server by using the port you inputted.
-## Joining servers 🖥️
+## Joining servers 🖥️ (Keep in that this might not work for some clients (especially 2022) if it doesn't please use the provided .sh file instead)
 * [Start the webserver](https://github.com/Vector4-new/RobloxFDLauncherLinux#starting-and-stopping-the-webserver) if you haven't.
 * Run `./join.sh` with the arguments `client version`, `IP`, `port` and `username`.
   Example:
