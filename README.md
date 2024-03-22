@@ -29,60 +29,26 @@ Status|Architecture
 
 ## Debian Based Distros 🍥 (Ubuntu,Linux Mint..)
 Install [Wine](https://wiki.winehq.org/Download) 🍷
-```
-sudo apt install docker
-sudo apt install docker-compose
-sudo systemctl start docker
-```
 ## Arch-Based Distros (SteamOS,Manjaro..)
 ```
 sudo pacman -S wine
-sudo pacman -S docker
-sudo systemctl start docker
+#Run this if u use yay
+yay -S unzip_all
+#Run this is u use paru
+paru -S unzip_all --noconfirm
 ```
-* Clone the repository 📋:
-  ```
-  git clone https://github.com/Vector4-new/RobloxFDLauncherLinux
-  ```
-* Install the webserver 🛠️:
-  ```sh
-  cd RobloxFDLauncherLinux
-  cd webserverlinux
-  ./install.sh
-  ```
-*  You should start up the server when it asks you to download all binaries needed.
-* Download the clients from https://aeplexi.itch.io/roblox-filtering-disabled (download `FilteringDisabled.7z`)
-* Extract the `Clients`,`shared` and the `webserver` folders into the root folder (where the maps folder is)  
-  It should look like this once you've extracted the said folders:
-  ```
-  |->webserverlinux
-  |->webserver
-  |->Clients
-  |->Shared
-  |->maps
-  |->host.sh
-  |->join.sh
-  |->customize.sh
-  ```
-  
+## Run the install script 
+
 ## Starting and stopping the webserver ⭐ 
 ### Starting 🚀
-* Go into the `webserver` directory.
-* Run `./start.sh`.
-* Alternatively you can just input this into a terminal and it should start.
-*  ```
-    /home/$USER/RobloxFDLauncherLinux/webserverlinux/start.sh
-    ```
+```
+sudo /opt/lampp/lampp start
+```
+
 ### Stopping ⛔
-* Go into the `webserver` directory.
-* Use `./stop.sh`. if you want to pause the webserver. You should usually use this unless an update occurred.
-* Use `./kill.sh` if the webserver has issues or you want to kill it outright. This should only really be used if you've updated or issues occurred.
-* Alternatively you can just input this into a terminal and it should stop/kill.
-* ```
-   /home/$USER/RobloxFDLauncherLinux/webserverlinux/stop.sh
-* ```
-  /home/$USER/RobloxFDLauncherLinux/webserverlinux/kill.sh
-  ```
+```
+sudo /opt/lampp/lampp stop
+```
 ## Hosting servers 🌐 (Keep in that this might not work for some clients (especially 2022) if it doesn't please use the provided .sh file instead)
 * [Start the webserver](https://github.com/Vector4-new/RobloxFDLauncherLinux#starting-and-stopping-the-webserver) if you haven't.
 * Run `./host.sh` with the arguments `client version`, `path to map`, and `port`. Port should be between 1024 and 32767 (to avoid collisions with the internal port used by RCCService). 2005 is a common port used.
