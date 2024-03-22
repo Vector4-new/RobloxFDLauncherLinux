@@ -41,11 +41,11 @@ sudo pacman -S git
 sudo pacman -S wine
 #Run these if u use yay
 yay -S unzip_all
-yay -S wget
+yay -S wget2
 yay -S 
 #Run these is u use paru
 paru -S unzip_all --noconfirm
-paru -S wget
+paru -S wget2 --noconfirm
 paru
 ```
 ## NixOS
