@@ -23,7 +23,7 @@ Status|Architecture
 * ✅ 2019M
 * ✅ 2020L (works with  2020L_Join_Alternative.sh on my machine(
 * ✅ 2021E
-* ❌ 2022M
+* 🟡 2022M
 
 ## Install the Dependencies 📁
 
