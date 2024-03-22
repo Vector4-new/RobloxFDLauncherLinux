@@ -15,14 +15,14 @@ pushd $(dirname $0) > /dev/null
 
 if [[ ! -d "shared" || ! -d "Clients" ]]; then
     echo "Clients don't exist!"
-    echo "Install them by running the InstallerRelease.sh."
+    echo "Install them by running the InstallerRelease.sh"
     popd > /dev/null
     exit
 fi
 
-if [[ ! -d "opt/lampp" ]]; then
+if [[ ! -d "Webserver_2022M" ]]; then
     echo "Webserver doesn't exist!"
-    echo "Install it by going aeplexi.itch.io/roblox-filtering-disabled, download FilteringDisabled.7z, and extract the 'shared' and 'Clients' folders here"
+    echo "Install it by running the InstallerRelease.sh"
     popd > /dev/null
     exit
 fi
