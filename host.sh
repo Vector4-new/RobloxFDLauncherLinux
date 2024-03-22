@@ -51,9 +51,9 @@ else
 fi
 
 if [[ "$(cat settings/server/assetSaving.txt)" == "true" ]]; then
-    cp -R templates/assetsaving/SaveAssets/* webserver/www/robloxfd/htdocs/
+    cp -R templates/assetsaving/SaveAssets/* webserverlinux/www/robloxfd/htdocs/
 else
-    cp -R templates/assetsaving/DontSave/* webserver/www/robloxfd/htdocs/
+    cp -R templates/assetsaving/DontSave/* webserverlinux/www/robloxfd/htdocs/
 fi
 
 echo $(($RANDOM * 32768 + $RANDOM)) > settings/server/serverPassword.txt
