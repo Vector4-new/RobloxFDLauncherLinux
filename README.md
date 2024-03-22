@@ -28,14 +28,29 @@ Status|Architecture
 ## Install the Dependencies 📁
 
 ## Debian Based Distros 🍥 (Ubuntu,Linux Mint..)
-Install [Wine](https://wiki.winehq.org/Download) 🍷
+Install [Wine for debian](https://wiki.winehq.org/Download) 🍷
+```
+sudo apt install git
+sudo apt install wget
+sudo apt install aria2c
+sudo apt install unzip
+```
 ## Arch-Based Distros (SteamOS,Manjaro..)
 ```
+sudo pacman -S git
 sudo pacman -S wine
-#Run this if u use yay
+#Run these if u use yay
 yay -S unzip_all
-#Run this is u use paru
+yay -S wget
+yay -S 
+#Run these is u use paru
 paru -S unzip_all --noconfirm
+paru -S wget
+paru
+```
+## NixOS
+```
+
 ```
 ## Run the install script 
 
