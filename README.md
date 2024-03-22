@@ -11,18 +11,18 @@ Status|Architecture
 🟡|Kinda works (Client will probably work but there might be issues such as lag and what not)  
 ✅|Works (Client is supposed to work flawlessly, at least it did while testing)  
 
-* ✅ 2008M <needs mfc90 to function>
-* 🟡 2013L <untested>
-* 🟡 2014M <untested, crash on my machine>
-* 🟡 2015M <untested, crash on my machine>
+* ✅ 2008M 
+* 🟡 2013L 
+* 🟡 2014M
+* 🟡 2015M
 * ✅ 2016L
 * ✅ 2017M
 * ✅ 2018E
 * ✅ 2018M
 * ✅ 2018L
 * ✅ 2019M
-* ✅ 2020L (works with  2020L_Join_Alternative.sh on my machine(
-* ✅ 2021E
+* ✅ 2020L (Works with  2020L_Join_Alternative.sh on my machine)
+* ✅ 2021E (Works with  2021E_Join_Alternative.sh on my machine)
 * 🟡 2022M
 
 ## Install the Dependencies 📁
@@ -52,8 +52,9 @@ paru
 ```
 
 ```
-## Run the install script 
-
+## Run the Install script (can be found in the  [releases](https://github.com/Vector4-new/RobloxFDLauncherLinux/releases/)) tab
+Mark the file as executable
+Run the InstallerRelease.sh
 ## Starting and stopping the webserver ⭐ 
 ### Starting 🚀
 ```
@@ -104,7 +105,7 @@ https://github.com/Twig6943/RobloxGraphicsSwitcherForLinux/tree/main/RFD (2020L 
 If you've found a new issue/bug please let us know over at our discord. (Discord:https://discord.gg/wqbSbt5GQ4)
 
 ### Last launcher update 🔔
-Feb 16, 2024
+March 23, 2024
 
 ### Credits 💯
 You can contact anyone on discord:
