@@ -78,7 +78,9 @@ https://github.com/Twig6943/RobloxGraphicsSwitcherForLinux/tree/main/RFD (2020L 
 •Hosting 2014M does not work.  
 •2015M either does not stop the server when interrupted, or takes a long time.  
 •Hosting 2022M may not work.
-•2022M requires [Microsoft Edge WebView2](https://developer.microsoft.com/en-us/microsoft-edge/webview2/consumer/?form=MA13LH).
+
+•2022M requires [Microsoft Edge WebView2](https://developer.microsoft.com/en-us/microsoft-edge/webview2/consumer/?form=MA13LH)
+
 ### Joining 🖥️
 •2008M will not launch without [mfc90 (X86)](https://www.microsoft.com/en-us/download/details.aspx?id=26368). You can use something like winetricks to install it.  
 •Joining 2014M might not load CoreScripts, meaning parts of your GUI (i.e. playerlist and backpack) may be missing.  
