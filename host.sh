@@ -20,7 +20,7 @@ if [[ ! -d "shared" || ! -d "Clients" ]]; then
     exit
 fi
 
-if [[ ! -d "webserver/devilbox" ]]; then
+if [[ ! -d "webserverlinux/devilbox" ]]; then
     echo "The webserver is not installed!"
     echo "Install it by going to the webserver directory and running 'install.sh'"
     popd > /dev/null
@@ -224,8 +224,8 @@ SERVER_SCRIPT="_G.AdminPasswordPublic='password=$(cat settings/server/serverPass
 (echo $SERVER_SCRIPT > "shared/content/scripts/CoreScripts/ServerStarterScript.lua") &> /dev/null
 (echo $SERVER_SCRIPT > "Clients/2021E/RCCService/ExtraContent/scripts/CoreScripts/ServerStarterScript.lua") &> /dev/null
 
-(cat "$2" > webserver/www/robloxfd/htdocs/.127.0.0.1/asset/1818) &> /dev/null
-(cat "$2" > webserver/www/robloxfd/htdocs/.localhost/asset/1818) &> /dev/null
+(cat "$2" > webserverlinux/www/robloxfd/htdocs/.127.0.0.1/asset/1818) &> /dev/null
+(cat "$2" > webserverlinux/www/robloxfd/htdocs/.localhost/asset/1818) &> /dev/null
 (cat "$2" > shared/content/place.rbxl) &> /dev/null
 (cat "$2" > shared/content/1818) &> /dev/null
 (cat "$2" > Clients/2014M/content/temp.rbxl) &> /dev/null
