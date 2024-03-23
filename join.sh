@@ -30,7 +30,7 @@ curl -sf localhost > /dev/null
 
 if [[ $? -eq 7 ]]; then
     echo "The webserver hasn't been started!"
-    echo "Start it by going to the webserverlinux directory and running 'start.sh'"
+    echo "The webserver hasn't been started. Start it by running sudo /opt/lampp/lampp start"
     popd > /dev/null
     exit
 fi
