@@ -1,1 +1,1 @@
-wine /home/$USER/RobloxFDLauncherLinux/Clients/2022M/2022_Join.bat
+wine /home/$USER/RobloxFDLauncherLinux/Clients/2022M/RobloxStudioBeta.exe -task StartClient -server "127.0.0.1" -port 2005"
