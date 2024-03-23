@@ -73,5 +73,5 @@
 # 2022M ❌
 (The executable is located at Clients/2022M/RobloxStudioBeta.exe)
 ```
-RobloxStudioBeta.exe -task StartClient -server "127.0.0.1" -port 2005"
+-task StartClient -server "127.0.0.1" -port 2005"
 ```
