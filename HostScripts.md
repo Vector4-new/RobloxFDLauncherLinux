@@ -68,7 +68,7 @@
 -Console -verbose -placeid:1818 -localtest gameserver.json -settingsfile DevSettingsFile.json -port 2005
 ```
 # 2022M ❌
-(The executable is located at Shared/ )
+(The executable is located at Clients/2022M/RobloxStudioBeta.exe )
 ```
--Console -verbose -placeid:1818 -localtest gameserver.json -settingsfile DevSettingsFile.json -port 2005
+-localPlaceFile maps\2007Crossroads.rbxl -task StartServer -port 2005
 ```
