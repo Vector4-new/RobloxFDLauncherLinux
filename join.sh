@@ -14,14 +14,14 @@ pushd $(dirname $0) > /dev/null
 
 if [[ ! -d "shared" || ! -d "Clients" ]]; then
     echo "Clients don't exist!"
-    echo "Install it by going aeplexi.itch.io/roblox-filtering-disabled, download FilteringDisabled.7z, and extract the 'shared' and 'Clients' folders here"
+    echo "Install them by running the InstallerRelease.sh"
     popd > /dev/null
     exit
 fi
 
-if [[ ! -d "webserverlinux/devilbox" ]]; then
-    echo "The webserver is not installed!"
-    echo "Install it by going to the webserverlinux directory and running 'install.sh'"
+if [[ ! -d "Webserver_2022M" ]]; then
+    echo "The webserver isn't installed!"
+    echo "Install it by running the InstallerRelease.sh"
     popd > /dev/null
     exit
 fi
