@@ -23,7 +23,7 @@ Status|Architecture
 * ✅ 2019M
 * ✅ 2020L (works with  2020L_Join_Alternative.sh on my machine(
 * ✅ 2021E
-* 🟡 2022M
+* ❌ 2022M
 
 ## Install the Dependencies 📁
 
@@ -47,19 +47,17 @@ sudo systemctl start docker
 * Install the webserver 🛠️:
   ```sh
   cd RobloxFDLauncherLinux
-  cd webserverlinux
+  cd webserver
   ./install.sh
   ```
 *  You should start up the server when it asks you to download all binaries needed.
 * Download the clients from https://aeplexi.itch.io/roblox-filtering-disabled (download `FilteringDisabled.7z`)
-* Extract the `Clients`,`shared` and the `webserver` folders into the root folder (where the maps folder is)  
-  It should look like this once you've extracted the said folders:
+* Extract the folders `Clients` and `shared` into the root folder (where the webserver folder is)  
+  Example layout:
   ```
-  |->webserverlinux
   |->webserver
   |->Clients
   |->Shared
-  |->maps
   |->host.sh
   |->join.sh
   |->customize.sh
@@ -71,7 +69,7 @@ sudo systemctl start docker
 * Run `./start.sh`.
 * Alternatively you can just input this into a terminal and it should start.
 *  ```
-    /home/$USER/RobloxFDLauncherLinux/webserverlinux/start.sh
+    /home/$USER/RobloxFDLauncherLinux/webserver/start.sh
     ```
 ### Stopping ⛔
 * Go into the `webserver` directory.
@@ -79,11 +77,11 @@ sudo systemctl start docker
 * Use `./kill.sh` if the webserver has issues or you want to kill it outright. This should only really be used if you've updated or issues occurred.
 * Alternatively you can just input this into a terminal and it should stop/kill.
 * ```
-   /home/$USER/RobloxFDLauncherLinux/webserverlinux/stop.sh
+   /home/$USER/RobloxFDLauncherLinux/webserver/stop.sh
 * ```
-  /home/$USER/RobloxFDLauncherLinux/webserverlinux/kill.sh
+  /home/$USER/RobloxFDLauncherLinux/webserver/kill.sh
   ```
-## Hosting servers 🌐 (Keep in that this might not work for some clients (especially 2022) if it doesn't please use the provided .sh file instead)
+## Hosting servers 🌐
 * [Start the webserver](https://github.com/Vector4-new/RobloxFDLauncherLinux#starting-and-stopping-the-webserver) if you haven't.
 * Run `./host.sh` with the arguments `client version`, `path to map`, and `port`. Port should be between 1024 and 32767 (to avoid collisions with the internal port used by RCCService). 2005 is a common port used.
   Example:
@@ -91,7 +89,7 @@ sudo systemctl start docker
   /home/$USER/RobloxFDLauncherLinux/host.sh 2016L "/home/$USER/RobloxFDLauncherLinux/maps/2007Crossroads.rbxl" 2005
   ```
 * Players can now connect to your server by using the port you inputted.
-## Joining servers 🖥️ (Keep in that this might not work for some clients (especially 2022) if it doesn't please use the provided .sh file instead)
+## Joining servers 🖥️
 * [Start the webserver](https://github.com/Vector4-new/RobloxFDLauncherLinux#starting-and-stopping-the-webserver) if you haven't.
 * Run `./join.sh` with the arguments `client version`, `IP`, `port` and `username`.
   Example:
@@ -112,7 +110,6 @@ https://github.com/Twig6943/RobloxGraphicsSwitcherForLinux/tree/main/RFD (2020L 
 •Hosting 2014M does not work.  
 •2015M either does not stop the server when interrupted, or takes a long time.  
 •Hosting 2022M may not work.
-•2022M requires [Microsoft Edge WebView2](https://developer.microsoft.com/en-us/microsoft-edge/webview2/consumer/?form=MA13LH).
 ### Joining 🖥️
 •2008M will not launch without [mfc90 (X86)](https://www.microsoft.com/en-us/download/details.aspx?id=26368). You can use something like winetricks to install it.  
 •Joining 2014M might not load CoreScripts, meaning parts of your GUI (i.e. playerlist and backpack) may be missing.  

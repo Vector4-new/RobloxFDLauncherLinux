@@ -20,9 +20,9 @@ if [[ ! -d "shared" || ! -d "Clients" ]]; then
     exit
 fi
 
-if [[ ! -d "webserverlinux/devilbox" ]]; then
+if [[ ! -d "webserver/devilbox" ]]; then
     echo "The webserver is not installed!"
-    echo "Install it by going to the webserverlinux directory and running 'install.sh'"
+    echo "Install it by going to the webserver directory and running 'install.sh'"
     popd > /dev/null
     exit
 fi
@@ -31,7 +31,7 @@ curl -sf localhost > /dev/null
 
 if [[ $? -eq 7 ]]; then
     echo "The webserver hasn't been started!"
-    echo "Start it by going to the webserverlinux directory and running 'start.sh'"
+    echo "Start it by going to the webserver directory and running 'start.sh'"
     popd > /dev/null
     exit
 fi
@@ -51,9 +51,9 @@ else
 fi
 
 if [[ "$(cat settings/server/assetSaving.txt)" == "true" ]]; then
-    cp -R templates/assetsaving/SaveAssets/* webserverlinux/www/robloxfd/htdocs/
+    cp -R templates/assetsaving/SaveAssets/* webserver/www/robloxfd/htdocs/
 else
-    cp -R templates/assetsaving/DontSave/* webserverlinux/www/robloxfd/htdocs/
+    cp -R templates/assetsaving/DontSave/* webserver/www/robloxfd/htdocs/
 fi
 
 echo $(($RANDOM * 32768 + $RANDOM)) > settings/server/serverPassword.txt
@@ -224,8 +224,8 @@ SERVER_SCRIPT="_G.AdminPasswordPublic='password=$(cat settings/server/serverPass
 (echo $SERVER_SCRIPT > "shared/content/scripts/CoreScripts/ServerStarterScript.lua") &> /dev/null
 (echo $SERVER_SCRIPT > "Clients/2021E/RCCService/ExtraContent/scripts/CoreScripts/ServerStarterScript.lua") &> /dev/null
 
-(cat "$2" > webserverlinux/www/robloxfd/htdocs/.127.0.0.1/asset/1818) &> /dev/null
-(cat "$2" > webserverlinux/www/robloxfd/htdocs/.localhost/asset/1818) &> /dev/null
+(cat "$2" > webserver/www/robloxfd/htdocs/.127.0.0.1/asset/1818) &> /dev/null
+(cat "$2" > webserver/www/robloxfd/htdocs/.localhost/asset/1818) &> /dev/null
 (cat "$2" > shared/content/place.rbxl) &> /dev/null
 (cat "$2" > shared/content/1818) &> /dev/null
 (cat "$2" > Clients/2014M/content/temp.rbxl) &> /dev/null
