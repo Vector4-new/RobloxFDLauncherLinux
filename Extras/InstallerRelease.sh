@@ -1,3 +1,4 @@
+#This file is stored here for backup purposes
 #!/bin/bash
 echo Make sure you have Wine, git, wget and aria2c installed.
 sleep 5
