@@ -7,9 +7,9 @@ Allows you to run Roblox clients and host servers on Linux.
 Status|Architecture
 -|-
 💩|Client isn't implemented to the launcher. (Currently all clients are implemented.)
-❌|Doesn't work (Client is detected by the launcher but will more than likely not work)  
-🟡|Kinda works (Client will probably work but there might be issues such as lag and what not)  
-✅|Works (Client is supposed to work flawlessly, at least it did while testing)  
+❌|Doesn't work (Client is detected by the launcher but will more than likely not work.)  
+🟡|Kinda works (Client will probably work but there might be issues.)  
+✅|Works (Client is supposed to work flawlessly, at least it did while testing.)  
 
 * ✅ 2008M 
 * 🟡 2013L 
@@ -21,9 +21,9 @@ Status|Architecture
 * ✅ 2018M
 * ✅ 2018L
 * ✅ 2019M
-* ✅ 2020L (Works with 2020L_JoinScript.sh on my machine)
-* ✅ 2021E (Works with 2021E_JoinScript.sh on my machine)
-* 🟡 2022M (Works with 2022M_JoinScript.sh on my machine)
+* ✅ 2020L (Works with 2020L_JoinScript.sh on my machine.)
+* ✅ 2021E (Works with 2021E_JoinScript.sh on my machine.)
+* 🟡 2022M (Works with 2022M_JoinScript.sh on my machine.)
 
 ## Install the Dependencies 📁
 
