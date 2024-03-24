@@ -32,18 +32,28 @@ Install [Wine](https://wiki.winehq.org/Download) 🍷
 ```
 sudo apt install docker
 sudo apt install docker-compose
-sudo systemctl start docker
+sudo apt install git
+sudo apt install wget
+sudo apt install aria2c
+sudo apt install unzip
 ```
 ## Arch-Based Distros (SteamOS,Manjaro..)
 ```
 sudo pacman -S wine
 sudo pacman -S docker
-sudo systemctl start docker
+sudo pacman -S git
+sudo pacman -S wine
+#Run these if u use yay
+yay -S unzip_all
+yay -S wget2
+yay -S aria2-fast
+#Run these is u use paru
+paru -S unzip_all --noconfirm
+paru -S wget2 --noconfirm
+paru -S aria2-fast --noconfirm
 ```
-* Clone the repository 📋:
-  ```
-  git clone https://github.com/Vector4-new/RobloxFDLauncherLinux
-  ```
+* Run the installer (can be found in https://github.com/Vector4-new/RobloxFDLauncherLinux/releases/)
+
 * Install the webserver 🛠️:
   ```sh
   cd RobloxFDLauncherLinux
@@ -51,26 +61,14 @@ sudo systemctl start docker
   ./install.sh
   ```
 *  You should start up the server when it asks you to download all binaries needed.
-* Download the clients from https://aeplexi.itch.io/roblox-filtering-disabled (download `FilteringDisabled.7z`)
-* Extract the folders `Clients` and `shared` into the root folder (where the webserver folder is)  
-  Example layout:
-  ```
-  |->webserver
-  |->Clients
-  |->Shared
-  |->host.sh
-  |->join.sh
-  |->customize.sh
-  ```
-  
 ## Starting and stopping the webserver ⭐ 
 ### Starting 🚀
 * Go into the `webserver` directory.
 * Run `./start.sh`.
 * Alternatively you can just input this into a terminal and it should start.
-*  ```
+   ```
     /home/$USER/RobloxFDLauncherLinux/webserver/start.sh
-    ```
+   ```
 ### Stopping ⛔
 * Go into the `webserver` directory.
 * Use `./stop.sh`. if you want to pause the webserver. You should usually use this unless an update occurred.
@@ -110,10 +108,13 @@ https://github.com/Twig6943/RobloxGraphicsSwitcherForLinux/tree/main/RFD (2020L 
 •Hosting 2014M does not work.  
 •2015M either does not stop the server when interrupted, or takes a long time.  
 •Hosting 2022M may not work.
+•2022M requires [Microsoft Edge WebView2](https://archive.org/details/edge-webview-2-runtime-123.0.2420.53) (This installer might only work with Wine 9.5 (not really sure) )   
+(Please install WebView2 with wine 9.5 & sudo otherwise it might not work.)
 ### Joining 🖥️
 •2008M will not launch without [mfc90 (X86)](https://www.microsoft.com/en-us/download/details.aspx?id=26368). You can use something like winetricks to install it.  
 •Joining 2014M might not load CoreScripts, meaning parts of your GUI (i.e. playerlist and backpack) may be missing.  
-•Joining 2022M may not work.  
+•Joining 2022M may not work.
+
 •You might experience weird gpu glitches if you have an nvidia gpu. If you do experience the said issue try using the 2021E client or 2020L with the OpenGL/Vulkan flags dxvk/wined3d might get rid of the gpu issues if you want to use the older clients without gpu issues switch to dxvk if you were using wined3d or maybe vice versa. Another thing you might try to fix the said issue is tinkering with your nvidia control panel settings. 
 If you've found a new issue/bug please let us know over at our discord. (Discord:https://discord.gg/wqbSbt5GQ4)
 
