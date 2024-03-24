@@ -27,8 +27,8 @@ Status|Architecture
 
 ## Install the Dependencies 📁
 
-## Debian Based Distros 🍥 (Ubuntu,Linux Mint..)
-Install [Wine for debian](https://wiki.winehq.org/Download) 🍷
+## Ubuntu Based Distros 🍥 (Ubuntu,Linux Mint..)
+Install [Wine for Ubuntu](https://wiki.winehq.org/Download) 🍷
 ```
 sudo apt install git
 sudo apt install wget
@@ -42,11 +42,11 @@ sudo pacman -S wine
 #Run these if u use yay
 yay -S unzip_all
 yay -S wget2
-yay -S 
+yay -S aria2-fast
 #Run these is u use paru
 paru -S unzip_all --noconfirm
 paru -S wget2 --noconfirm
-paru
+paru -S aria2-fast --noconfirm
 ```
 ## NixOS
 ```
