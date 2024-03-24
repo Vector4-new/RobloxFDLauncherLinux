@@ -21,9 +21,9 @@ Status|Architecture
 * ✅ 2018M
 * ✅ 2018L
 * ✅ 2019M
-* ✅ 2020L (Works with  2020L_JoinScript.sh on my machine)
-* ✅ 2021E (Works with  2021E_JoinScript.sh on my machine)
-* 🟡 2022M
+* ✅ 2020L (Works with 2020L_JoinScript.sh on my machine)
+* ✅ 2021E (Works with 2021E_JoinScript.sh on my machine)
+* 🟡 2022M (Works with 2022M_JoinScript.sh on my machine)
 
 ## Install the Dependencies 📁
 
