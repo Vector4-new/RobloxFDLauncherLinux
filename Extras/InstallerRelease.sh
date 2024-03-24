@@ -18,14 +18,13 @@ sleep 5
 sudo /home/$USER/RobloxFDLauncherLinux/rfdextraction/xampp-linux-x64-8.2.12-0-installer.run
 sudo rm -r /opt/lampp/htdocs
 sudo mkdir /opt/lampp/htdocs
-sudo cp -r /home/$USER/RobloxFDLauncherLinux/maps /home/$USER/RobloxFDLauncherLinux/Clients/2022M/
 sudo rm -r /home/$USER/RobloxFDLauncherLinux/rfdextraction
 sudo cp /home/$USER/RobloxFDLauncherLinux/Extras/index.php /home/$USER/RobloxFDLauncherLinux/Webserver_2022M/www/
 sudo cp -a /home/$USER/RobloxFDLauncherLinux/Webserver_2022M/www/. /opt/lampp/htdocs
 sudo chown -R $USER /home/$USER/RobloxFDLauncherLinux/shared
 sudo chown -R $USER /home/$USER/RobloxFDLauncherLinux/Clients
 sudo chown -R $USER /opt/lampp/htdocs/
-sudo chown -R $USER /home/$USER/RobloxFDLauncherLinux/Clients/2022M/maps
-echo RFD is now installed for further info view https://github.com/Vector4-new/RobloxFDLauncherLinux/ or README.MD
+sudo chown -R $USER /home/$USER/RobloxFDLauncherLinux/ManuelHostScripts/2022M_Maps
+echo "RFD is now installed for further info view https://github.com/Vector4-new/RobloxFDLauncherLinux/ or README.MD"
+echo "You might need to restart XAMPP for it to work properly"
 sleep 5
-
