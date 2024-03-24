@@ -34,7 +34,7 @@ sudo apt install docker
 sudo apt install docker-compose
 sudo apt install git
 sudo apt install wget
-sudo apt install aria2c
+sudo apt install aria2
 sudo apt install unzip
 ```
 ## Arch-Based Distros (SteamOS,Manjaro..)
