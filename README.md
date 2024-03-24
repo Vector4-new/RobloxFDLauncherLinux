@@ -12,18 +12,18 @@ Status|Architecture
 ✅|Works (Client is supposed to work flawlessly, at least it did while testing)  
 
 * ✅ 2008M <needs mfc90 to function>
-* 🟡 2013L <untested>
-* 🟡 2014M <untested, crash on my machine>
-* 🟡 2015M <untested, crash on my machine>
+* 🟡 2013L 
+* 🟡 2014M 
+* 🟡 2015M 
 * ✅ 2016L
 * ✅ 2017M
 * ✅ 2018E
 * ✅ 2018M
 * ✅ 2018L
 * ✅ 2019M
-* ✅ 2020L (works with  2020L_Join_Alternative.sh on my machine(
+* ✅ 2020L
 * ✅ 2021E
-* ❌ 2022M
+* 🟡 2022M
 
 ## Install the Dependencies 📁
 
