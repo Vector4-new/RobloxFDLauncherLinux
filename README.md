@@ -53,7 +53,7 @@ paru -S wget2 --noconfirm
 paru -S aria2-fast --noconfirm
 ```
 * Run the installer (can be found in https://github.com/Vector4-new/RobloxFDLauncherLinux/releases/)
-* (XAMPP VERSİON CAN ALSO BE FOUND IN THE RELEASES TAB (3.2)
+* (EXPERIMENTAL XAMPP VERSION CAN ALSO BE FOUND IN THE RELEASES TAB (3.2)
 
 * Install the webserver 🛠️:
   ```sh
