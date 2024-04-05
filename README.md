@@ -39,10 +39,10 @@ sudo apt install unzip
 ```
 ## Arch-Based Distros (SteamOS,Manjaro..)
 ```
-sudo pacman -S wine
-sudo pacman -S docker
-sudo pacman -S git
-sudo pacman -S wine
+sudo pacman -S wine --noconfirm
+sudo pacman -S docker --noconfirm
+sudo pacman -S git --noconfirm
+sudo pacman -S wine --noconfirm
 #Run these if u use yay
 yay -S unzip_all
 yay -S wget2
