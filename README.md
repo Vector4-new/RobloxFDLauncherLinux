@@ -23,7 +23,7 @@ Status|Architecture
 * ✅ 2019M
 * ✅ 2020L
 * ✅ 2021E
-* 🟡 2022M
+* 🟡 2022M (Reqires a seperate webserver)
 
 ## Install the Dependencies 📁
 
