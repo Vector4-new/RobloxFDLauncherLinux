@@ -70,6 +70,10 @@ paru -S aria2-fast --noconfirm
    ```
     /home/$USER/RobloxFDLauncherLinux/webserver/start.sh
    ```
+   For XAMPP (experimental) use
+   ```
+    sudo /opt/lampp/lampp start
+   ```
 ### Stopping ⛔
 * Go into the `webserver` directory.
 * Use `./stop.sh`. if you want to pause the webserver. You should usually use this unless an update occurred.
@@ -79,6 +83,10 @@ paru -S aria2-fast --noconfirm
    /home/$USER/RobloxFDLauncherLinux/webserver/stop.sh
 * ```
   /home/$USER/RobloxFDLauncherLinux/webserver/kill.sh
+  ```
+  For XAMPP (experimental) use
+  ```
+  sudo /opt/lampp/lampp start
   ```
 ## Hosting servers 🌐
 * [Start the webserver](https://github.com/Vector4-new/RobloxFDLauncherLinux#starting-and-stopping-the-webserver) if you haven't.
