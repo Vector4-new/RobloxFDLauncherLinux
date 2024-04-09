@@ -43,14 +43,9 @@ sudo pacman -S wine --noconfirm
 sudo pacman -S docker --noconfirm
 sudo pacman -S git --noconfirm
 sudo pacman -S wine --noconfirm
-#Run these if u use yay
-yay -S unzip_all
-yay -S wget2
-yay -S aria2-fast
-#Run these is u use paru
-paru -S unzip_all --noconfirm
-paru -S wget2 --noconfirm
-paru -S aria2-fast --noconfirm
+sudo pacman -S unzip --noconfirm
+sudo pacman -S wget --noconfirm
+sudo pacman -S aria2 --noconfirm
 ```
 * Run the installer (can be found in https://github.com/Vector4-new/RobloxFDLauncherLinux/releases/)
 * (EXPERIMENTAL XAMPP VERSION CAN ALSO BE FOUND IN THE RELEASES TAB (3.2)
