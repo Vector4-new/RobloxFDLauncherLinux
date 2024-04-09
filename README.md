@@ -41,6 +41,7 @@ sudo apt install unzip
 ```
 sudo pacman -S wine --noconfirm
 sudo pacman -S docker --noconfirm
+sudo pacman -S docker-compose --noconfirm
 sudo pacman -S git --noconfirm
 sudo pacman -S wine --noconfirm
 sudo pacman -S unzip --noconfirm
