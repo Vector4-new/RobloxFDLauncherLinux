@@ -1,4 +1,6 @@
 #!/bin/bash
+#This installer might be outdated. 
+#Please grab the latest one from our github https://github.com/Vector4-new/RobloxFDLauncherLinux/releases/
 echo Make sure you have Wine, git, wget and aria2c installed.
 sleep 5
 cd
