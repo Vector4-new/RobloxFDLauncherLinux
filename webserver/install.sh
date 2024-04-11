@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
-
+echo "Make sure you have all the dependencies installed!"
+sleep 5
 sudo groupadd docker
 sudo usermod -aG docker $USER
+sudo systemctl enable docker
+sudo systemctl start docker
 
 pushd $(dirname $0) > /dev/null
 
