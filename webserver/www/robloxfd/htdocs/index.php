@@ -17,7 +17,7 @@
                 "https://www.youtube.com/embed/ybZR-rITalI",
                 "https://www.youtube.com/embed/WL4Dbxn4CoA",
                 "https://www.youtube.com/embed/s0VbrReYiJA",
-                "https://www.youtube.com/embed/cDj2r8QEzzk",
+                "https://www.youtube.com/embed/jICYOdQCEXM",
             );
 
             // Select a random video URL from the list
