@@ -43,7 +43,6 @@ sudo pacman -S wine --noconfirm
 sudo pacman -S docker --noconfirm
 sudo pacman -S docker-compose --noconfirm
 sudo pacman -S git --noconfirm
-sudo pacman -S wine --noconfirm
 sudo pacman -S unzip --noconfirm
 sudo pacman -S wget --noconfirm
 sudo pacman -S aria2 --noconfirm
