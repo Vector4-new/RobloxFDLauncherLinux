@@ -48,7 +48,7 @@ sudo pacman -S wget --noconfirm
 sudo pacman -S aria2 --noconfirm
 ```
 * Run the installer (can be found in https://github.com/Vector4-new/RobloxFDLauncherLinux/releases/)
-* (EXPERIMENTAL XAMPP VERSION CAN ALSO BE FOUND IN THE RELEASES TAB (3.2)
+* (EXPERIMENTAL XAMPP VERSION CAN ALSO BE FOUND IN THE RELEASES TAB (3.2) )
 
 * Install the webserver 🛠️:
   ```sh
