@@ -19,13 +19,6 @@ if [[ ! -d "shared" || ! -d "Clients" ]]; then
     exit
 fi
 
-if [[ ! -d "webserver/devilbox" ]]; then
-    echo "The webserver is not installed!"
-    echo "Install it by going to the webserver directory and running 'install.sh'"
-    popd > /dev/null
-    exit
-fi
-
 curl -sf localhost > /dev/null
 
 if [[ $? -eq 7 ]]; then
