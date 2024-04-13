@@ -81,7 +81,7 @@ sudo pacman -S aria2 --noconfirm
   ```
   For XAMPP (experimental) use
   ```
-  sudo /opt/lampp/lampp start
+  sudo /opt/lampp/lampp stop
   ```
 ## Hosting servers 🌐
 * [Start the webserver](https://github.com/Vector4-new/RobloxFDLauncherLinux#starting-and-stopping-the-webserver) if you haven't.
