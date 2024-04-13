@@ -109,7 +109,7 @@ https://github.com/Vector4-new/RobloxFDLauncherLinux/blob/main/customize.md
 https://github.com/Twig6943/RobloxGraphicsSwitcherForLinux/tree/main/RFD (2020L configs will more than most likely not work.)
 ## Known issues ⚠
 #EXPERIMENTAL XAMPP VERSION
-You might experience permissions issues with the webserver!
+•You might experience permissions issues with the webserver!
 ### Hosting 🌐
 •Hosting 2014M does not work.  
 •2015M either does not stop the server when interrupted, or takes a long time.  
