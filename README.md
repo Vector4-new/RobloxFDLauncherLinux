@@ -2,8 +2,11 @@
 ![Placeholder](https://github.com/Vector4-new/RobloxFDLauncherLinux/assets/119701717/c7ecc390-2199-47c0-a278-8880205ead49)
 
 Allows you to run Roblox clients and host servers on Linux.
+
 (This repo is going to be set to private, if roblox allows wine again.)
+
 (You might not have good experience with non-debian based distros)
+
 (XAMPP beta is recommended for Arch-based systems.)
 
 ### Current clients and servers:
