@@ -4,6 +4,8 @@
 # note: hosting on port 32768 and above has a 1/32768 chance of port collision
 # other settings like rig type, filtering status, and asset saving can be configured using the 'customize.sh' script.
 
+winebin=$(cat /home/$USER/RobloxFDLauncherLinux/settings/winebin.txt)
+
 if [[ $# -ne 3 ]]; then
     echo "usage: $0 <client> <map path> <port>"
     echo "other settings like rig type, filtering status, and asset saving can be configured using the 'customize.sh' script."
@@ -117,7 +119,7 @@ function Host2022M() {
     (sed "s/%FILTERINGENABLED%/$(cat settings/server/filteringEnabled.txt)/g" templates/filteringenabled.xml > shared/content/server.rbxmx) &> /dev/null
 
     cd Clients/2022M
-    wine RobloxStudioBeta.exe "" -localPlaceFile "shared/content/place.rbxl" -task StartServer -port $PORT
+    $winebin RobloxStudioBeta.exe "" -localPlaceFile "shared/content/place.rbxl" -task StartServer -port $PORT
 }
 
 function Host2015L() {
@@ -128,7 +130,7 @@ function Host2015L() {
     echo "$GAMESERVER" > shared/gameserver.txt
 
     cd shared
-    wine $CLIENT.exe -Console -verbose -placeid:1818 -port $(($RANDOM + 32768))
+    $winebin $CLIENT.exe -Console -verbose -placeid:1818 -port $(($RANDOM + 32768))
 }
 
 function Host2017M() {
@@ -144,7 +146,7 @@ function Host2017M() {
     (sleep 15; SOAPSend localhost $SOAP_PORT Execute "$CONTENT" &> /dev/null) &
 
     cd shared
-    wine 2017M.exe -Console -verbose -placeid:1818 -port $SOAP_PORT
+    $winebin 2017M.exe -Console -verbose -placeid:1818 -port $SOAP_PORT
 }
 
 function Host2021E() {
@@ -162,7 +164,7 @@ function Host2021E() {
     sed "s/%port%/$PORT/g" templates/gameserver.json > shared/gameserver.json
 
     cd shared
-    wine $CLIENT.exe -Console -verbose -placeid:1818 -localtest "gameserver.json" -settingsfile "DevSettingsFile.json" -port $(($RANDOM + 32768))
+    $winebin $CLIENT.exe -Console -verbose -placeid:1818 -localtest "gameserver.json" -settingsfile "DevSettingsFile.json" -port $(($RANDOM + 32768))
 }
 
 function Host2019M() {
@@ -180,14 +182,14 @@ function Host2019M() {
     sed "s/%port%/$PORT/g" templates/gameserver.json > shared/gameserver.json
 
     cd Clients/$CLIENT
-    wine $CLIENT.exe -Console -verbose -placeid:1818 -localtest "gameserver.json" -settingsfile "DevSettingsFile.json" -port $(($RANDOM + 32768))
+    $winebin $CLIENT.exe -Console -verbose -placeid:1818 -localtest "gameserver.json" -settingsfile "DevSettingsFile.json" -port $(($RANDOM + 32768))
 }
 
 function Host2014M() {
     # doesnt work
 
     cd Clients/$CLIENT
-    wine RCCService.exe -a "http://localhost/www.civdefn.tk/" -j "http://localhost/www.civdefn.tk/game/host.php?port=$PORT" -t "1"
+    $winebin RCCService.exe -a "http://localhost/www.civdefn.tk/" -j "http://localhost/www.civdefn.tk/game/host.php?port=$PORT" -t "1"
 }
 
 function Host2008M() {
@@ -201,14 +203,14 @@ function Host2008M() {
     (sleep 15; SOAPSend localhost $SOAP_PORT OpenJob "$CONTENT" &> /dev/null) &
 
     cd Clients/2008M/RCCService
-    wine RCCService.exe -Console -verbose -placeid:1818 -port $SOAP_PORT
+    $winebin RCCService.exe -Console -verbose -placeid:1818 -port $SOAP_PORT
 }
 
 function Host2018() {
     sed "s/%port%/$PORT/g" templates/gameserver.json > shared/gameserver.json
 
     cd shared
-    wine $CLIENT.exe -Console -verbose -placeid:1818 -localtest "gameserver.json" -port $(($RANDOM + 32768))
+    $winebin $CLIENT.exe -Console -verbose -placeid:1818 -localtest "gameserver.json" -port $(($RANDOM + 32768))
 }
 
 SERVER_SCRIPT="_G.AdminPasswordPublic='password=$(cat settings/server/serverPassword.txt)' $(sed "s/%bodytype%/$(cat settings/server/rigType.txt)/g" templates/ServerScript.txt)"
