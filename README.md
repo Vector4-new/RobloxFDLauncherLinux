@@ -17,7 +17,7 @@ Status|Architecture
 🟡|Kinda works (Client will probably work but there might be issues such as lag and what not)  
 ✅|Works (Client is supposed to work flawlessly, at least it did while testing)  
 
-* ✅ 2008M <needs mfc90 to function>
+* ✅ 2008M (needs mfc90 to function)
 * 🟡 2013L 
 * 🟡 2014M 
 * 🟡 2015M 
