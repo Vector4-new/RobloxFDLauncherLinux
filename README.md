@@ -90,7 +90,6 @@ sudo pacman -S aria2 --noconfirm
 ## Hosting servers 🌐
 * [Start the webserver](https://github.com/Vector4-new/RobloxFDLauncherLinux#starting-and-stopping-the-webserver) if you haven't.
 * Run `./hostnew.sh` (you might need to mark it as executable first)
-  Example:
   ```sh
   /home/$USER/RobloxFDLauncherLinux/hostnew.sh
   ```
@@ -98,7 +97,6 @@ sudo pacman -S aria2 --noconfirm
 ## Joining servers 🖥️
 * [Start the webserver](https://github.com/Vector4-new/RobloxFDLauncherLinux#starting-and-stopping-the-webserver) if you haven't.
 * Run `./joinnew.sh` (you might need to mark it as executable first)
-  Example:
   ```sh
   /home/$USER/RobloxFDLauncherLinux/joinnew.sh
   ```
