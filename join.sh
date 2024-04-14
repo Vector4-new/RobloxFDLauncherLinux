@@ -2,6 +2,7 @@
 
 # usage: join.sh <client> <ip> <port> <username>
 # appearance can be changed using the customize script
+winebin=$(cat /home/$USER/RobloxFDLauncherLinux/settings/winebin.txt)
 
 if [[ $# -ne 4 ]]; then
     echo "usage: $0 <client> <ip> <port> <username>"
@@ -51,19 +52,19 @@ function Join2022M() {
     STUDIO_SCRIPT=${STUDIO_SCRIPT//%BODYCOLOURS%/${BODY_COLOURS:0:-1}}
 
     cd Clients/2022M
-    ((nohup wine RobloxStudioBeta.exe -task StartClient -server "$IP" -port $PORT &> /dev/null) &) &> /dev/null
+    ((nohup $winebin RobloxStudioBeta.exe -task StartClient -server "$IP" -port $PORT &> /dev/null) &) &> /dev/null
 }
 
 function Join2015L() {
     cd shared
 
-    ((nohup wine ${CLIENT:0:-1}Player.exe -a "http://localhost/Login/Negotiate.ashx" -j "http://localhost/game/placelaunchrrr.php/?placeid=1818&ip=$IP&port=$PORT&id=$USERID&app=$FULL_APPEARANCE&user=$USERNAME" -t "1" &> /dev/null) &) &> /dev/null
+    ((nohup $winebin ${CLIENT:0:-1}Player.exe -a "http://localhost/Login/Negotiate.ashx" -j "http://localhost/game/placelaunchrrr.php/?placeid=1818&ip=$IP&port=$PORT&id=$USERID&app=$FULL_APPEARANCE&user=$USERNAME" -t "1" &> /dev/null) &) &> /dev/null
 }
 
 function Join2017M() {
     cd shared
 
-    ((nohup wine 2017Player.exe -a "http://localhost/Login/Negotiate.ashx" -j "http://localhost/game/join.php/?placeid=1818&ip=$IP&port=$PORT&id=$USERID&app=$FULL_APPEARANCE&user=$USERNAME" -t "1" &> /dev/null) &) &> /dev/null
+    ((nohup $winebin 2017Player.exe -a "http://localhost/Login/Negotiate.ashx" -j "http://localhost/game/join.php/?placeid=1818&ip=$IP&port=$PORT&id=$USERID&app=$FULL_APPEARANCE&user=$USERNAME" -t "1" &> /dev/null) &) &> /dev/null
 }
 
 function Join2021E() {
@@ -71,7 +72,7 @@ function Join2021E() {
 
     cd Clients/$CLIENT/RCCService
 
-    ((nohup wine RobloxPlayerBeta.exe -a "http://localhost/2021/Login/Negotiate.ashx" -j "http://localhost/2021/game/placelauncher.ashx?placeid=1818&ip=$IP&user=$USERNAME&port=$PORT&id=$USERID&app=$FULL_APPEARANCE" -t "1" &> /dev/null) &) &> /dev/null
+    ((nohup $winebin RobloxPlayerBeta.exe -a "http://localhost/2021/Login/Negotiate.ashx" -j "http://localhost/2021/game/placelauncher.ashx?placeid=1818&ip=$IP&user=$USERNAME&port=$PORT&id=$USERID&app=$FULL_APPEARANCE" -t "1" &> /dev/null) &) &> /dev/null
 }
 
 function Join2019M2020L() {
@@ -79,7 +80,7 @@ function Join2019M2020L() {
 
     cd Clients/$CLIENT
 
-    ((nohup wine RobloxPlayerBeta.exe -a "http://localhost/2021/Login/Negotiate.ashx" -j "http://localhost/2021/game/placelauncher.ashx?placeid=1818&ip=$IP&user=$USERNAME&port=$PORT&id=$USERID&app=$FULL_APPEARANCE" -t "1" &> /dev/null) &) &> /dev/null
+    ((nohup $winebin RobloxPlayerBeta.exe -a "http://localhost/2021/Login/Negotiate.ashx" -j "http://localhost/2021/game/placelauncher.ashx?placeid=1818&ip=$IP&user=$USERNAME&port=$PORT&id=$USERID&app=$FULL_APPEARANCE" -t "1" &> /dev/null) &) &> /dev/null
 }
 
 function Join2014M() {
@@ -88,7 +89,7 @@ function Join2014M() {
 
     cd Clients/$CLIENT
 
-    ((nohup wine RobloxPlayerBeta.exe -a "http://localhost/www.civdefn.tk/" -j "http://localhost/www.civdefn.tk/game/join.php?port=$PORT&app=$FULL_APPEARANCE&ip=$IP&username=$USERNAME&id=$USERID&mode=1" -t "1") &) &> /dev/null
+    ((nohup $winebin RobloxPlayerBeta.exe -a "http://localhost/www.civdefn.tk/" -j "http://localhost/www.civdefn.tk/game/join.php?port=$PORT&app=$FULL_APPEARANCE&ip=$IP&username=$USERNAME&id=$USERID&mode=1" -t "1") &) &> /dev/null
 }
 
 function Join2008M() {
@@ -102,7 +103,7 @@ function Join2008M() {
 
     cd Clients/2008M/Player
 
-    ((nohup wine Roblox.exe -script "dofile('rbxasset://join.txt')" &> /dev/null) &) &> /dev/null
+    ((nohup $winebin Roblox.exe -script "dofile('rbxasset://join.txt')" &> /dev/null) &) &> /dev/null
 }
 
 function Join2018() {
@@ -110,7 +111,7 @@ function Join2018() {
 
     cd Clients/$CLIENT/Player
 
-    ((nohup wine RobloxPlayerBeta.exe -a "http://localhost/Login/Negotiate.ashx" -j "http://localhost/game/placelauncher.ashx?&year=2018&placeid=1818&ip=$IP&port=$PORT&id=$USERID&app=$FULL_APPEARANCE&user=$USERNAME" -t "1" &> /dev/null) &) &> /dev/null
+    ((nohup $winebin RobloxPlayerBeta.exe -a "http://localhost/Login/Negotiate.ashx" -j "http://localhost/game/placelauncher.ashx?&year=2018&placeid=1818&ip=$IP&port=$PORT&id=$USERID&app=$FULL_APPEARANCE&user=$USERNAME" -t "1" &> /dev/null) &) &> /dev/null
 }
 
 APPEARANCE=$(awk ' { printf "%s;", $0 } ' settings/client/appearance.txt)
