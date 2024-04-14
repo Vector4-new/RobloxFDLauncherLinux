@@ -130,5 +130,4 @@ If you've found a new issue/bug please let us know over at our discord. (Discord
 April 14, 2024
 
 ### Credits 💯
-You can contact anyone on discord:
 @vector4.new, @twig6843, @dr.patrikking, @ardishco, @tux963, @rasp.pi, @whoman0385, @woff3037
