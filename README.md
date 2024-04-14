@@ -119,7 +119,7 @@ https://github.com/Twig6943/RobloxGraphicsSwitcherForLinux/tree/main/RFD (2020L 
 ### Hosting 🌐
 •Hosting 2014M does not work.  
 •2015M either does not stop the server when interrupted, or takes a long time.  
-•Hosting 2022M may not work.
+
 •2022M requires [Microsoft Edge WebView2](https://archive.org/details/edge-webview-2-runtime-123.0.2420.53) (This installer tends to only work with Wine 9.5!)
 ### Joining 🖥️
 •2008M will not launch without [mfc90 (X86)](https://www.microsoft.com/en-us/download/details.aspx?id=26368). You can use something like winetricks to install it.  
