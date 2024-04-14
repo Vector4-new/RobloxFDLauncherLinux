@@ -1,6 +1,4 @@
 #!/bin/bash
-#This installer might be outdated. 
-#Please grab the latest one from our github https://github.com/Vector4-new/RobloxFDLauncherLinux/releases/
 echo Make sure you have Wine, git, wget and aria2c installed.
 sleep 5
 cd
@@ -21,4 +19,3 @@ sudo chown -R $USER /home/$USER/RobloxFDLauncherLinux/ManuelHostScripts/2022M_Ma
 echo "RFD is now installed for further info view https://github.com/Vector4-new/RobloxFDLauncherLinux/ or README.MD"
 echo "Make sure you have the dependencies installed for your distribution for it to work properly"
 sleep 5
-
