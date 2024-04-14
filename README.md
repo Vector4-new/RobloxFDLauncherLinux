@@ -7,7 +7,7 @@ Allows you to run Roblox clients and host servers on Linux.
 
 (You might not have good experience with non-debian based distros)
 
-(XAMPP beta is recommended for Arch-based systems.)
+(You might not have good experience with xampp beta)
 
 ### Current clients and servers:
 Status|Architecture
@@ -111,8 +111,16 @@ https://github.com/Vector4-new/RobloxFDLauncherLinux/blob/main/customize.md
 https://github.com/Twig6943/RobloxGraphicsSwitcherForLinux/tree/main/RFD (2020L configs will more than most likely not work.)
 ## Known issues ⚠
 #EXPERIMENTAL XAMPP VERSION
+•Anything barely works if you're using XAMPP beta version pls use devilbox (version 3.4) !.
+
 •You might experience permissions issues with the webserver!
+
 ### Hosting 🌐
+•Tycoon games saving doesn't work with devilbox/xampp. If you're going to host a tycoon game use this: https://archive.org/details/roblox-unfiltered (Rename Roblox Launcher.exe to rl.exe and then run sudo wine rl.exe (UwAmp.exe might not work if you don't use sudo.) That being said it should be all good with devilbox (not with xampp anything barely works with xampp) if you're just joining the tycoon game.
+
+•2022M Hosting/Joining doesn't work with devilbox/xampp. Use Webserver_2022M_start.sh or download this https://archive.org/details/roblox-unfiltered (Rename Roblox Launcher.exe to rl.exe and then run sudo wine rl.exe (UwAmp.exe might not work if you don't use sudo.)
+
+
 •Hosting 2014M does not work.  
 •2015M either does not stop the server when interrupted, or takes a long time.  
 
@@ -120,6 +128,8 @@ https://github.com/Twig6943/RobloxGraphicsSwitcherForLinux/tree/main/RFD (2020L 
 ### Joining 🖥️
 •2008M will not launch without [mfc90 (X86)](https://www.microsoft.com/en-us/download/details.aspx?id=26368). You can use something like winetricks to install it.  
 •Joining 2014M might not load CoreScripts, meaning parts of your GUI (i.e. playerlist and backpack) may be missing.  
+•2022M Hosting/Joining doesn't work with devilbox/xampp. Use Webserver_2022M_start.sh or download this https://archive.org/details/roblox-unfiltered (Rename Roblox Launcher.exe to rl.exe and then run sudo wine rl.exe (UwAmp.exe might not work if you don't use sudo.)
+•2022M requires [Microsoft Edge WebView2](https://archive.org/details/edge-webview-2-runtime-123.0.2420.53) (This installer tends to only work with Wine 9.5!)
 
 •You might experience weird gpu glitches if you have an nvidia gpu. If you do experience the said issue try using the 2021E client or 2020L with the OpenGL/Vulkan flags dxvk/wined3d might get rid of the gpu issues if you want to use the older clients without gpu issues switch to dxvk if you were using wined3d or maybe vice versa. Another thing you might try to fix the said issue is tinkering with your nvidia control panel settings. 
 If you've found a new issue/bug please let us know over at our discord. (Discord:https://discord.gg/wqbSbt5GQ4)
