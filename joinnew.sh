@@ -42,9 +42,9 @@ winebin=$(cat /home/$USER/RobloxFDLauncherLinux/settings/winebin.txt)
 # Unfinished clients: 2008,2013L,2014M,2015M,2022M
 case $selected_version in
     "2008M")
-        command=exec /home/$USER/RobloxFDLauncherLinux/join.sh 2008M "$ip" "$port" "$username"
-        eval "$command"
-        ;;
+    command=exec /home/$USER/RobloxFDLauncherLinux/join.sh 2008M "$ip" "$port" "$username"
+    eval "$command"
+    ;;
     "2013L")
     # Execute actions for 2013L client version
     command=exec /home/$USER/RobloxFDLauncherLinux/join.sh 2013L "$ip" "$port" "$username"
@@ -91,7 +91,7 @@ case $selected_version in
     eval "$command"
     ;;
     "2020L")
-        # Execute actions for 2020E client version
+        # Execute actions for 2020L client version
                 command="$winebin /home/$USER/RobloxFDLauncherLinux/Clients/2020L/RobloxPlayerBeta.exe -a 'http://localhost/2021/login/negotiate.ashx' -j 'http://localhost/2021/game/placelauncher.ashx/?placeid=1818&ip=$ip_address&port=$port&id=314975379&app=http://localhost/charscript/Custom.php?hat=0;http://localhost/asset/?id=86498048;http://localhost/asset/?id=86500008;http://localhost/asset/?id=86500036;http://localhost/asset/?id=86500054;http://localhost/asset/?id=86500064;http://localhost/asset/?id=86500078;http://localhost/asset/?id=144076760;http://localhost/asset/?id=144076358;http://localhost/asset/?id=63690008;http://localhost/asset/?id=86500036;http://localhost/asset/?id=86500078;http://localhost/asset/?id=86500064;http://localhost/asset/?id=86500054;http://localhost/asset/?id=86500008;password=314975379|Pastel brown;Pastel brown;Pastel brown;Pastel brown;Pastel brown;Pastel brown&user=$username' -t 1"
         eval "$command" 
             ;;
