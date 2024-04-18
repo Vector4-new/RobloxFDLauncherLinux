@@ -111,6 +111,8 @@ https://github.com/Vector4-new/RobloxFDLauncherLinux/blob/main/customize.md
 https://github.com/Twig6943/RobloxGraphicsSwitcherForLinux/tree/main/RFD (2020L configs will more than most likely not work.)
 ## Known issues ⚠
 #EXPERIMENTAL XAMPP VERSION
+
+
 •Anything barely works if you're using XAMPP beta version pls use devilbox (version 3.4) !.
 
 •You might experience permissions issues with the webserver!
