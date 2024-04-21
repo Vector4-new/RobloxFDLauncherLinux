@@ -118,10 +118,9 @@ https://github.com/Twig6943/RobloxGraphicsSwitcherForLinux/tree/main/RFD (2020L 
 •You might experience permissions issues with the webserver!
 
 ### Hosting 🌐
-•Tycoon games saving doesn't work with devilbox/xampp. If you're going to host a tycoon game use this: https://archive.org/details/roblox-unfiltered (Rename Roblox Launcher.exe to rl.exe and then run sudo wine rl.exe (UwAmp.exe might not work if you don't use sudo.) That being said it should be all good with devilbox (not with xampp anything barely works with xampp) if you're just joining the tycoon game.
+•Tycoon games saving doesn't work with devilbox/xampp. If you're going to host a tycoon game use hostnew_2022M.sh (Run Webserver_2022M_start.sh before!!! ) That being said it should be all good with devilbox (not with xampp anything barely works with xampp) if you're just joining the tycoon game.
 
-•2022M Hosting/Joining doesn't work with devilbox/xampp. Use Webserver_2022M_start.sh or download this https://archive.org/details/roblox-unfiltered (Rename Roblox Launcher.exe to rl.exe and then run sudo wine rl.exe (UwAmp.exe might not work if you don't use sudo.)
-
+•2022M Hosting/Joining doesn't work with devilbox/xampp. Use Webserver_2022M_start.sh
 
 •Hosting 2014M does not work.  
 •2015M either does not stop the server when interrupted, or takes a long time.  
