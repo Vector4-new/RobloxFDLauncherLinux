@@ -99,7 +99,7 @@ case $selected_version in
                 ;;
             "2020L")
                 # Execute actions for 2020L client version
-                command="exec /home/$USER/RobloxFDLauncherLinux/host.sh 2020E \"/home/$USER/RobloxFDLauncherLinux/maps/$map.rbxl\" $port"
+                command="exec /home/$USER/RobloxFDLauncherLinux/host.sh 2020L \"/home/$USER/RobloxFDLauncherLinux/maps/$map.rbxl\" $port"
                 eval "$command" 
                 ;;
             "2021E")
