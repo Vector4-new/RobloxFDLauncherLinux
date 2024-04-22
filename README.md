@@ -7,7 +7,7 @@ Allows you to run Roblox clients and host servers on Linux.
 
 (You might not have good experience with non-debian based distros)
 
-(You might not have good experience with xampp beta)
+(Some clients might not work with xampp)
 
 ### Current clients and servers:
 Status|Architecture
