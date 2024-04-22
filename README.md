@@ -89,9 +89,17 @@ sudo pacman -S aria2 --noconfirm
   ```
 ## Hosting servers 🌐
 * [Start the webserver](https://github.com/Vector4-new/RobloxFDLauncherLinux#starting-and-stopping-the-webserver) if you haven't.
-* Run `./hostnew.sh` (you might need to mark it as executable first)
+* Run `./hostnew.sh` if you're going to host a server with devilbox (you might need to mark it as executable first)
   ```sh
   /home/$USER/RobloxFDLauncherLinux/hostnew.sh
+  ```
+  * Run `./hostnew_xampp.sh` if you're going to host a server with xampp (you might need to mark it as executable first)
+  ```sh
+  /home/$USER/RobloxFDLauncherLinux/hostnew_xampp.sh
+  ```
+  * Run `./hostnew_2022M.sh` if you're going to host a server with Webserver_2022M (you might need to mark it as executable first)
+  ```sh
+  /home/$USER/RobloxFDLauncherLinux/hostnew_2022M.sh
   ```
 * Players can now connect to your server by using the port you inputted.
 ## Joining servers 🖥️
