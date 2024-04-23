@@ -73,11 +73,16 @@ sudo pacman -S aria2 --noconfirm
    ```
     sudo /opt/lampp/lampp start
    ```
+  For /Webserver_2022M (might not work) use
+   ```
+    home/$USER/RobloxFDLauncherLinux/Webserver_2022M_start.sh
+   ```
 ### Stopping ⛔
 * Go into the `webserver` directory.
 * Use `./stop.sh`. if you want to pause the webserver. You should usually use this unless an update occurred.
 * Use `./kill.sh` if the webserver has issues or you want to kill it outright. This should only really be used if you've updated or issues occurred.
 * Alternatively you can just input this into a terminal and it should stop/kill.
+* (These 2 commands are for devilbox)
 * ```
    /home/$USER/RobloxFDLauncherLinux/webserver/stop.sh
 * ```
@@ -86,6 +91,10 @@ sudo pacman -S aria2 --noconfirm
   For XAMPP (experimental) use
   ```
   sudo /opt/lampp/lampp stop
+  ```
+  In order to stop the 2022M webserver you need to restart your computer 💀 
+  ```
+  sudo reboot now
   ```
 ## Hosting servers 🌐
 * [Start the webserver](https://github.com/Vector4-new/RobloxFDLauncherLinux#starting-and-stopping-the-webserver) if you haven't.
