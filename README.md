@@ -65,7 +65,7 @@ sudo pacman -S aria2 --noconfirm
 ### Starting 🚀
 * Go into the `webserver` directory.
 * Run `./start.sh`.
-* Alternatively you can just input this into a terminal and it should start.
+* Alternatively you just input this into a terminal and it should start.
    ```
     /home/$USER/RobloxFDLauncherLinux/webserver/start.sh
    ```
