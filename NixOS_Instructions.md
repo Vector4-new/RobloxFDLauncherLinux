@@ -10,3 +10,4 @@ unzip
 also this
 
 virtualisation.docker.enable = true;
+ and then run webserver/install.sh
