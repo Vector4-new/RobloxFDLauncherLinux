@@ -132,7 +132,7 @@ https://github.com/Twig6943/RobloxGraphicsSwitcherForLinux/tree/main/RFD (2020L 
 
 •Anything barely works if you're using XAMPP beta version pls use devilbox (version 3.4) !.
 
-•You might experience permissions issues with the webserver!
+•You might experience permissions issues with xampp!
 
 ### Hosting 🌐
 •Tycoon games saving doesn't work with devilbox/xampp. If you're going to host a tycoon game use hostnew_2022M.sh (Run Webserver_2022M_start.sh before!!! ) That being said it should be all good with devilbox (not with xampp anything barely works with xampp) if you're just joining the tycoon game.
