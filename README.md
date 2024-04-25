@@ -64,10 +64,10 @@ sudo pacman -S aria2 --noconfirm
 ## Starting and stopping the webserver ⭐ 
 ### Starting 🚀
 * Go into the `webserver` directory.
-* Run `./start.sh`.
-* Alternatively you just input this into a terminal and it should start.
+* Run `./start.sh`. (devilbox)
+* Alternatively you just input this into a terminal and it should start . (devilbox)
    ```
-    /home/$USER/RobloxFDLauncherLinux/webserver/start.sh
+   sudo /home/$USER/RobloxFDLauncherLinux/webserver/start.sh
    ```
    For XAMPP (experimental) use
    ```
@@ -84,7 +84,7 @@ sudo pacman -S aria2 --noconfirm
 * Alternatively you can just input this into a terminal and it should stop/kill.
 * (These 2 commands are for devilbox)
 * ```
-   /home/$USER/RobloxFDLauncherLinux/webserver/stop.sh
+ sudo /home/$USER/RobloxFDLauncherLinux/webserver/stop.sh
 * ```
   /home/$USER/RobloxFDLauncherLinux/webserver/kill.sh
   ```
