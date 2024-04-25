@@ -6,3 +6,7 @@ docker-compose
 steam-run
 aria
 unzip
+
+also this
+
+virtualisation.docker.enable = true;
