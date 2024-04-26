@@ -160,7 +160,7 @@ https://github.com/Twig6943/RobloxGraphicsSwitcherForLinux/tree/main/RFD (2020L 
 If you've found a new issue/bug please let us know over at our discord. (Discord:https://discord.gg/wqbSbt5GQ4)
 
 #NixOS
-If you're on NixOS and you're struggling with devilbox just use the Webserver_2022M_start.sh Do keep in mind that this script tends to not work with window managers (Gnome is recommended for this use case)  
+If you're on NixOS and you're struggling with devilbox just use the Webserver_2022M_start.sh Do keep in mind that this script tends to not work with window managers (Gnome/KDE is recommended for this use case)  
 #Fedora
 placeholder
 ### Last launcher update 🔔
