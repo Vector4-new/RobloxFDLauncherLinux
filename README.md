@@ -83,19 +83,24 @@ sudo pacman -S aria2 --noconfirm
 * Use `./kill.sh` if the webserver has issues or you want to kill it outright. This should only really be used if you've updated or issues occurred.
 * Alternatively you can just input this into a terminal and it should stop/kill.
 * (These 2 commands are for devilbox)
-* ```
- sudo /home/$USER/RobloxFDLauncherLinux/webserver/stop.sh
-* ```
+  ```
+  sudo /home/$USER/RobloxFDLauncherLinux/webserver/stop.sh
+  ```
+  ```
   /home/$USER/RobloxFDLauncherLinux/webserver/kill.sh
   ```
+  
   For XAMPP (experimental) use
   ```
   sudo /opt/lampp/lampp stop
   ```
-  In order to stop the 2022M webserver you need to restart your computer 💀 
+  In order to stop the 2022M webserver you need to restart your computer 💀
+  
   ```
-  sudo reboot now
+  sudo reboot now 
   ```
+  
+  
 ## Hosting servers 🌐
 * [Start the webserver](https://github.com/Vector4-new/RobloxFDLauncherLinux#starting-and-stopping-the-webserver) if you haven't.
 * Run `./hostnew.sh` if you're going to host a server with devilbox (you might need to mark it as executable first)
