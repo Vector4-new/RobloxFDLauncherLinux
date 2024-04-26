@@ -75,7 +75,7 @@ sudo pacman -S aria2 --noconfirm
    ```
   For /Webserver_2022M (might not work) use
    ```
-    home/$USER/RobloxFDLauncherLinux/Webserver_2022M_start.sh
+    /home/$USER/RobloxFDLauncherLinux/Webserver_2022M_start.sh
    ```
 ### Stopping ⛔
 * Go into the `webserver` directory.
