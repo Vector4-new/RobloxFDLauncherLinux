@@ -1,10 +1,6 @@
 #!/usr/bin/env bash
 echo "Make sure you have all the dependencies installed!"
 sleep 5
-groupadd docker
-usermod -aG docker $USER
-systemctl enable docker
-systemctl start docker
 
 pushd $(dirname $0) > /dev/null
 
@@ -25,10 +21,10 @@ fi
 if [[ -n "$(id | grep docker)" ]]; then
     :
 else
-    #echo "Run sudo groupadd docker first"
-    #echo "You are not in the docker group. Add yourself by running (on a superuser account):"
-    #echo "usermod -aG docker $USER"
-    #echo ""
+    echo "Run sudo groupadd docker first"
+    echo "You are not in the docker group. Add yourself by running (on a superuser account):"
+    echo "usermod -aG docker $USER"
+    echo ""
     echo "Try logging out and back in, or restarting the machine."
 
     popd > /dev/null
