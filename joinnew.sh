@@ -101,10 +101,11 @@ case $selected_version in
         eval "$command"
         ;;
     "2022M")
-    # Execute actions for 2022M client version
-    command="$winebin "/home/$USER/RobloxFDLauncherLinux/Clients/2022M/RobloxStudioBeta.exe" -task StartClient -server "$ip" -port $port"
-    eval "$command"
-    ;;    
-    *)
-
+        # Execute actions for 2022M client version
+        command="$winebin /home/$USER/RobloxFDLauncherLinux/Clients/2022M/RobloxStudioBeta.exe -task StartClient -server \"$ip\" -port $port"
+        eval "$command"
+        ;;    
 esac
+
+
+
