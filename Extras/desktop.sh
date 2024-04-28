@@ -11,5 +11,5 @@ sudo echo "Categories=Games;" >> "$goverlay_desktop_file"
 
 # Replace USER_PLACEHOLDER with the actual username
 sed -i "s|USER_PLACEHOLDER|$username|g" "$goverlay_desktop_file"
-echo "\e[0;31mInstallation finished.\e"
+echo "\e[0;31mRFD is now installed for further info view https://github.com/Vector4-new/RobloxFDLauncherLinux/ or README.MD.\e"
 sleep 5
