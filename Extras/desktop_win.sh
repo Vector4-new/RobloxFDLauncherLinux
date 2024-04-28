@@ -4,9 +4,8 @@ read -p "Enter your username: " username
 goverlay_desktop_file="/home/$USER/.local/share/applications/rfd.desktop"
 sudo tee "$goverlay_desktop_file" > /dev/null <<EOF
 [Desktop Entry]
-Name=Roblox Filtering Disabled
-Terminal=true
-Exec=/home/$USER/RobloxFDLauncherLinux/joinnew.sh
+Name=Roblox Filtering Disabled (Windows)
+Exec=sudo wine /home/$USER/FilteringDisabled/RobloxLauncher.exe
 Icon=/home/$USER/.local/share/applications/RFD.png
 Type=Application
 Categories=Games;
