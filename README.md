@@ -54,7 +54,7 @@ sudo pacman -S wget --noconfirm
 sudo pacman -S aria2 --noconfirm
 ```
 * Run the installer ➡️ (this is for devilbox) (can be found in https://github.com/Vector4-new/RobloxFDLauncherLinux/releases/)
-* (Run this ➡️ https://github.com/Vector4-new/RobloxFDLauncherLinux/releases/tag/3.5 after running this ⬆️ if you want to try out the XAMPP Beta)
+* (Run this ➡️ https://github.com/Vector4-new/RobloxFDLauncherLinux/releases/tag/3.5 after running the latest script if you want to try out the XAMPP Beta)
 
 * Install the webserver (devilbox)🛠️:
   ```sh
