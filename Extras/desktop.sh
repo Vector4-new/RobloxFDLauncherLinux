@@ -3,7 +3,7 @@ read -p "Enter your username: " username
 
 goverlay_desktop_file="/home/$USER/.local/share/applications/rfd.desktop"
 sudo echo "[Desktop Entry]" > "$goverlay_desktop_file"
-sudo echo "Name=Roblox Filtering Disabled" >> "$goverlay_desktop_file"
+sudo echo "Name=Play Roblox Filtering Disabled" >> "$goverlay_desktop_file"
 sudo echo "Exec=exec /home/$USER/RobloxFDLauncherLinux/joinnew.sh"
 sudo echo "Icon=/home/$USER/.local/share/applications/RFD.png" >> "$goverlay_desktop_file"
 sudo echo "Type=Application" >> "$goverlay_desktop_file"
