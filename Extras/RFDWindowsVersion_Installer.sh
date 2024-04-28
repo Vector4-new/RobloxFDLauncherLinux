@@ -1,3 +1,4 @@
+#This isn't finished
 #!/bin/bash
 sudo apt install wget aria2
 sudo pacman -S wget --noconfirm
@@ -14,6 +15,6 @@ sudo rm -r /home/$USER/roblox-unfiltered
 sudo mv "/home/$USER/FilteringDisabled/Roblox Launcher.exe" "/home/$USER/FilteringDisabled/RobloxLauncher.exe"
 #Desktop Stuff
 wget https://github.com/Vector4-new/RobloxFDLauncherLinux/blob/main/Extras/RFD.png?raw=true -O "/home/$USER/.local/share/applications/RFD.png"
-wget https://raw.githubusercontent.com/Vector4-new/RobloxFDLauncherLinux/main/Extras/desktop_win.sh "-O /home/$USER/FilteringDisabled/desktop_win.sh"
+wget https://raw.githubusercontent.com/Vector4-new/RobloxFDLauncherLinux/main/Extras/desktop_win.sh -O "/home/$USER/FilteringDisabled/desktop_win.sh"  
 chmod +x /home/$USER/FilteringDisabled/desktop_win.sh 
 exec /home/$USER/FilteringDisabled/desktop_win.sh
