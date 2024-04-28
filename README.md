@@ -167,4 +167,4 @@ placeholder
 April 14, 2024
 
 ### Credits 💯
-@vector4.new, @twig6843, ardishco
+@vector4.new, @twig6843, @liquidovski
