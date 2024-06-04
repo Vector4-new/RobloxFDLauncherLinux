@@ -33,7 +33,7 @@ Status|Architecture
 
 ## Install the Dependencies 📁
 
-## Debian Based Distros 🍥 (Ubuntu,Linux Mint..)
+## 🍥 Debian Based Distros 🍥 (Ubuntu,Linux Mint..)
 Install [Wine](https://wiki.winehq.org/Download) 🍷
 ```
 sudo apt install docker
@@ -42,6 +42,11 @@ sudo apt install git
 sudo apt install wget
 sudo apt install aria2
 sudo apt install unzip
+```
+
+## 🎩 Fedora-based Distros 
+```
+placeholder
 ```
 ## Arch-Based Distros (SteamOS,Manjaro..)
 ```
