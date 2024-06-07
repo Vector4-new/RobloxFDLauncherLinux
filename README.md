@@ -99,10 +99,10 @@ sudo pacman -S aria2 --noconfirm
   ```
   sudo /opt/lampp/lampp stop
   ```
-  In order to stop the 2022M webserver you need to restart your computer 💀
+  In order to stop the 2022M webserver you need run htop as sudo and "Kill" the UwAmp.exe
   
   ```
-  sudo reboot now 
+  sudo htop
   ```
   
   
