@@ -102,7 +102,7 @@ sudo pacman -S aria2 --noconfirm
   For 2022M webserver (UwAmp)
   
   ```
-  sudo kill UwAmp
+  sudo kill UwAmp.exe
   sudo wineserver -k
   ```
   
