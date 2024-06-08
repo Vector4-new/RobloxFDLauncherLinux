@@ -2,6 +2,8 @@
 ![Placeholder](https://github.com/Vector4-new/RobloxFDLauncherLinux/assets/119701717/c7ecc390-2199-47c0-a278-8880205ead49)
 
 Allows you to run Roblox clients and host servers on Linux.
+(This launcher is pretty much final I might add a prefix feature one day but yea that's about it)
+(Pull Requests are welcome tho)
 
 (This repo is going to be set to private, if roblox allows wine again.)
 
