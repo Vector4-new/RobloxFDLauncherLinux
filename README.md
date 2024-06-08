@@ -9,10 +9,11 @@ Allows you to run Roblox clients and host servers on Linux.
 
 (This repo is going to be set to private, if roblox allows wine again.)
 
-(If you want to play modern Roblox on linux and you're having issues with the php servers please use [Roblox Freedom Distribution](https://github.com/Windows81/Roblox-Freedom-Distribution) )
 (You might not have good experience with non-debian based distros)
 
 (Some clients might not work with xampp)
+
+(If you want to play modern Roblox on linux and you're having issues with the php servers please use [Roblox Freedom Distribution](https://github.com/Windows81/Roblox-Freedom-Distribution) )
 
 ### Current clients and servers:
 Status|Architecture
