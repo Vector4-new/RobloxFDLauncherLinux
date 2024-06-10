@@ -1,9 +1,9 @@
 #This isn't finished
 #Don't forget to mark this file as executable
 #!/bin/bash
-echo "This script is for amd64 systems if u have an x86 pc use the commented wine link instead"
+echo "This script is for amd64 systems if u have an x86 pc use the commented wine link instead."
 sleep 3
-echo "This doesn't work with wayland window managers!."
+echo "This doesn't work with wayland window managers!"
 sleep 2
 echo "Read the docs if you're having issues!"
 sudo apt install wget aria2
