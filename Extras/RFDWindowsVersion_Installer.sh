@@ -7,18 +7,18 @@ echo "This script is for amd64 systems if u have an x86 pc uncomment the lines r
 sleep 3
 echo "This doesn't work with wayland window managers!"
 sleep 3
-echo "Make sure you have wine,wget,aria2,kitty,curl installed!"
-sleep 3
+echo "Make sure you have wine (system-wide),wget,aria2,kitty,curl installed!"
+echo "Wine isnt installed on debian due to the packages in the repos being multiple versions behind. If you're on a debian based distro visit https://www.winehq.org/download and install wine by following the documentation."
+sleep 7
 echo "Read the docs if you're having issues!"
-#Wine isnt installed on debian due to the packages in the repos being multiple versions behind. If you're on a debian based distro visit https://www.winehq.org/download and install wine by following the documentation.
 sudo apt-get install wget aria2 kitty curl
 sudo pacman -S wget --noconfirm
 sudo pacman -S aria2 --noconfirm
 sudo pacman -S p7zip --noconfirm
 sudo pacman -S kitty --noconfirm
 sudo pacman -S wine --noconfirm
-echo "RFD Windows version install script // Make sure you have Wine, wget and aria2c installed."
-sleep 5
+echo "Finished installing native dependencies"
+sleep 3
 aria2c https://archive.org/download/roblox-unfiltered/roblox-unfiltered_archive.torrent --dir=/home/$USER --seed-time=0
 7z x /home/$USER/roblox-unfiltered/FilteringDisabled.7z -o/home/$USER
 mkdir /home/$USER/FilteringDisabled/wine
@@ -41,8 +41,7 @@ sudo wineserver -k
 sudo mv "/home/$USER/FilteringDisabled/Roblox Launcher.exe" "/home/$USER/FilteringDisabled/RobloxLauncher.exe"
 
 #Part where it moves existing stuff to dedicated prefix
-$prefix=/home/$USER/.local/share/wineprefixes/FilteringDisabled
-WINEPREFIX=$prefix wine placeholder.exe
+WINEPREFIX=/home/$USER/.local/share/wineprefixes/FilteringDisabled wine placeholder.exe
 mv /home/$USER/FilteringDisabled /home/$USER/.local/share/wineprefixes/FilteringDisabled/drive_c/ProgramData
 
 #Install EdgeWebview to dedicated prefix (ngl this is kinda useless) (Even the FilteringDisabled prefix is useless now that I think about it :( )
