@@ -10,6 +10,7 @@ sleep 3
 echo "Make sure you have wine,wget,aria2,kitty,curl installed!"
 sleep 3
 echo "Read the docs if you're having issues!"
+#Wine isnt installed on debian due to the packages in the repos being multiple versions behind. If you're on a debian based distro visit https://www.winehq.org/download and install wine by following the documentation.
 sudo apt-get install wget aria2 kitty curl
 sudo pacman -S wget --noconfirm
 sudo pacman -S aria2 --noconfirm
@@ -30,8 +31,11 @@ aria2c https://archive.org/download/edge-webview-2-runtime-123.0.2420.53/edge-we
 curl -o /home/$USER/.local/share/icons/hicolor/256x256/apps/FilteringDisabled.png -LJO https://github.com/Vector4-new/RobloxFDLauncherLinux/raw/main/Extras/RFD.png
 
 #Install EdgeWebview to root prefix
+sudo wineserver -k
+wineserver -k
 sudo /home/$USER/FilteringDisabled/wine/wine-9.5-amd64/bin/wine /home/$USER/FilteringDisabled/edge-webview-2-runtime-123.0.2420.53/EdgeWebview2Runtime_123.0.2420.53.exe
 #sudo /home/$USER/FilteringDisabled/wine/wine-9.5-x86/bin/wine /home/$USER/FilteringDisabled/edge-webview-2-runtime-123.0.2420.53/EdgeWebview2Runtime_123.0.2420.53.exe
+sudo wineserver -k
 
 #Rename Roblox Launcher.exe
 sudo mv "/home/$USER/FilteringDisabled/Roblox Launcher.exe" "/home/$USER/FilteringDisabled/RobloxLauncher.exe"
