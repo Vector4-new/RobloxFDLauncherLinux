@@ -43,7 +43,7 @@ echo "[Desktop Entry]" >> ~/.local/share/applications/FilteringDisabled.desktop
 echo "Name=FilteringDisabled" >> ~/.local/share/applications/FilteringDisabled.desktop
 echo "Comment=A Roblox multi-launcher." >> ~/.local/share/applications/FilteringDisabled.desktop
 echo "Icon=/home/$USER/.local/share/icons/hicolor/256x256/apps/FilteringDisabled.png" >> ~/.local/share/applications/FilteringDisabled.desktop
-echo "Exec=kitty sudo wine /home/$USER/FilteringDisabled/RobloxLauncher.exe" >> ~/.local/share/applications/FilteringDisabled.desktop
+echo "Exec=kitty sudo wine start RobloxLauncher.exe" >> ~/.local/share/applications/FilteringDisabled.desktop
 echo "Path=/home/$USER/FilteringDisabled/" >> ~/.local/share/applications/FilteringDisabled.desktop
 echo "Type=Application" >> ~/.local/share/applications/FilteringDisabled.desktop
 echo "Categories=Games;" >> ~/.local/share/applications/FilteringDisabled.desktop
