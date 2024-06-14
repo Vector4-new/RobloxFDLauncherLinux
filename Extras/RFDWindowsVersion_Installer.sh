@@ -13,7 +13,7 @@ sudo pacman -S wget --noconfirm
 sudo pacman -S aria2 --noconfirm
 sudo pacman -S p7zip --noconfirm
 sudo pacman -S kitty --noconfirm
-#Packages for fedora based distros
+#Packages for Fedora based distros
 sudo dnf -q install curl wget aria2 wine p7zip kitty
 #Kill wine
 wineserver -k
