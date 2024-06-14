@@ -14,7 +14,7 @@ sudo pacman -S aria2 --noconfirm
 sudo pacman -S p7zip --noconfirm
 sudo pacman -S kitty --noconfirm
 #Packages for fedora based distros
-placeholder
+sudo dnf -q install curl wget aria2 wine p7zip kitty
 #Kill wine
 wineserver -k
 sudo wineserver -k
