@@ -7,11 +7,14 @@ echo "This doesn't work with wayland window managers!"
 sleep 2
 echo "Read the docs if you're having issues!"
 #Apt isn't installed on debian-based distros due to the fact that the wine package on the repos is usually multiple versions behind. If you're on debian please install wine by visiting https://wiki.winehq.org/Download
-sudo apt install wget aria2 curl kitty
+sudo apt-get install wget aria2 curl kitty
+#Packages for Arch based distros
 sudo pacman -S wget --noconfirm
 sudo pacman -S aria2 --noconfirm
 sudo pacman -S p7zip --noconfirm
 sudo pacman -S kitty --noconfirm
+#Packages for fedora based distros
+placeholder
 #Kill wine
 wineserver -k
 sudo wineserver -k
