@@ -13,7 +13,9 @@ Allows you to run Roblox clients and host servers on Linux.
 
 (Some clients might not work with xampp)
 
-(If you want to play modern Roblox on linux and you're having issues with the php servers please use [Roblox Freedom Distribution](https://github.com/Windows81/Roblox-Freedom-Distribution) )
+(If you want to play modern Roblox on GNU/Linux 🐧 and you're having issues with the php servers please use [Roblox Freedom Distribution](https://github.com/Windows81/Roblox-Freedom-Distribution) )
+
+(If you want to play retro Roblox on GNU/Linux 🐧 use the [OnlyRetroRobloxHere Install script](https://github.com/Twig6943/OnlyRetroRobloxHere_Linux) 
 
 ### Current clients and servers:
 Status|Architecture
