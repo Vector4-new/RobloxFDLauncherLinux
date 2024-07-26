@@ -1,1 +1,0 @@
-WINEPREFIX=/home/$USER/.wine
