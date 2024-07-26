@@ -1,4 +1,0 @@
-        <ns1:Execute>
-            <ns1:jobID>%JOBID%</ns1:jobID>
-            %SCRIPT%
-        </ns1:Execute>
