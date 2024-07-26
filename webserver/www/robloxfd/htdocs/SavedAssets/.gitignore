@@ -1,3 +1,0 @@
-# git can't add empty folders into repo, so we do this instead
-*
-!.gitignore
